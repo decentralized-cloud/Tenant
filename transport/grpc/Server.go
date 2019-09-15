@@ -122,7 +122,7 @@ func (server *Server) CreateTenant(
 	return response.(*tenantGRPCContract.CreateTenantResponse), nil
 }
 
-// ReadTenant read an exsiting tenant
+// ReadTenant read an existing tenant
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request to read an esiting tenant
 // Returns the result of reading an exiting tenant
@@ -139,7 +139,7 @@ func (server *Server) ReadTenant(
 
 }
 
-// UpdateTenant update an exsiting tenant
+// UpdateTenant update an existing tenant
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request to update an esiting tenant
 // Returns the result of updateing an exiting tenant
@@ -156,7 +156,7 @@ func (server *Server) UpdateTenant(
 
 }
 
-// DeleteTenant delete an exsiting tenant
+// DeleteTenant delete an existing tenant
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request to delete an esiting tenant
 // Returns the result of deleting an exiting tenant
