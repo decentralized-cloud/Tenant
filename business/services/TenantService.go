@@ -42,7 +42,7 @@ func (service *TenantService) CreateTenant(
 	}, nil
 }
 
-// ReadTenant read an exsiting tenant
+// ReadTenant read an existing tenant
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to read an esiting tenant
 // Returns either the result of reading an exiting tenant or error if something goes wrong.
@@ -62,7 +62,7 @@ func (service *TenantService) ReadTenant(
 	}, nil
 }
 
-// UpdateTenant update an exsiting tenant
+// UpdateTenant update an existing tenant
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to update an esiting tenant
 // Returns either the result of updateing an exiting tenant or error if something goes wrong.
@@ -81,7 +81,7 @@ func (service *TenantService) UpdateTenant(
 	return &contracts.UpdateTenantResponse{}, nil
 }
 
-// DeleteTenant delete an exsiting tenant
+// DeleteTenant delete an existing tenant
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to delete an esiting tenant
 // Returns either the result of deleting an exiting tenant or error if something goes wrong.

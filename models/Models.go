@@ -1,7 +1,7 @@
 // Package models defines the different object models used in Tenant
 package models
 
-// The tenant
+// Tenant defines the tenant object
 type Tenant struct {
 	Name string
 }
