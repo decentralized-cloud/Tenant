@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"github.com/decentralized-cloud/Tenant/business/contracts"
+	commonErrors "github.com/decentralized-cloud/Tenant/common/errors"
 	repositoryContracts "github.com/decentralized-cloud/Tenant/repository/contracts"
 )
 
@@ -29,12 +30,28 @@ func NewTenantService(
 func (service *TenantService) CreateTenant(
 	ctx context.Context,
 	request *contracts.CreateTenantRequest) (*contracts.CreateTenantResponse, error) {
+	if ctx == nil {
+		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+	}
+
+	if request == nil {
+		return nil, commonErrors.NewArgumentError("request", "request is required")
+	}
+
+	if err := request.Validate(); err != nil {
+		return nil, commonErrors.NewArgumentError("request", err.Error())
+	}
+
 	response, err := service.repositoryService.CreateTenant(ctx, &repositoryContracts.CreateTenantRequest{
 		Tenant: request.Tenant,
 	})
 
 	if err != nil {
-		return nil, err
+		if _, ok := err.(repositoryContracts.TenantAlreadyExistsError); ok {
+			return nil, contracts.NewTenantAlreadyExistsError()
+		}
+
+		return nil, contracts.NewUnknownError(err.Error())
 	}
 
 	return &contracts.CreateTenantResponse{
@@ -49,12 +66,28 @@ func (service *TenantService) CreateTenant(
 func (service *TenantService) ReadTenant(
 	ctx context.Context,
 	request *contracts.ReadTenantRequest) (*contracts.ReadTenantResponse, error) {
+	if ctx == nil {
+		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+	}
+
+	if request == nil {
+		return nil, commonErrors.NewArgumentError("request", "request is required")
+	}
+
+	if err := request.Validate(); err != nil {
+		return nil, commonErrors.NewArgumentError("request", err.Error())
+	}
+
 	response, err := service.repositoryService.ReadTenant(ctx, &repositoryContracts.ReadTenantRequest{
 		TenantID: request.TenantID,
 	})
 
 	if err != nil {
-		return nil, err
+		if _, ok := err.(repositoryContracts.TenantNotFoundError); ok {
+			return nil, contracts.NewTenantNotFoundError(request.TenantID)
+		}
+
+		return nil, contracts.NewUnknownError(err.Error())
 	}
 
 	return &contracts.ReadTenantResponse{
@@ -69,13 +102,29 @@ func (service *TenantService) ReadTenant(
 func (service *TenantService) UpdateTenant(
 	ctx context.Context,
 	request *contracts.UpdateTenantRequest) (*contracts.UpdateTenantResponse, error) {
+	if ctx == nil {
+		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+	}
+
+	if request == nil {
+		return nil, commonErrors.NewArgumentError("request", "request is required")
+	}
+
+	if err := request.Validate(); err != nil {
+		return nil, commonErrors.NewArgumentError("request", err.Error())
+	}
+
 	_, err := service.repositoryService.UpdateTenant(ctx, &repositoryContracts.UpdateTenantRequest{
 		TenantID: request.TenantID,
 		Tenant:   request.Tenant,
 	})
 
 	if err != nil {
-		return nil, err
+		if _, ok := err.(repositoryContracts.TenantNotFoundError); ok {
+			return nil, contracts.NewTenantNotFoundError(request.TenantID)
+		}
+
+		return nil, contracts.NewUnknownError(err.Error())
 	}
 
 	return &contracts.UpdateTenantResponse{}, nil
@@ -88,12 +137,28 @@ func (service *TenantService) UpdateTenant(
 func (service *TenantService) DeleteTenant(
 	ctx context.Context,
 	request *contracts.DeleteTenantRequest) (*contracts.DeleteTenantResponse, error) {
+	if ctx == nil {
+		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+	}
+
+	if request == nil {
+		return nil, commonErrors.NewArgumentError("request", "request is required")
+	}
+
+	if err := request.Validate(); err != nil {
+		return nil, commonErrors.NewArgumentError("request", err.Error())
+	}
+
 	_, err := service.repositoryService.DeleteTenant(ctx, &repositoryContracts.DeleteTenantRequest{
 		TenantID: request.TenantID,
 	})
 
 	if err != nil {
-		return nil, err
+		if _, ok := err.(repositoryContracts.TenantNotFoundError); ok {
+			return nil, contracts.NewTenantNotFoundError(request.TenantID)
+		}
+
+		return nil, contracts.NewUnknownError(err.Error())
 	}
 
 	return &contracts.DeleteTenantResponse{}, nil
