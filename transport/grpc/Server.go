@@ -17,6 +17,7 @@ import (
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 )
 
+// Server provides function to start GRPC server to serve tenant requests
 type Server struct {
 	endpointCreatorService endpointContracts.EndpointCreatorContract
 
@@ -27,9 +28,7 @@ type Server struct {
 }
 
 // ListenAndServe creates a new GRPC server instance, listens on a port and start serving GRPC requests
-func ListenAndServe() {
-	server := &Server{}
-
+func (server *Server) ListenAndServe() {
 	if err := server.setupDependencies(); err != nil {
 		log.Fatal(err)
 	}
