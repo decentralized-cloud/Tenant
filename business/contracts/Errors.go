@@ -21,7 +21,9 @@ func NewUnknownError(errorMessage string) error {
 		errorMessage: errorMessage,
 		message:      fmt.Sprintf("Unknow error occurs. Error message is: %s", errorMessage),
 	}
-} // TenantAlreadyExistsError indicates that the tenant with the given information already exists
+}
+
+// TenantAlreadyExistsError indicates that the tenant with the given information already exists
 type TenantAlreadyExistsError struct {
 	message string
 }
