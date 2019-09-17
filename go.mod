@@ -4,14 +4,12 @@ go 1.13
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
-	github.com/craicoverflow/go-environment-variables-example v0.0.0-20190228224948-ee3fabeff275
 	github.com/decentralized-cloud/TenantContract v0.0.2
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/mock v1.3.1
-	github.com/joho/godotenv v1.3.0
 	github.com/lucsky/cuid v1.0.2
 	github.com/onsi/ginkgo v1.10.1
 	github.com/onsi/gomega v1.7.0

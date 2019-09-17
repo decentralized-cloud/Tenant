@@ -1,4 +1,4 @@
-// Package contracts defines the configuration business contracts
+//Package contracts defines configuration service contracts
 package contracts
 
 // ConfigurationServiceContract declares the service that provides environment variables

@@ -1,10 +1,11 @@
+// Package services defines configuration service implementation
 package services
 
 import (
 	"os"
 	"strconv"
 
-	"github.com/decentralized-cloud/Tenant/business/contracts"
+	"github.com/decentralized-cloud/Tenant/configuration/contracts"
 )
 
 // ConfigurationService implements the service that provides environment variables
@@ -13,7 +14,8 @@ type ConfigurationService struct {
 
 // NewConfigurationService creates new instance of the ConfigurationService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
-func NewConfigurationService(contracts.ConfigurationServiceContract, error) {
+func NewConfigurationService() (configurationService *ConfigurationService, err error) {
+	return configurationService, nil
 }
 
 // GetPort retrieves port number from environment variable
@@ -25,7 +27,7 @@ func (service *ConfigurationService) GetPort() (*int, error) {
 	if err != nil {
 		return nil, contracts.NewUnknownError(err.Error())
 	}
-	return portNumber, nil
+	return &portNumber, nil
 }
 
 // GetHostName retrieves host name from environment variable
