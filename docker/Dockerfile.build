@@ -1,0 +1,9 @@
+FROM decentralizedcloud/golang-build-base
+LABEL maintainer="morteza.alizadeh@gmail.com"
+
+ADD . /src
+WORKDIR /src
+
+RUN go get -v -t -d ./...
+RUN go build -v .
+

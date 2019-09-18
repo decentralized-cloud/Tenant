@@ -8,7 +8,7 @@ import (
 	"github.com/decentralized-cloud/Tenant/configuration/contracts"
 )
 
-// ConfigurationService implements the service that provides environment variables
+// ConfigurationService implements the service that provides configuration required by different Tenat modules
 type ConfigurationService struct {
 }
 
@@ -19,24 +19,22 @@ func NewConfigurationService() (configurationService *ConfigurationService, err 
 }
 
 // GetPort retrieves port number from environment variable
-// Returns the port number
-func (service *ConfigurationService) GetPort() (*int, error) {
-	//Todo : what is port number environment variable name
+// Returns the port number or error if something goes wrong
+func (service *ConfigurationService) GetPort() (int, error) {
 	portNumberString := os.Getenv("PORT")
 	portNumber, err := strconv.Atoi(portNumberString)
+
 	if err != nil {
-		return nil, contracts.NewUnknownError(err.Error())
+		return 0, contracts.NewUnknownError(err.Error())
 	}
-	return &portNumber, nil
+
+	return portNumber, nil
 }
 
 // GetHostName retrieves host name from environment variable
-// Returns the port number
-func (service *ConfigurationService) GetHostName() (*string, error) {
-	hostName, err := os.GetHostName()
-	if err != nil {
-		return nil, contracts.NewUnknownError(err.Error())
-	}
-	return hostName, nil
+// Returns the host name or error if something goes wrong
+func (service *ConfigurationService) GetHostName() (string, error) {
+	hostName := os.Getenv("HOST")
 
+	return hostName, nil
 }
