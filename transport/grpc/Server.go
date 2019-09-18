@@ -6,12 +6,15 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strconv"
 
 	business "github.com/decentralized-cloud/Tenant/business/services"
+	configuration "github.com/decentralized-cloud/Tenant/configuration/services"
 	endpoint "github.com/decentralized-cloud/Tenant/endpoint/services"
 	repository "github.com/decentralized-cloud/Tenant/repository/services"
 	"google.golang.org/grpc"
 
+	configurationServiceContracts "github.com/decentralized-cloud/Tenant/configuration/contracts"
 	endpointContracts "github.com/decentralized-cloud/Tenant/endpoint/contracts"
 	tenantGRPCContract "github.com/decentralized-cloud/TenantContract"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
@@ -20,6 +23,7 @@ import (
 // Server provides function to start GRPC server to serve tenant requests
 type Server struct {
 	endpointCreatorService endpointContracts.EndpointCreatorContract
+	configurationService   configurationServiceContracts.ConfigurationServiceContract
 
 	createTenantHandler gokitgrpc.Handler
 	readTenantHandler   gokitgrpc.Handler
@@ -38,7 +42,16 @@ func (server *Server) ListenAndServe() {
 	errors := make(chan error)
 
 	go func() {
-		listener, err := net.Listen("tcp", ":9090")
+
+		portNumber, err := server.configurationService.GetPort()
+		if err != nil {
+			errors <- err
+			return
+		}
+
+		portNumberString := strconv.Itoa(portNumber)
+
+		listener, err := net.Listen("tcp", fmt.Sprintf(":%s", portNumberString))
 		if err != nil {
 			errors <- err
 
@@ -49,7 +62,8 @@ func (server *Server) ListenAndServe() {
 
 		tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, server)
 
-		fmt.Println("gRPC listen on 9090")
+		fmt.Println(fmt.Sprintf("gRPC listen on %s", portNumberString))
+
 		errors <- gRPCServer.Serve(listener)
 	}()
 
@@ -74,6 +88,8 @@ func (server *Server) setupDependencies() error {
 	if err != nil {
 		return err
 	}
+
+	server.configurationService, err = configuration.NewConfigurationService()
 
 	return nil
 }
