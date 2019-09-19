@@ -1,16 +1,12 @@
-FROM decentralizedcloud/golang-build-base
+FROM decentralizedcloud/golang-test-and-coverage-base:252
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
+ARG CI_SERVICE
 ARG COVERALLS_TOKEN
 
 ADD . /src
 WORKDIR /src
 
-RUN go test -v ./...
-
-RUN go get github.com/mattn/goveralls
-RUN go get github.com/modocache/gover
-
-RUN ./scripts/coverage.sh
-RUN goveralls -coverprofile gover.coverprofile -service drone.io -repotoken $COVERALLS_TOKEN
+RUN go test -v -covermode=count -coverprofile=coverage.out ./...
+RUN goveralls -coverprofile=coverage.out -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN
 
