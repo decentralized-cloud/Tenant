@@ -19,11 +19,22 @@ steps:
   displayName: "Generating docker tags"
 
 - task: Docker@2
+  displayName: Docker Login
+  inputs:
+    containerRegistry: $(DOCKER_CONTAINER_REGISTRY)
+    command: 'login'
+
+- task: Docker@2
   displayName: Build
   inputs:
+    containerRegistry: $(DOCKER_CONTAINER_REGISTRY)
+    repository: $(DOCKER_REPOSITORY_NAME)
     command: 'build'
     Dockerfile: $(BUILD_DOCKER_FILE_PATH)
     buildContext: '$(system.defaultWorkingDirectory)'
+    tags: |
+      $(GENERATED_DOCKER_TAG_ID)
+      $(GENERATED_DOCKER_TAG)
 
 - task: Docker@2
   displayName: Test and Coverage
@@ -32,12 +43,6 @@ steps:
     Dockerfile: $(TEST_AND_COVERAGE_DOCKER_FILE_PATH)
     buildContext: '$(system.defaultWorkingDirectory)'
     arguments: '--build-arg CI_SERVICE=$(CI_SERVICE) --build-arg COVERALLS_TOKEN=$(COVERALLS_TOKEN)'
-
-- task: Docker@2
-  displayName: Docker Login
-  inputs:
-    containerRegistry: $(DOCKER_CONTAINER_REGISTRY)
-    command: 'login'
 
 - task: Docker@2
   displayName: Push
