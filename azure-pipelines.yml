@@ -25,6 +25,7 @@ steps:
     Dockerfile: $(BUILD_DOCKER_FILE_PATH)
     buildContext: '$(system.defaultWorkingDirectory)'
 
+
 - task: Docker@2
   displayName: Test and Coverage
   inputs:
