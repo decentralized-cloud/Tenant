@@ -1,4 +1,4 @@
-FROM decentralizedcloud/golang-test-and-coverage-base
+FROM decentralizedcloud/golang-test-and-coverage-base:252
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
 ARG CI_SERVICE
