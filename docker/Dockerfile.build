@@ -1,4 +1,4 @@
-FROM decentralizedcloud/golang-build-base
+FROM decentralizedcloud/golang-build-base:232
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
 ADD . /src
