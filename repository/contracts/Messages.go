@@ -1,7 +1,7 @@
 // Package contracts defines the different tenant repository contracts
 package contracts
 
-import "github.com/decentralized-cloud/Tenant/models"
+import "github.com/decentralized-cloud/tenant/models"
 
 // CreateTenantRequest contains the request to create a new tenant
 type CreateTenantRequest struct {

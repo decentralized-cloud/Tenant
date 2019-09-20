@@ -4,11 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/decentralized-cloud/Tenant/business/contracts"
-	"github.com/decentralized-cloud/Tenant/business/services"
-	commonErrors "github.com/decentralized-cloud/Tenant/common/errors"
-	"github.com/decentralized-cloud/Tenant/models"
-	repsoitoryMocks "github.com/decentralized-cloud/Tenant/repository/mocks"
+	"github.com/decentralized-cloud/tenant/business/contracts"
+	"github.com/decentralized-cloud/tenant/business/services"
+	commonErrors "github.com/decentralized-cloud/tenant/common/errors"
+	"github.com/decentralized-cloud/tenant/models"
+	repsoitoryMocks "github.com/decentralized-cloud/tenant/repository/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
 
