@@ -4,9 +4,9 @@ package grpctransport
 import (
 	"context"
 
-	businessContracts "github.com/decentralized-cloud/Tenant/business/contracts"
-	"github.com/decentralized-cloud/Tenant/models"
-	tenantGRPCContract "github.com/decentralized-cloud/TenantContract"
+	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract"
+	businessContracts "github.com/decentralized-cloud/tenant/business/contracts"
+	"github.com/decentralized-cloud/tenant/models"
 )
 
 // decodeCreateTenantRequest decodes CreateTenant request message from GRPC object to business object

@@ -1,6 +1,7 @@
 // Package util implements different utilities required by the tenant service
 package util
 
+// Set by linker
 var (
 	versionNumber = "undefined"
 	platform      = "undefined"

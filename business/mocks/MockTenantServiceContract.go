@@ -6,9 +6,10 @@ package mock_contracts
 
 import (
 	context "context"
-	contracts "github.com/decentralized-cloud/Tenant/business/contracts"
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+
+	contracts "github.com/decentralized-cloud/tenant/business/contracts"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockTenantServiceContract is a mock of TenantServiceContract interface

@@ -4,8 +4,8 @@ package services
 import (
 	"context"
 
-	businessContracts "github.com/decentralized-cloud/Tenant/business/contracts"
-	"github.com/decentralized-cloud/Tenant/endpoint/contracts"
+	businessContracts "github.com/decentralized-cloud/tenant/business/contracts"
+	"github.com/decentralized-cloud/tenant/endpoint/contracts"
 	"github.com/go-kit/kit/endpoint"
 )
 

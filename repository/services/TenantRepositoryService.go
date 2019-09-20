@@ -4,7 +4,7 @@ package services
 import (
 	"context"
 
-	"github.com/decentralized-cloud/Tenant/repository/contracts"
+	"github.com/decentralized-cloud/tenant/repository/contracts"
 	"github.com/lucsky/cuid"
 )
 
