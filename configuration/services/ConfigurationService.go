@@ -14,8 +14,8 @@ type ConfigurationService struct {
 
 // NewConfigurationService creates new instance of the ConfigurationService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
-func NewConfigurationService() (configurationService contracts.ConfigurationServiceContract, err error) {
-	return configurationService, nil
+func NewConfigurationService() (contracts.ConfigurationServiceContract, error) {
+	return &ConfigurationService{}, nil
 }
 
 // GetPort retrieves port number from environment variable
@@ -31,9 +31,9 @@ func (service *ConfigurationService) GetPort() (int, error) {
 	return portNumber, nil
 }
 
-// GetHostName retrieves host name from environment variable
-// Returns the host name or error if something goes wrong
-func (service *ConfigurationService) GetHostName() (string, error) {
+// GetHost retrieves host from environment variable
+// Returns the host or error if something goes wrong
+func (service *ConfigurationService) GetHost() (string, error) {
 	hostName := os.Getenv("HOST")
 
 	return hostName, nil
