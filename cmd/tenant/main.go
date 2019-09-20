@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/decentralized-cloud/Tenant/internal/cmd"
-	"github.com/decentralized-cloud/Tenant/pkg/util"
+	"github.com/decentralized-cloud/tenant/internal/cmd"
+	"github.com/decentralized-cloud/tenant/pkg/util"
 )
 
 func main() {

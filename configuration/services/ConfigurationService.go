@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/decentralized-cloud/Tenant/configuration/contracts"
+	"github.com/decentralized-cloud/tenant/configuration/contracts"
 )
 
 // ConfigurationService implements the service that provides configuration required by different Tenat modules

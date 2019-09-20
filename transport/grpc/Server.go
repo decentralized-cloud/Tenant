@@ -7,15 +7,15 @@ import (
 	"log"
 	"net"
 
-	business "github.com/decentralized-cloud/Tenant/business/services"
-	configuration "github.com/decentralized-cloud/Tenant/configuration/services"
-	endpoint "github.com/decentralized-cloud/Tenant/endpoint/services"
-	repository "github.com/decentralized-cloud/Tenant/repository/services"
+	business "github.com/decentralized-cloud/tenant/business/services"
+	configuration "github.com/decentralized-cloud/tenant/configuration/services"
+	endpoint "github.com/decentralized-cloud/tenant/endpoint/services"
+	repository "github.com/decentralized-cloud/tenant/repository/services"
 	"google.golang.org/grpc"
 
-	configurationServiceContracts "github.com/decentralized-cloud/Tenant/configuration/contracts"
-	endpointContracts "github.com/decentralized-cloud/Tenant/endpoint/contracts"
-	tenantGRPCContract "github.com/decentralized-cloud/TenantContract"
+	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract"
+	configurationServiceContracts "github.com/decentralized-cloud/tenant/configuration/contracts"
+	endpointContracts "github.com/decentralized-cloud/tenant/endpoint/contracts"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 )
 

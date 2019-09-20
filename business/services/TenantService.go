@@ -4,9 +4,9 @@ package services
 import (
 	"context"
 
-	"github.com/decentralized-cloud/Tenant/business/contracts"
-	commonErrors "github.com/decentralized-cloud/Tenant/common/errors"
-	repositoryContracts "github.com/decentralized-cloud/Tenant/repository/contracts"
+	"github.com/decentralized-cloud/tenant/business/contracts"
+	commonErrors "github.com/decentralized-cloud/tenant/common/errors"
+	repositoryContracts "github.com/decentralized-cloud/tenant/repository/contracts"
 )
 
 // TenantService implements the service that create new tenant, read, update and delete existing tenants.
