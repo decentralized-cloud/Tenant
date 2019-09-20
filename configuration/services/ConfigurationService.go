@@ -14,7 +14,7 @@ type ConfigurationService struct {
 
 // NewConfigurationService creates new instance of the ConfigurationService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
-func NewConfigurationService() (configurationService *ConfigurationService, err error) {
+func NewConfigurationService() (configurationService contracts.ConfigurationServiceContract, err error) {
 	return configurationService, nil
 }
 

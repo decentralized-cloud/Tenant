@@ -8,10 +8,12 @@ import (
 	"net"
 
 	business "github.com/decentralized-cloud/Tenant/business/services"
+	configuration "github.com/decentralized-cloud/Tenant/configuration/services"
 	endpoint "github.com/decentralized-cloud/Tenant/endpoint/services"
 	repository "github.com/decentralized-cloud/Tenant/repository/services"
 	"google.golang.org/grpc"
 
+	configurationServiceContracts "github.com/decentralized-cloud/Tenant/configuration/contracts"
 	endpointContracts "github.com/decentralized-cloud/Tenant/endpoint/contracts"
 	tenantGRPCContract "github.com/decentralized-cloud/TenantContract"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
@@ -20,6 +22,7 @@ import (
 // Server provides function to start GRPC server to serve tenant requests
 type Server struct {
 	endpointCreatorService endpointContracts.EndpointCreatorContract
+	configurationService   configurationServiceContracts.ConfigurationServiceContract
 
 	createTenantHandler gokitgrpc.Handler
 	readTenantHandler   gokitgrpc.Handler
@@ -38,7 +41,22 @@ func (server *Server) ListenAndServe() {
 	errors := make(chan error)
 
 	go func() {
-		listener, err := net.Listen("tcp", ":9090")
+
+		portNumber, err := server.configurationService.GetPort()
+		if err != nil {
+			errors <- err
+			return
+		}
+
+		host, err := server.configurationService.GetHost()
+		if err != nil {
+			errors <- err
+			return
+		}
+
+		address := fmt.Sprintf("%s:%d", host, portNumber)
+		listener, err := net.Listen("tcp", address)
+
 		if err != nil {
 			errors <- err
 
@@ -49,7 +67,7 @@ func (server *Server) ListenAndServe() {
 
 		tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, server)
 
-		fmt.Println("gRPC listen on 9090")
+		fmt.Printf("gRPC listen on %s\n", address)
 		errors <- gRPCServer.Serve(listener)
 	}()
 
@@ -69,9 +87,11 @@ func (server *Server) setupDependencies() error {
 		return err
 	}
 
-	server.endpointCreatorService, err = endpoint.NewEndpointCreatorService(businessServer)
+	if server.endpointCreatorService, err = endpoint.NewEndpointCreatorService(businessServer); err != nil {
+		return err
+	}
 
-	if err != nil {
+	if server.configurationService, err = configuration.NewConfigurationService(); err != nil {
 		return err
 	}
 
