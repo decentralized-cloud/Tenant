@@ -4,6 +4,5 @@ LABEL maintainer="morteza.alizadeh@gmail.com"
 ADD . /src
 WORKDIR /src
 
-RUN go get -v -t -d ./...
-RUN go build -v cmd/tenant/main.go
+RUN make build
 

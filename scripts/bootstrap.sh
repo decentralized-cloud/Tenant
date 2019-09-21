@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # bootstrap.sh check for and install any dependencies we have for building and using Tenant service
 #

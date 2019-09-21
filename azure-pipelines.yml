@@ -5,7 +5,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  DOCKER_TAG_GENERATORT_SCRIPT: '$(system.defaultWorkingDirectory)/scripts/generate-docker-tag.sh'
   DOCKER_CONTAINER_REGISTRY: 'Decentralized Cloud Docker Hub'
   DOCKER_REPOSITORY_NAME: 'decentralizedcloud/tenant'
   TEST_AND_COVERAGE_DOCKER_FILE_PATH: '$(system.defaultWorkingDirectory)/docker/Dockerfile.testAndCoverage'
@@ -13,10 +12,10 @@ variables:
 
 steps:
 - task: Bash@3
-  inputs:
-    filePath: $(DOCKER_TAG_GENERATORT_SCRIPT)
-    arguments: $(Build.SourceBranch) $(Build.BuildId)
   displayName: "Generating docker tags"
+  inputs:
+    filePath:  '$(system.defaultWorkingDirectory)/scripts/generate-docker-tag.sh'
+    arguments: $(Build.SourceBranch) $(Build.BuildId)
 
 - task: Docker@2
   displayName: Build
