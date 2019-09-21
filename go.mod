@@ -15,7 +15,7 @@ require (
 	github.com/onsi/ginkgo v1.10.1
 	github.com/onsi/gomega v1.7.0
 	github.com/spf13/cobra v0.0.5
-	golang.org/x/tools v0.0.0-20190920130846-1081e67f6b77 // indirect
+	golang.org/x/tools v0.0.0-20190920225731-5eefd052ad72 // indirect
 	google.golang.org/grpc v1.23.1
 	gopkg.in/yaml.v2 v2.2.2
 )

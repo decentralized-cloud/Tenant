@@ -7,6 +7,6 @@ ARG COVERALLS_TOKEN
 ADD . /src
 WORKDIR /src
 
-RUN go test -v -covermode=count -coverprofile=coverage.out ./...
-RUN goveralls -coverprofile=coverage.out -service=$CI_SERVICE -repotoken $COVERALLS_TOKEN
-
+RUN make dep
+RUN make test
+RUN make publish-test-results

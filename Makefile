@@ -19,7 +19,7 @@ COVERALLS_TOKEN ?=
 export CGO_ENABLED ?= 0
 export GOOS ?= $(OS)
 export GOARCH ?= amd64
-GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mocks/*.go")
+GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go")
 
 .PHONY: all
 all: dep build install ## Get deps, build, and install binary
@@ -53,7 +53,7 @@ format: ## Format the source
 test: ## Run unit tests
 	mkdir -p $(REPORTS_DIR)
 	rm -f $(REPORTS_DIR)/*
-	@go test -ldflags "$(LDFLAGS)" -v -covermode=count -coverprofile="$(REPORTS_DIR/coverage.out)" ./...
+	@go test -ldflags "$(LDFLAGS)" -v -covermode=count -coverprofile="$(REPORTS_DIR)/coverage.out" ./...
 
 .PHONY: publish-test-results
 publish-test-results: ## Publish test results
