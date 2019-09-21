@@ -4,7 +4,10 @@ trigger:
       - v*
   branches:
     include:
-      - "*"
+      - master
+      - release/*
+      - feature/*
+      - bug/*
   paths:
     exclude:
       - README.md
