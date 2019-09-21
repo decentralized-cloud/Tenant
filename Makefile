@@ -5,7 +5,7 @@ OS = $(shell uname -s | tr '[:upper:]' '[:lower:]')
 BINARY_NAME = tenant
 BUILD_DIR ?= bin
 PACKAGE_DIR = cmd/tenant
-VERSION ?= $(shell git tag | tail -1 | sed "s|v||g")-dev
+VERSION ?= dev
 COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null)
 BUILD_DATE ?= $(shell date +%FT%T%z)
 PREFIX = github.com/decentralized-cloud/tenant/pkg/util
@@ -31,10 +31,10 @@ clean: ## Clean the working area and the project
 
 .PHONY: dep
 dep: ## Install dependencies
-	@go mod tidy
-	@go get -v -t ./...
 	@go get golang.org/x/tools/cmd/cover
 	@go get github.com/mattn/goveralls
+	@go mod tidy
+	@go get -v -t ./...
 
 .PHONY: build
 build: GOARGS += -tags "$(GOTAGS)" -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)
