@@ -14,7 +14,6 @@ REPORTS_DIR ?= reports
 CI_SERVICE ?=
 COVERALLS_TOKEN ?=
 
-
 # Go variables
 export CGO_ENABLED ?= 0
 export GOOS ?= $(OS)
