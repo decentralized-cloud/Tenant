@@ -1,5 +1,13 @@
 trigger:
-- "*"
+  tags:
+    include:
+      - v*
+  branches:
+    include:
+      - "*"
+  paths:
+    exclude:
+      - README.md
 
 pool:
   vmImage: 'ubuntu-latest'
