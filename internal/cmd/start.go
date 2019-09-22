@@ -9,7 +9,7 @@ import (
 func newStartCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "start",
-		Short: "Start the tenant service",
+		Short: "Start the Tenant service",
 		Run: func(cmd *cobra.Command, args []string) {
 			util.StartService()
 		},

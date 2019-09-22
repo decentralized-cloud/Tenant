@@ -14,6 +14,7 @@ func NewRootCommand() *cobra.Command {
 			printHeader()
 		},
 	}
+
 	// Register all commands
 	cmd.AddCommand(
 		newStartCommand(),
