@@ -19,7 +19,7 @@ import (
 var _ = Describe("CreateTenant Tests", func() {
 	var (
 		mockCtrl                    *gomock.Controller
-		tenantService               contract.TenantServiceContract
+		sut                         contract.TenantServiceContract
 		mockTenantRepositoryService *repsoitoryMocks.MockTenantRepositoryServiceContract
 		ctx                         context.Context
 		request                     contract.CreateTenantRequest
@@ -29,7 +29,7 @@ var _ = Describe("CreateTenant Tests", func() {
 		mockCtrl = gomock.NewController(GinkgoT())
 
 		mockTenantRepositoryService = repsoitoryMocks.NewMockTenantRepositoryServiceContract(mockCtrl)
-		tenantService, _ = service.NewTenantService(mockTenantRepositoryService)
+		sut, _ = service.NewTenantService(mockTenantRepositoryService)
 
 		ctx = context.Background()
 		request = contract.CreateTenantRequest{
@@ -44,7 +44,7 @@ var _ = Describe("CreateTenant Tests", func() {
 
 	Describe("Input Parameters", func() {
 		It("should return error when ctx is nil", func() {
-			_, err := tenantService.CreateTenant(nil, &request)
+			_, err := sut.CreateTenant(nil, &request)
 
 			Ω(err).Should(HaveOccurred())
 
@@ -54,7 +54,7 @@ var _ = Describe("CreateTenant Tests", func() {
 		})
 
 		It("should return error when request is nil", func() {
-			_, err := tenantService.CreateTenant(ctx, nil)
+			_, err := sut.CreateTenant(ctx, nil)
 
 			Ω(err).Should(HaveOccurred())
 
@@ -68,7 +68,7 @@ var _ = Describe("CreateTenant Tests", func() {
 				Tenant: models.Tenant{
 					Name: "",
 				}}
-			_, err := tenantService.CreateTenant(ctx, &request)
+			_, err := sut.CreateTenant(ctx, &request)
 
 			Ω(err).Should(HaveOccurred())
 
