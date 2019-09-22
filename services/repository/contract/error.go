@@ -43,7 +43,7 @@ func NewTenantAlreadyExistsError() error {
 
 // TenantNotFoundError indicates that the tenant with the given tenantID does not exist
 type TenantNotFoundError struct {
-	tenantID string
+	TenantID string
 	message  string
 }
 
@@ -57,7 +57,7 @@ func (e TenantNotFoundError) Error() string {
 // tenantID: Mandatory. The tenantID that did not match any existing tenant
 func NewTenantNotFoundError(tenantID string) error {
 	return TenantNotFoundError{
-		tenantID: tenantID,
+		TenantID: tenantID,
 		message:  fmt.Sprintf("Tenant with tenantID: %s not found", tenantID),
 	}
 }

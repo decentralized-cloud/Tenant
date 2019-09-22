@@ -4,12 +4,20 @@ package service
 import (
 	"context"
 
+	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/repository/contract"
+
 	"github.com/lucsky/cuid"
 )
 
+var tenants map[string]models.Tenant
+
 // TenantRepositoryService implements the repository service that create new tenant, read, update and delete existing tenants.
 type TenantRepositoryService struct {
+}
+
+func init() {
+	tenants = make(map[string]models.Tenant)
 }
 
 // NewTenantRepositoryService creates new instance of the TenantRepositoryService, setting up all dependencies and returns the instance
@@ -25,8 +33,12 @@ func NewTenantRepositoryService() (contract.TenantRepositoryServiceContract, err
 func (service *TenantRepositoryService) CreateTenant(
 	ctx context.Context,
 	request *contract.CreateTenantRequest) (*contract.CreateTenantResponse, error) {
+
+	tenantID := cuid.New()
+	tenants[tenantID] = request.Tenant
+
 	return &contract.CreateTenantResponse{
-		TenantID: cuid.New(),
+		TenantID: tenantID,
 	}, nil
 }
 
@@ -37,7 +49,13 @@ func (service *TenantRepositoryService) CreateTenant(
 func (service *TenantRepositoryService) ReadTenant(
 	ctx context.Context,
 	request *contract.ReadTenantRequest) (*contract.ReadTenantResponse, error) {
-	return &contract.ReadTenantResponse{}, nil
+
+	tenant, ok := tenants[request.TenantID]
+	if !ok {
+		return nil, contract.NewTenantNotFoundError(request.TenantID)
+	}
+
+	return &contract.ReadTenantResponse{Tenant: tenant}, nil
 }
 
 // UpdateTenant update an existing tenant
@@ -47,6 +65,13 @@ func (service *TenantRepositoryService) ReadTenant(
 func (service *TenantRepositoryService) UpdateTenant(
 	ctx context.Context,
 	request *contract.UpdateTenantRequest) (*contract.UpdateTenantResponse, error) {
+
+	_, ok := tenants[request.TenantID]
+	if !ok {
+		return nil, contract.NewTenantNotFoundError(request.TenantID)
+	}
+	tenants[request.TenantID] = request.Tenant
+
 	return &contract.UpdateTenantResponse{}, nil
 }
 
@@ -57,5 +82,12 @@ func (service *TenantRepositoryService) UpdateTenant(
 func (service *TenantRepositoryService) DeleteTenant(
 	ctx context.Context,
 	request *contract.DeleteTenantRequest) (*contract.DeleteTenantResponse, error) {
+
+	_, ok := tenants[request.TenantID]
+	if !ok {
+		return nil, contract.NewTenantNotFoundError(request.TenantID)
+	}
+	delete(tenants, request.TenantID)
+
 	return &contract.DeleteTenantResponse{}, nil
 }
