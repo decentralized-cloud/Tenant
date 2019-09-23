@@ -5,7 +5,7 @@ import "fmt"
 
 // UnknownError indicates that the tenant with the given information already exists
 type UnknownError struct {
-	errorMessage string
+	ErrorMessage string
 	message      string
 }
 
@@ -18,7 +18,7 @@ func (e UnknownError) Error() string {
 // NewUnknownError creates a new UnknownError error
 func NewUnknownError(errorMessage string) error {
 	return UnknownError{
-		errorMessage: errorMessage,
+		ErrorMessage: errorMessage,
 		message:      fmt.Sprintf("Unknow error occurs. Error message is: %s", errorMessage),
 	}
 }
@@ -43,7 +43,7 @@ func NewTenantAlreadyExistsError() error {
 
 // TenantNotFoundError indicates that the tenant with the given tenantID does not exist
 type TenantNotFoundError struct {
-	tenantID string
+	TenantID string
 	message  string
 }
 
@@ -57,7 +57,7 @@ func (e TenantNotFoundError) Error() string {
 // tenantID: Mandatory. The tenantID that did not match any existing tenant
 func NewTenantNotFoundError(tenantID string) error {
 	return TenantNotFoundError{
-		tenantID: tenantID,
+		TenantID: tenantID,
 		message:  fmt.Sprintf("Tenant with tenantID: %s not found", tenantID),
 	}
 }

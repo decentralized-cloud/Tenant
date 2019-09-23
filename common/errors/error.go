@@ -5,8 +5,8 @@ import "fmt"
 
 // ArgumentError indicates that the provided input argument is invalid.
 type ArgumentError struct {
-	argumentName string
-	errorMessage string
+	ArgumentName string
+	ErrorMessage string
 	message      string
 }
 
@@ -19,8 +19,8 @@ func (e ArgumentError) Error() string {
 // NewArgumentError creates a new ArgumentError error
 func NewArgumentError(argumentName, errorMessage string) error {
 	return ArgumentError{
-		argumentName: argumentName,
-		errorMessage: errorMessage,
+		ArgumentName: argumentName,
+		ErrorMessage: errorMessage,
 		message:      fmt.Sprintf("Argument \"%s\" is invalid. Error message: %s", argumentName, errorMessage),
 	}
 }

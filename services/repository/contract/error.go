@@ -5,7 +5,7 @@ import "fmt"
 
 // UnknownError indicates that the tenant with the given information already exists
 type UnknownError struct {
-	errorMessage string
+	ErrorMessage string
 	message      string
 }
 
@@ -18,7 +18,7 @@ func (e UnknownError) Error() string {
 // NewUnknownError creates a new UnknownError error
 func NewUnknownError(errorMessage string) error {
 	return UnknownError{
-		errorMessage: errorMessage,
+		ErrorMessage: errorMessage,
 		message:      fmt.Sprintf("Unknow error occurs. Error message is: %s", errorMessage),
 	}
 }
