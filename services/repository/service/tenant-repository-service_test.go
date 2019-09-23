@@ -30,9 +30,19 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			}}
 	})
 
-	Describe("Given user going to create a new tenant", func() {
-		Context("When create tenant is called", func() {
-			It("Then new tenant is created", func() {
+	Context("user tries to instantiate TenantRepositoryService", func() {
+		When("all dependecies are resolved and NewTenantRepositoryService is called", func() {
+			It("should instantiate the new TenantRepositoryService", func() {
+				service, err := service.NewTenantRepositoryService()
+				Ω(err).Should(BeNil())
+				Ω(service).ShouldNot(BeNil())
+			})
+		})
+	})
+
+	Context("user going to create a new tenant", func() {
+		When("create tenant is called", func() {
+			It("should create the new tenant", func() {
 				response, err := sut.CreateTenant(ctx, &createRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.TenantID).ShouldNot(BeNil())
@@ -40,7 +50,7 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 		})
 	})
 
-	Describe("Given tenant already exists", func() {
+	Context("tenant already exists", func() {
 		var (
 			tenantID string
 		)
@@ -50,8 +60,8 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			tenantID = response.TenantID
 		})
 
-		Context("When user reads the tenant", func() {
-			It("Then tenant information is returned", func() {
+		When("user reads the tenant", func() {
+			It("should return the tenant information", func() {
 				response, err := sut.ReadTenant(ctx, &contract.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
 				Ω(response.Tenant).ShouldNot(BeNil())
@@ -59,8 +69,8 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			})
 		})
 
-		Context("When user updates the existing tenant", func() {
-			It("Then tenant information is updated", func() {
+		When("user updates the existing tenant", func() {
+			It("should update the tenant information", func() {
 				updateRequest := contract.UpdateTenantRequest{
 					TenantID: tenantID,
 					Tenant: models.Tenant{
@@ -77,8 +87,8 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			})
 		})
 
-		Context("When user deletes the tenant", func() {
-			It("Then tenant is deleted", func() {
+		When("user deletes the tenant", func() {
+			It("should delete the tenant", func() {
 				_, err := sut.DeleteTenant(ctx, &contract.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
 
@@ -89,13 +99,11 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 				notFoundErr, ok := err.(contract.TenantNotFoundError)
 				Ω(ok).Should(BeTrue())
 				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
-
 			})
 		})
 	})
 
-	Describe("Given tenant does not exist", func() {
-
+	Context("tenant does not exist", func() {
 		var (
 			tenantID string
 		)
@@ -104,8 +112,8 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			tenantID = cuid.New()
 		})
 
-		Context("When user reads the tenant", func() {
-			It("Then not found error is returned", func() {
+		When("user reads the tenant", func() {
+			It("should return NotgFoundError", func() {
 				response, err := sut.ReadTenant(ctx, &contract.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
@@ -116,9 +124,8 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			})
 		})
 
-		Context("When user tries to update the tenant", func() {
-			It("Then not found error is returned", func() {
-
+		When("user tries to update the tenant", func() {
+			It("should return NotgFoundError", func() {
 				updateRequest := contract.UpdateTenantRequest{
 					TenantID: tenantID,
 					Tenant: models.Tenant{
@@ -134,8 +141,8 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 			})
 		})
 
-		Context("When user tries to delete the tenant", func() {
-			It("Then not found error is returned", func() {
+		When("user tries to delete the tenant", func() {
+			It("should return NotgFoundError", func() {
 				response, err := sut.DeleteTenant(ctx, &contract.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())

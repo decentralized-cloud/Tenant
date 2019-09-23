@@ -18,6 +18,10 @@ type TenantService struct {
 // Returns the new service or error if something goes wrong
 func NewTenantService(
 	repositoryService repositoryContract.TenantRepositoryServiceContract) (contract.TenantServiceContract, error) {
+	if repositoryService == nil {
+		return nil, commonErrors.NewArgumentError("repositoryService", "repositoryService is required")
+	}
+
 	return &TenantService{
 		repositoryService: repositoryService,
 	}, nil
