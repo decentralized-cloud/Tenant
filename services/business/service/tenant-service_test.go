@@ -406,7 +406,7 @@ var _ = Describe("TenantService Tests", func() {
 			})
 
 			When("And tenant repository UpdateTenant return no error", func() {
-				It("should return the tenantID", func() {
+				It("should return no error", func() {
 					mockTenantRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).
