@@ -155,7 +155,7 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 	})
 })
 
-func TestCreateTenant(t *testing.T) {
+func TestTenantRepositoryService(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "TenantRepositoryService Tests")
 }
