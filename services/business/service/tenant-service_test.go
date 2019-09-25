@@ -42,12 +42,8 @@ var _ = Describe("TenantService Tests", func() {
 		When("tenant repository service is not provided and NewTenantService is called", func() {
 			It("should return ArgumentError", func() {
 				service, err := service.NewTenantService(nil)
-				Ω(err).Should(HaveOccurred())
 				Ω(service).Should(BeNil())
-
-				argumentErr, ok := err.(commonErrors.ArgumentError)
-				Ω(ok).Should(BeTrue())
-				Ω(argumentErr.ArgumentName).Should(Equal("repositoryService"))
+				assertArgumentError("repositoryService", "", err)
 			})
 		})
 
@@ -76,24 +72,16 @@ var _ = Describe("TenantService Tests", func() {
 			When("CreateTenant is called without context", func() {
 				It("should return ArgumentError", func() {
 					response, err := sut.CreateTenant(nil, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("ctx"))
+					assertArgumentError("ctx", "", err)
 				})
 			})
 
 			When("CreateTenant is called without request", func() {
 				It("should return ArgumentError", func() {
 					response, err := sut.CreateTenant(ctx, nil)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
+					assertArgumentError("request", "", err)
 				})
 			})
 
@@ -105,13 +93,8 @@ var _ = Describe("TenantService Tests", func() {
 						}}
 
 					response, err := sut.CreateTenant(ctx, &invalidRequest)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
-					Ω(argumentErr.ErrorMessage).Should(Equal(invalidRequest.Validate().Error()))
+					assertArgumentError("request", invalidRequest.Validate().Error(), err)
 				})
 			})
 
@@ -137,11 +120,8 @@ var _ = Describe("TenantService Tests", func() {
 							Return(nil, repositoryContract.NewTenantAlreadyExistsError())
 
 						response, err := sut.CreateTenant(ctx, &request)
-						Ω(err).Should(HaveOccurred())
 						Ω(response).Should(BeNil())
-
-						_, ok := err.(contract.TenantAlreadyExistsError)
-						Ω(ok).Should(BeTrue())
+						assertTenantAlreadyExistsError(err)
 					})
 				})
 
@@ -154,12 +134,8 @@ var _ = Describe("TenantService Tests", func() {
 							Return(nil, expectedError)
 
 						response, err := sut.CreateTenant(ctx, &request)
-						Ω(err).Should(HaveOccurred())
 						Ω(response).Should(BeNil())
-
-						unknownErr, ok := err.(contract.UnknownError)
-						Ω(ok).Should(BeTrue())
-						Ω(unknownErr.ErrorMessage).Should(Equal(expectedError.Error()))
+						assertUnknowError(expectedError.Error(), err)
 					})
 				})
 
@@ -196,24 +172,16 @@ var _ = Describe("TenantService Tests", func() {
 			When("ReadTenant is called without context", func() {
 				It("should return ArgumentError", func() {
 					response, err := sut.ReadTenant(nil, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("ctx"))
+					assertArgumentError("ctx", "", err)
 				})
 			})
 
 			When("ReadTenant is called without request", func() {
 				It("should return ArgumentError", func() {
 					response, err := sut.ReadTenant(ctx, nil)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
+					assertArgumentError("request", "", err)
 				})
 			})
 
@@ -224,13 +192,8 @@ var _ = Describe("TenantService Tests", func() {
 					}
 
 					response, err := sut.ReadTenant(ctx, &invalidRequest)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
-					Ω(argumentErr.ErrorMessage).Should(Equal(invalidRequest.Validate().Error()))
+					assertArgumentError("request", invalidRequest.Validate().Error(), err)
 				})
 			})
 
@@ -257,11 +220,8 @@ var _ = Describe("TenantService Tests", func() {
 						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
 
 					response, err := sut.ReadTenant(ctx, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					_, ok := err.(contract.TenantNotFoundError)
-					Ω(ok).Should(BeTrue())
+					assertTenantNotFoundError(request.TenantID, err)
 				})
 			})
 
@@ -274,12 +234,8 @@ var _ = Describe("TenantService Tests", func() {
 						Return(nil, expectedError)
 
 					response, err := sut.ReadTenant(ctx, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					unknownErr, ok := err.(contract.UnknownError)
-					Ω(ok).Should(BeTrue())
-					Ω(unknownErr.ErrorMessage).Should(Equal(expectedError.Error()))
+					assertUnknowError(expectedError.Error(), err)
 				})
 			})
 
@@ -316,24 +272,16 @@ var _ = Describe("TenantService Tests", func() {
 			When("UpdateTenant is called without context", func() {
 				It("should return ArgumentError", func() {
 					response, err := sut.UpdateTenant(nil, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("ctx"))
+					assertArgumentError("ctx", "", err)
 				})
 			})
 
 			When("UpdateTenant is called without request", func() {
 				It("should return ArgumentError", func() {
 					response, err := sut.UpdateTenant(ctx, nil)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
+					assertArgumentError("request", "", err)
 				})
 			})
 
@@ -345,13 +293,8 @@ var _ = Describe("TenantService Tests", func() {
 					}
 
 					response, err := sut.UpdateTenant(ctx, &invalidRequest)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
-					Ω(argumentErr.ErrorMessage).Should(Equal(invalidRequest.Validate().Error()))
+					assertArgumentError("request", invalidRequest.Validate().Error(), err)
 				})
 			})
 
@@ -379,11 +322,8 @@ var _ = Describe("TenantService Tests", func() {
 						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
 
 					response, err := sut.UpdateTenant(ctx, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					_, ok := err.(contract.TenantNotFoundError)
-					Ω(ok).Should(BeTrue())
+					assertTenantNotFoundError(request.TenantID, err)
 				})
 			})
 
@@ -396,12 +336,8 @@ var _ = Describe("TenantService Tests", func() {
 						Return(nil, expectedError)
 
 					response, err := sut.UpdateTenant(ctx, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					unknownErr, ok := err.(contract.UnknownError)
-					Ω(ok).Should(BeTrue())
-					Ω(unknownErr.ErrorMessage).Should(Equal(expectedError.Error()))
+					assertUnknowError(expectedError.Error(), err)
 				})
 			})
 
@@ -434,24 +370,16 @@ var _ = Describe("TenantService Tests", func() {
 			When("context is null", func() {
 				It("should return ArgumentError and ArgumentName matches the context argument name", func() {
 					response, err := sut.DeleteTenant(nil, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("ctx"))
+					assertArgumentError("ctx", "", err)
 				})
 			})
 
 			When("request is null", func() {
 				It("should return ArgumentError and ArgumentName matches the request argument name", func() {
 					response, err := sut.DeleteTenant(ctx, nil)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
+					assertArgumentError("request", "", err)
 				})
 			})
 
@@ -462,13 +390,8 @@ var _ = Describe("TenantService Tests", func() {
 					}
 
 					response, err := sut.DeleteTenant(ctx, &invalidRequest)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					argumentErr, ok := err.(commonErrors.ArgumentError)
-					Ω(ok).Should(BeTrue())
-					Ω(argumentErr.ArgumentName).Should(Equal("request"))
-					Ω(argumentErr.ErrorMessage).Should(Equal(invalidRequest.Validate().Error()))
+					assertArgumentError("request", invalidRequest.Validate().Error(), err)
 				})
 			})
 
@@ -495,11 +418,8 @@ var _ = Describe("TenantService Tests", func() {
 						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
 
 					response, err := sut.DeleteTenant(ctx, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					_, ok := err.(contract.TenantNotFoundError)
-					Ω(ok).Should(BeTrue())
+					assertTenantNotFoundError(request.TenantID, err)
 				})
 			})
 			When("tenant repository DeleteTenant is faced with any error rather than TenantNotFoundError", func() {
@@ -511,12 +431,8 @@ var _ = Describe("TenantService Tests", func() {
 						Return(nil, expectedError)
 
 					response, err := sut.DeleteTenant(ctx, &request)
-					Ω(err).Should(HaveOccurred())
 					Ω(response).Should(BeNil())
-
-					unknownErr, ok := err.(contract.UnknownError)
-					Ω(ok).Should(BeTrue())
-					Ω(unknownErr.ErrorMessage).Should(Equal(expectedError.Error()))
+					assertUnknowError(expectedError.Error(), err)
 				})
 			})
 
@@ -538,4 +454,46 @@ var _ = Describe("TenantService Tests", func() {
 func TestTenantService(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "TenantService Tests")
+}
+
+func assertArgumentError(expectedArgumentName, expectedErrorMessage string, err error) {
+	Ω(err).Should(HaveOccurred())
+
+	castedErr, ok := err.(commonErrors.ArgumentError)
+	Ω(ok).Should(BeTrue())
+
+	if expectedArgumentName != "" {
+		Ω(castedErr.ArgumentName).Should(Equal(expectedArgumentName))
+	}
+
+	if expectedErrorMessage != "" {
+		Ω(castedErr.ErrorMessage).Should(Equal(expectedErrorMessage))
+	}
+}
+
+func assertUnknowError(expectedErrorMessage string, err error) {
+	Ω(err).Should(HaveOccurred())
+
+	castedErr, ok := err.(contract.UnknownError)
+	Ω(ok).Should(BeTrue())
+
+	if expectedErrorMessage != "" {
+		Ω(castedErr.ErrorMessage).Should(Equal(expectedErrorMessage))
+	}
+}
+
+func assertTenantNotFoundError(expectedTenantID string, err error) {
+	Ω(err).Should(HaveOccurred())
+
+	castedErr, ok := err.(contract.TenantNotFoundError)
+	Ω(ok).Should(BeTrue())
+
+	Ω(castedErr.TenantID).Should(Equal(expectedTenantID))
+}
+
+func assertTenantAlreadyExistsError(err error) {
+	Ω(err).Should(HaveOccurred())
+
+	_, ok := err.(contract.TenantAlreadyExistsError)
+	Ω(ok).Should(BeTrue())
 }
