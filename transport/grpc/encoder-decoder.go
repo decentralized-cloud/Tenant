@@ -4,7 +4,7 @@ package grpctransport
 import (
 	"context"
 
-	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract"
+	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
 	"github.com/decentralized-cloud/tenant/models"
 	businessContract "github.com/decentralized-cloud/tenant/services/business/contract"
 )

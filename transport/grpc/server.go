@@ -13,7 +13,7 @@ import (
 	repository "github.com/decentralized-cloud/tenant/services/repository/service"
 	"google.golang.org/grpc"
 
-	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract"
+	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
 	configurationServiceContract "github.com/decentralized-cloud/tenant/services/configuration/contract"
 	endpointContract "github.com/decentralized-cloud/tenant/services/endpoint/contract"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
