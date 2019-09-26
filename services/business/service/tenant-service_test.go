@@ -5,7 +5,6 @@ import (
 	"errors"
 	"testing"
 
-	commonErrors "github.com/decentralized-cloud/tenant/common/errors"
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/business/contract"
 	"github.com/decentralized-cloud/tenant/services/business/service"
@@ -13,6 +12,7 @@ import (
 	repsoitoryMock "github.com/decentralized-cloud/tenant/services/repository/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
+	commonErrors "github.com/micro-business/go-core/system/errors"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
