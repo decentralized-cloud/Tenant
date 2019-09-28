@@ -11,7 +11,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/mock v1.3.1
 	github.com/lucsky/cuid v1.0.2
-	github.com/micro-business/go-core v0.0.2
+	github.com/micro-business/go-core v0.0.3
 	github.com/onsi/ginkgo v1.10.1
 	github.com/onsi/gomega v1.7.0
 	github.com/spf13/cobra v0.0.5
