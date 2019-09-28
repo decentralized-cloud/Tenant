@@ -7,11 +7,10 @@ import (
 	businessContract "github.com/decentralized-cloud/tenant/services/business/contract"
 	"github.com/decentralized-cloud/tenant/services/endpoint/contract"
 	"github.com/go-kit/kit/endpoint"
+	commonErrors "github.com/micro-business/go-core/system/errors"
 )
 
-// EndpointCreatorService implements the service that creates endpoints to create new tenant,
-// read, update and delete existing tenant.
-type EndpointCreatorService struct {
+type endpointCreatorService struct {
 	businessService businessContract.TenantServiceContract
 }
 
@@ -20,14 +19,18 @@ type EndpointCreatorService struct {
 // Returns the new service or error if something goes wrong
 func NewEndpointCreatorService(
 	businessService businessContract.TenantServiceContract) (contract.EndpointCreatorContract, error) {
-	return &EndpointCreatorService{
+	if businessService == nil {
+		return nil, commonErrors.NewArgumentError("businessService", "businessService is required")
+	}
+
+	return &endpointCreatorService{
 		businessService: businessService,
 	}, nil
 }
 
 // CreateTenantEndpoint creates Create Tenant endpoint
 // Returns the Create Tenant endpoint
-func (service *EndpointCreatorService) CreateTenantEndpoint() endpoint.Endpoint {
+func (service *endpointCreatorService) CreateTenantEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		return service.businessService.CreateTenant(ctx, request.(*businessContract.CreateTenantRequest))
 	}
@@ -35,7 +38,7 @@ func (service *EndpointCreatorService) CreateTenantEndpoint() endpoint.Endpoint 
 
 // ReadTenantEndpoint creates Read Tenant endpoint
 // Returns the Read Tenant endpoint
-func (service *EndpointCreatorService) ReadTenantEndpoint() endpoint.Endpoint {
+func (service *endpointCreatorService) ReadTenantEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		return service.businessService.ReadTenant(ctx, request.(*businessContract.ReadTenantRequest))
 	}
@@ -43,7 +46,7 @@ func (service *EndpointCreatorService) ReadTenantEndpoint() endpoint.Endpoint {
 
 // UpdateTenantEndpoint creates Update Tenant endpoint
 // Returns the Update Tenant endpoint
-func (service *EndpointCreatorService) UpdateTenantEndpoint() endpoint.Endpoint {
+func (service *endpointCreatorService) UpdateTenantEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		return service.businessService.UpdateTenant(ctx, request.(*businessContract.UpdateTenantRequest))
 	}
@@ -51,7 +54,7 @@ func (service *EndpointCreatorService) UpdateTenantEndpoint() endpoint.Endpoint 
 
 // DeleteTenantEndpoint creates Delete Tenant endpoint
 // Returns the Delete Tenant endpoint
-func (service *EndpointCreatorService) DeleteTenantEndpoint() endpoint.Endpoint {
+func (service *endpointCreatorService) DeleteTenantEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		return service.businessService.DeleteTenant(ctx, request.(*businessContract.DeleteTenantRequest))
 	}
