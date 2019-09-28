@@ -16,7 +16,7 @@ type TenantServiceContract interface {
 
 	// ReadTenant read an existing tenant
 	// context: Mandatory The reference to the context
-	// request: Mandatory. The request to read an esiting tenant
+	// request: Mandatory. The request to read an existing tenant
 	// Returns either the result of reading an exiting tenant or error if something goes wrong.
 	ReadTenant(
 		ctx context.Context,
@@ -24,7 +24,7 @@ type TenantServiceContract interface {
 
 	// UpdateTenant update an existing tenant
 	// context: Mandatory The reference to the context
-	// request: Mandatory. The request to update an esiting tenant
+	// request: Mandatory. The request to update an existing tenant
 	// Returns either the result of updateing an exiting tenant or error if something goes wrong.
 	UpdateTenant(
 		ctx context.Context,
@@ -32,7 +32,7 @@ type TenantServiceContract interface {
 
 	// DeleteTenant delete an existing tenant
 	// context: Mandatory The reference to the context
-	// request: Mandatory. The request to delete an esiting tenant
+	// request: Mandatory. The request to delete an existing tenant
 	// Returns either the result of deleting an exiting tenant or error if something goes wrong.
 	DeleteTenant(
 		ctx context.Context,

@@ -133,7 +133,7 @@ func (service *transportService) CreateTenant(
 
 // ReadTenant read an existing tenant
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to read an esiting tenant
+// request: Mandatory. The request to read an existing tenant
 // Returns the result of reading an exiting tenant
 func (service *transportService) ReadTenant(
 	ctx context.Context,
@@ -150,7 +150,7 @@ func (service *transportService) ReadTenant(
 
 // UpdateTenant update an existing tenant
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to update an esiting tenant
+// request: Mandatory. The request to update an existing tenant
 // Returns the result of updateing an exiting tenant
 func (service *transportService) UpdateTenant(
 	ctx context.Context,
@@ -167,7 +167,7 @@ func (service *transportService) UpdateTenant(
 
 // DeleteTenant delete an existing tenant
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to delete an esiting tenant
+// request: Mandatory. The request to delete an existing tenant
 // Returns the result of deleting an exiting tenant
 func (service *transportService) DeleteTenant(
 	ctx context.Context,
