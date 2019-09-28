@@ -75,8 +75,8 @@ func (service *TenantService) CreateTenant(
 
 // ReadTenant read an existing tenant
 // context: Mandatory The reference to the context
-// request: Mandatory. The request to read an exiting tenant
-// Returns either the result of reading an exiting tenant or error if something goes wrong.
+// request: Mandatory. The request to read an existing tenant
+// Returns either the result of reading an existing tenant or error if something goes wrong.
 func (service *TenantService) ReadTenant(
 	ctx context.Context,
 	request *contract.ReadTenantRequest) (*contract.ReadTenantResponse, error) {
@@ -121,8 +121,8 @@ func (service *TenantService) ReadTenant(
 
 // UpdateTenant update an existing tenant
 // context: Mandatory The reference to the context
-// request: Mandatory. The request to update an exiting tenant
-// Returns either the result of updateing an exiting tenant or error if something goes wrong.
+// request: Mandatory. The request to update an existing tenant
+// Returns either the result of updateing an existing tenant or error if something goes wrong.
 func (service *TenantService) UpdateTenant(
 	ctx context.Context,
 	request *contract.UpdateTenantRequest) (*contract.UpdateTenantResponse, error) {
@@ -166,8 +166,8 @@ func (service *TenantService) UpdateTenant(
 
 // DeleteTenant delete an existing tenant
 // context: Mandatory The reference to the context
-// request: Mandatory. The request to delete an exiting tenant
-// Returns either the result of deleting an exiting tenant or error if something goes wrong.
+// request: Mandatory. The request to delete an existing tenant
+// Returns either the result of deleting an existing tenant or error if something goes wrong.
 func (service *TenantService) DeleteTenant(
 	ctx context.Context,
 	request *contract.DeleteTenantRequest) (*contract.DeleteTenantResponse, error) {
