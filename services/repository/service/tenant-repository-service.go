@@ -12,8 +12,7 @@ import (
 
 var tenants map[string]models.Tenant
 
-// TenantRepositoryService implements the repository service that create new tenant, read, update and delete existing tenants.
-type TenantRepositoryService struct {
+type tenantRepositoryService struct {
 }
 
 func init() {
@@ -23,14 +22,14 @@ func init() {
 // NewTenantRepositoryService creates new instance of the TenantRepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
 func NewTenantRepositoryService() (contract.TenantRepositoryServiceContract, error) {
-	return &TenantRepositoryService{}, nil
+	return &tenantRepositoryService{}, nil
 }
 
 // CreateTenant creates a new tenant.
 // context: Optional The reference to the context
 // request: Mandatory. The request to create a new tenant
 // Returns either the result of creating new tenant or error if something goes wrong.
-func (service *TenantRepositoryService) CreateTenant(
+func (service *tenantRepositoryService) CreateTenant(
 	ctx context.Context,
 	request *contract.CreateTenantRequest) (*contract.CreateTenantResponse, error) {
 
@@ -46,7 +45,7 @@ func (service *TenantRepositoryService) CreateTenant(
 // context: Optional The reference to the context
 // request: Mandatory. The request to read an esiting tenant
 // Returns either the result of reading an exiting tenant or error if something goes wrong.
-func (service *TenantRepositoryService) ReadTenant(
+func (service *tenantRepositoryService) ReadTenant(
 	ctx context.Context,
 	request *contract.ReadTenantRequest) (*contract.ReadTenantResponse, error) {
 
@@ -62,7 +61,7 @@ func (service *TenantRepositoryService) ReadTenant(
 // context: Optional The reference to the context
 // request: Mandatory. The request to update an esiting tenant
 // Returns either the result of updateing an exiting tenant or error if something goes wrong.
-func (service *TenantRepositoryService) UpdateTenant(
+func (service *tenantRepositoryService) UpdateTenant(
 	ctx context.Context,
 	request *contract.UpdateTenantRequest) (*contract.UpdateTenantResponse, error) {
 
@@ -79,7 +78,7 @@ func (service *TenantRepositoryService) UpdateTenant(
 // context: Optional The reference to the context
 // request: Mandatory. The request to delete an esiting tenant
 // Returns either the result of deleting an exiting tenant or error if something goes wrong.
-func (service *TenantRepositoryService) DeleteTenant(
+func (service *tenantRepositoryService) DeleteTenant(
 	ctx context.Context,
 	request *contract.DeleteTenantRequest) (*contract.DeleteTenantResponse, error) {
 
