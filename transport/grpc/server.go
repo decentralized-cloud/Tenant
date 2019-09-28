@@ -4,13 +4,13 @@ package grpctransport
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
 
 	business "github.com/decentralized-cloud/tenant/services/business/service"
 	configuration "github.com/decentralized-cloud/tenant/services/configuration/service"
 	endpoint "github.com/decentralized-cloud/tenant/services/endpoint/service"
 	repository "github.com/decentralized-cloud/tenant/services/repository/service"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
 	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
@@ -30,48 +30,43 @@ type Server struct {
 	deleteTenantHandler gokitgrpc.Handler
 }
 
-// ListenAndServe creates a new GRPC server instance, listens on a port and start serving GRPC requests
-func (server *Server) ListenAndServe() {
+// StartListenAndServe creates a new GRPC server instance, listens on a port and start serving GRPC requests
+func (server *Server) StartListenAndServe() error {
 	if err := server.setupDependencies(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	server.setupHandlers()
 
-	errors := make(chan error)
+	portNumber, err := server.configurationService.GetPort()
+	if err != nil {
+		return err
+	}
 
-	go func() {
+	host, err := server.configurationService.GetHost()
+	if err != nil {
+		return err
+	}
 
-		portNumber, err := server.configurationService.GetPort()
-		if err != nil {
-			errors <- err
-			return
-		}
+	address := fmt.Sprintf("%s:%d", host, portNumber)
+	listener, err := net.Listen("tcp", address)
+	if err != nil {
+		return err
+	}
 
-		host, err := server.configurationService.GetHost()
-		if err != nil {
-			errors <- err
-			return
-		}
+	gRPCServer := grpc.NewServer()
+	tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, server)
 
-		address := fmt.Sprintf("%s:%d", host, portNumber)
-		listener, err := net.Listen("tcp", address)
+	logger, err := zap.NewProduction()
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			errors <- err
+	defer logger.Sync()
 
-			return
-		}
+	logger.Info("gRPC server started", zap.String("address", address))
 
-		gRPCServer := grpc.NewServer()
-
-		tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, server)
-
-		fmt.Printf("gRPC listen on %s\n", address)
-		errors <- gRPCServer.Serve(listener)
-	}()
-
-	fmt.Println(<-errors)
+	return gRPCServer.Serve(listener)
 }
 
 func (server *Server) setupDependencies() error {
