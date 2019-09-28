@@ -34,19 +34,22 @@ func PrintError(message string) {
 
 // PrintYAML takes input object, marshal it using YAML format and prints it into standard output
 // obj: Mandatory. Reference to the object to be printed
-// Returns error if something goes wrong
-func PrintYAML(obj interface{}) error {
+func PrintYAML(obj interface{}) {
 	marshal, err := yaml.Marshal(&obj)
-
 	if err != nil {
-		return err
+		PrintIfError(err)
+
+		return
 	}
 
 	_, err = os.Stdout.Write(marshal)
+	PrintIfError(err)
+}
 
+// PrintIfError print the error message if the provided err has valid error value
+// err: Optinal. The error to be printed
+func PrintIfError(err error) {
 	if err != nil {
-		return err
+		PrintError(err.Error())
 	}
-
-	return nil
 }
