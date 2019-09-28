@@ -35,15 +35,21 @@ func (service *TenantService) CreateTenant(
 	ctx context.Context,
 	request *contract.CreateTenantRequest) (*contract.CreateTenantResponse, error) {
 	if ctx == nil {
-		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+		return &contract.CreateTenantResponse{
+			Err: commonErrors.NewArgumentError("ctx", "ctx is required"),
+		}, nil
 	}
 
 	if request == nil {
-		return nil, commonErrors.NewArgumentError("request", "request is required")
+		return &contract.CreateTenantResponse{
+			Err: commonErrors.NewArgumentError("request", "request is required"),
+		}, nil
 	}
 
 	if err := request.Validate(); err != nil {
-		return nil, commonErrors.NewArgumentError("request", err.Error())
+		return &contract.CreateTenantResponse{
+			Err: commonErrors.NewArgumentError("request", err.Error()),
+		}, nil
 	}
 
 	response, err := service.repositoryService.CreateTenant(ctx, &repositoryContract.CreateTenantRequest{
@@ -52,10 +58,14 @@ func (service *TenantService) CreateTenant(
 
 	if err != nil {
 		if _, ok := err.(repositoryContract.TenantAlreadyExistsError); ok {
-			return nil, contract.NewTenantAlreadyExistsError()
+			return &contract.CreateTenantResponse{
+				Err: contract.NewTenantAlreadyExistsError(),
+			}, nil
 		}
 
-		return nil, contract.NewUnknownError(err.Error())
+		return &contract.CreateTenantResponse{
+			Err: contract.NewUnknownError(err.Error()),
+		}, nil
 	}
 
 	return &contract.CreateTenantResponse{
@@ -65,21 +75,27 @@ func (service *TenantService) CreateTenant(
 
 // ReadTenant read an existing tenant
 // context: Mandatory The reference to the context
-// request: Mandatory. The request to read an esiting tenant
+// request: Mandatory. The request to read an exiting tenant
 // Returns either the result of reading an exiting tenant or error if something goes wrong.
 func (service *TenantService) ReadTenant(
 	ctx context.Context,
 	request *contract.ReadTenantRequest) (*contract.ReadTenantResponse, error) {
 	if ctx == nil {
-		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+		return &contract.ReadTenantResponse{
+			Err: commonErrors.NewArgumentError("ctx", "ctx is required"),
+		}, nil
 	}
 
 	if request == nil {
-		return nil, commonErrors.NewArgumentError("request", "request is required")
+		return &contract.ReadTenantResponse{
+			Err: commonErrors.NewArgumentError("request", "request is required"),
+		}, nil
 	}
 
 	if err := request.Validate(); err != nil {
-		return nil, commonErrors.NewArgumentError("request", err.Error())
+		return &contract.ReadTenantResponse{
+			Err: commonErrors.NewArgumentError("request", err.Error()),
+		}, nil
 	}
 
 	response, err := service.repositoryService.ReadTenant(ctx, &repositoryContract.ReadTenantRequest{
@@ -88,10 +104,14 @@ func (service *TenantService) ReadTenant(
 
 	if err != nil {
 		if _, ok := err.(repositoryContract.TenantNotFoundError); ok {
-			return nil, contract.NewTenantNotFoundError(request.TenantID)
+			return &contract.ReadTenantResponse{
+				Err: contract.NewTenantNotFoundError(request.TenantID),
+			}, nil
 		}
 
-		return nil, contract.NewUnknownError(err.Error())
+		return &contract.ReadTenantResponse{
+			Err: contract.NewUnknownError(err.Error()),
+		}, nil
 	}
 
 	return &contract.ReadTenantResponse{
@@ -101,21 +121,27 @@ func (service *TenantService) ReadTenant(
 
 // UpdateTenant update an existing tenant
 // context: Mandatory The reference to the context
-// request: Mandatory. The request to update an esiting tenant
+// request: Mandatory. The request to update an exiting tenant
 // Returns either the result of updateing an exiting tenant or error if something goes wrong.
 func (service *TenantService) UpdateTenant(
 	ctx context.Context,
 	request *contract.UpdateTenantRequest) (*contract.UpdateTenantResponse, error) {
 	if ctx == nil {
-		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+		return &contract.UpdateTenantResponse{
+			Err: commonErrors.NewArgumentError("ctx", "ctx is required"),
+		}, nil
 	}
 
 	if request == nil {
-		return nil, commonErrors.NewArgumentError("request", "request is required")
+		return &contract.UpdateTenantResponse{
+			Err: commonErrors.NewArgumentError("request", "request is required"),
+		}, nil
 	}
 
 	if err := request.Validate(); err != nil {
-		return nil, commonErrors.NewArgumentError("request", err.Error())
+		return &contract.UpdateTenantResponse{
+			Err: commonErrors.NewArgumentError("request", err.Error()),
+		}, nil
 	}
 
 	_, err := service.repositoryService.UpdateTenant(ctx, &repositoryContract.UpdateTenantRequest{
@@ -125,10 +151,14 @@ func (service *TenantService) UpdateTenant(
 
 	if err != nil {
 		if _, ok := err.(repositoryContract.TenantNotFoundError); ok {
-			return nil, contract.NewTenantNotFoundError(request.TenantID)
+			return &contract.UpdateTenantResponse{
+				Err: contract.NewTenantNotFoundError(request.TenantID),
+			}, nil
 		}
 
-		return nil, contract.NewUnknownError(err.Error())
+		return &contract.UpdateTenantResponse{
+			Err: contract.NewUnknownError(err.Error()),
+		}, nil
 	}
 
 	return &contract.UpdateTenantResponse{}, nil
@@ -136,21 +166,27 @@ func (service *TenantService) UpdateTenant(
 
 // DeleteTenant delete an existing tenant
 // context: Mandatory The reference to the context
-// request: Mandatory. The request to delete an esiting tenant
+// request: Mandatory. The request to delete an exiting tenant
 // Returns either the result of deleting an exiting tenant or error if something goes wrong.
 func (service *TenantService) DeleteTenant(
 	ctx context.Context,
 	request *contract.DeleteTenantRequest) (*contract.DeleteTenantResponse, error) {
 	if ctx == nil {
-		return nil, commonErrors.NewArgumentError("ctx", "ctx is required")
+		return &contract.DeleteTenantResponse{
+			Err: commonErrors.NewArgumentError("ctx", "ctx is required"),
+		}, nil
 	}
 
 	if request == nil {
-		return nil, commonErrors.NewArgumentError("request", "request is required")
+		return &contract.DeleteTenantResponse{
+			Err: commonErrors.NewArgumentError("request", "request is required"),
+		}, nil
 	}
 
 	if err := request.Validate(); err != nil {
-		return nil, commonErrors.NewArgumentError("request", err.Error())
+		return &contract.DeleteTenantResponse{
+			Err: commonErrors.NewArgumentError("request", err.Error()),
+		}, nil
 	}
 
 	_, err := service.repositoryService.DeleteTenant(ctx, &repositoryContract.DeleteTenantRequest{
@@ -159,10 +195,14 @@ func (service *TenantService) DeleteTenant(
 
 	if err != nil {
 		if _, ok := err.(repositoryContract.TenantNotFoundError); ok {
-			return nil, contract.NewTenantNotFoundError(request.TenantID)
+			return &contract.DeleteTenantResponse{
+				Err: contract.NewTenantNotFoundError(request.TenantID),
+			}, nil
 		}
 
-		return nil, contract.NewUnknownError(err.Error())
+		return &contract.DeleteTenantResponse{
+			Err: contract.NewUnknownError(err.Error()),
+		}, nil
 	}
 
 	return &contract.DeleteTenantResponse{}, nil

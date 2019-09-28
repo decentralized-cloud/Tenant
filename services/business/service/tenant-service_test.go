@@ -47,7 +47,7 @@ var _ = Describe("TenantService Tests", func() {
 			})
 		})
 
-		When("all dependecies are resolved and NewTenantService is called", func() {
+		When("all dependencies are resolved and NewTenantService is called", func() {
 			It("should instantiate the new TenantService", func() {
 				service, err := service.NewTenantService(mockTenantRepositoryService)
 				Ω(err).Should(BeNil())
@@ -71,17 +71,17 @@ var _ = Describe("TenantService Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("CreateTenant is called without context", func() {
 				It("should return ArgumentError", func() {
-					response, err := sut.CreateTenant(nil, &request)
-					Ω(response).Should(BeNil())
-					assertArgumentError("ctx", "", err)
+					response, _ := sut.CreateTenant(nil, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("ctx", "", response.Err)
 				})
 			})
 
 			When("CreateTenant is called without request", func() {
 				It("should return ArgumentError", func() {
-					response, err := sut.CreateTenant(ctx, nil)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", "", err)
+					response, _ := sut.CreateTenant(ctx, nil)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", "", response.Err)
 				})
 			})
 
@@ -92,14 +92,14 @@ var _ = Describe("TenantService Tests", func() {
 							Name: "",
 						}}
 
-					response, err := sut.CreateTenant(ctx, &invalidRequest)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), err)
+					response, _ := sut.CreateTenant(ctx, &invalidRequest)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
 				})
 			})
 
 			When("CreateTenant is called with correct input paramters", func() {
-				It("should call tenant respository CreateTenant method", func() {
+				It("should call tenant repository CreateTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
 						CreateTenant(ctx, gomock.Any()).
@@ -108,8 +108,8 @@ var _ = Describe("TenantService Tests", func() {
 						}).
 						Return(&repositoryContract.CreateTenantResponse{TenantID: cuid.New()}, nil)
 
-					_, err := sut.CreateTenant(ctx, &request)
-					Ω(err).Should(BeNil())
+					response, _ := sut.CreateTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
 				})
 
 				When("And tenant repository CreateTenant return TenantAlreadyExistError", func() {
@@ -119,9 +119,9 @@ var _ = Describe("TenantService Tests", func() {
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(nil, repositoryContract.NewTenantAlreadyExistsError())
 
-						response, err := sut.CreateTenant(ctx, &request)
-						Ω(response).Should(BeNil())
-						assertTenantAlreadyExistsError(err)
+						response, _ := sut.CreateTenant(ctx, &request)
+						Ω(response.Err).ShouldNot(BeNil())
+						assertTenantAlreadyExistsError(response.Err)
 					})
 				})
 
@@ -133,9 +133,9 @@ var _ = Describe("TenantService Tests", func() {
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedError)
 
-						response, err := sut.CreateTenant(ctx, &request)
-						Ω(response).Should(BeNil())
-						assertUnknowError(expectedError.Error(), err)
+						response, _ := sut.CreateTenant(ctx, &request)
+						Ω(response.Err).ShouldNot(BeNil())
+						assertUnknowError(expectedError.Error(), response.Err)
 					})
 				})
 
@@ -147,9 +147,9 @@ var _ = Describe("TenantService Tests", func() {
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(&repositoryContract.CreateTenantResponse{TenantID: tenantID}, nil)
 
-						response, err := sut.CreateTenant(ctx, &request)
-						Ω(err).Should(BeNil())
-						Ω(response).ShouldNot(BeNil())
+						response, _ := sut.CreateTenant(ctx, &request)
+						Ω(response.Err).Should(BeNil())
+						Ω(response.TenantID).ShouldNot(BeNil())
 						Ω(response.TenantID).Should(Equal(tenantID))
 					})
 				})
@@ -171,17 +171,17 @@ var _ = Describe("TenantService Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("ReadTenant is called without context", func() {
 				It("should return ArgumentError", func() {
-					response, err := sut.ReadTenant(nil, &request)
-					Ω(response).Should(BeNil())
-					assertArgumentError("ctx", "", err)
+					response, _ := sut.ReadTenant(nil, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("ctx", "", response.Err)
 				})
 			})
 
 			When("ReadTenant is called without request", func() {
 				It("should return ArgumentError", func() {
-					response, err := sut.ReadTenant(ctx, nil)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", "", err)
+					response, _ := sut.ReadTenant(ctx, nil)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", "", response.Err)
 				})
 			})
 
@@ -191,14 +191,14 @@ var _ = Describe("TenantService Tests", func() {
 						TenantID: "",
 					}
 
-					response, err := sut.ReadTenant(ctx, &invalidRequest)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), err)
+					response, _ := sut.ReadTenant(ctx, &invalidRequest)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
 				})
 			})
 
 			When("ReadTenant is called with correct input paramters", func() {
-				It("should call tenant respository ReadTenant method", func() {
+				It("should call tenant repository ReadTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
 						ReadTenant(ctx, gomock.Any()).
@@ -207,8 +207,8 @@ var _ = Describe("TenantService Tests", func() {
 						}).
 						Return(&repositoryContract.ReadTenantResponse{Tenant: models.Tenant{Name: cuid.New()}}, nil)
 
-					_, err := sut.ReadTenant(ctx, &request)
-					Ω(err).Should(BeNil())
+					response, _ := sut.ReadTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
 				})
 			})
 
@@ -219,9 +219,9 @@ var _ = Describe("TenantService Tests", func() {
 						ReadTenant(gomock.Any(), gomock.Any()).
 						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
 
-					response, err := sut.ReadTenant(ctx, &request)
-					Ω(response).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, err)
+					response, _ := sut.ReadTenant(ctx, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertTenantNotFoundError(request.TenantID, response.Err)
 				})
 			})
 
@@ -233,9 +233,9 @@ var _ = Describe("TenantService Tests", func() {
 						ReadTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.ReadTenant(ctx, &request)
-					Ω(response).Should(BeNil())
-					assertUnknowError(expectedError.Error(), err)
+					response, _ := sut.ReadTenant(ctx, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertUnknowError(expectedError.Error(), response.Err)
 				})
 			})
 
@@ -247,9 +247,9 @@ var _ = Describe("TenantService Tests", func() {
 						ReadTenant(gomock.Any(), gomock.Any()).
 						Return(&repositoryContract.ReadTenantResponse{Tenant: tenant}, nil)
 
-					response, err := sut.ReadTenant(ctx, &request)
-					Ω(err).Should(BeNil())
-					Ω(response).ShouldNot(BeNil())
+					response, _ := sut.ReadTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
+					Ω(response.Tenant).ShouldNot(BeNil())
 					Ω(response.Tenant.Name).Should(Equal(tenant.Name))
 				})
 			})
@@ -271,17 +271,17 @@ var _ = Describe("TenantService Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("UpdateTenant is called without context", func() {
 				It("should return ArgumentError", func() {
-					response, err := sut.UpdateTenant(nil, &request)
-					Ω(response).Should(BeNil())
-					assertArgumentError("ctx", "", err)
+					response, _ := sut.UpdateTenant(nil, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("ctx", "", response.Err)
 				})
 			})
 
 			When("UpdateTenant is called without request", func() {
 				It("should return ArgumentError", func() {
-					response, err := sut.UpdateTenant(ctx, nil)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", "", err)
+					response, _ := sut.UpdateTenant(ctx, nil)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", "", response.Err)
 				})
 			})
 
@@ -292,14 +292,14 @@ var _ = Describe("TenantService Tests", func() {
 						Tenant:   models.Tenant{Name: ""},
 					}
 
-					response, err := sut.UpdateTenant(ctx, &invalidRequest)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), err)
+					response, _ := sut.UpdateTenant(ctx, &invalidRequest)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
 				})
 			})
 
 			When("UpdateTenant is called with correct input paramters", func() {
-				It("should call tenant respository UpdateTenant method", func() {
+				It("should call tenant repository UpdateTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
 						UpdateTenant(ctx, gomock.Any()).
@@ -309,8 +309,8 @@ var _ = Describe("TenantService Tests", func() {
 						}).
 						Return(&repositoryContract.UpdateTenantResponse{}, nil)
 
-					_, err := sut.UpdateTenant(ctx, &request)
-					Ω(err).Should(BeNil())
+					response, _ := sut.UpdateTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
 				})
 			})
 
@@ -321,9 +321,9 @@ var _ = Describe("TenantService Tests", func() {
 						UpdateTenant(gomock.Any(), gomock.Any()).
 						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
 
-					response, err := sut.UpdateTenant(ctx, &request)
-					Ω(response).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, err)
+					response, _ := sut.UpdateTenant(ctx, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertTenantNotFoundError(request.TenantID, response.Err)
 				})
 			})
 
@@ -335,9 +335,9 @@ var _ = Describe("TenantService Tests", func() {
 						UpdateTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.UpdateTenant(ctx, &request)
-					Ω(response).Should(BeNil())
-					assertUnknowError(expectedError.Error(), err)
+					response, _ := sut.UpdateTenant(ctx, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertUnknowError(expectedError.Error(), response.Err)
 				})
 			})
 
@@ -348,8 +348,8 @@ var _ = Describe("TenantService Tests", func() {
 						UpdateTenant(gomock.Any(), gomock.Any()).
 						Return(&repositoryContract.UpdateTenantResponse{}, nil)
 
-					_, err := sut.UpdateTenant(ctx, &request)
-					Ω(err).Should(BeNil())
+					response, _ := sut.UpdateTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
 				})
 			})
 		})
@@ -369,17 +369,17 @@ var _ = Describe("TenantService Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("context is null", func() {
 				It("should return ArgumentError and ArgumentName matches the context argument name", func() {
-					response, err := sut.DeleteTenant(nil, &request)
-					Ω(response).Should(BeNil())
-					assertArgumentError("ctx", "", err)
+					response, _ := sut.DeleteTenant(nil, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("ctx", "", response.Err)
 				})
 			})
 
 			When("request is null", func() {
 				It("should return ArgumentError and ArgumentName matches the request argument name", func() {
-					response, err := sut.DeleteTenant(ctx, nil)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", "", err)
+					response, _ := sut.DeleteTenant(ctx, nil)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", "", response.Err)
 				})
 			})
 
@@ -389,14 +389,14 @@ var _ = Describe("TenantService Tests", func() {
 						TenantID: "",
 					}
 
-					response, err := sut.DeleteTenant(ctx, &invalidRequest)
-					Ω(response).Should(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), err)
+					response, _ := sut.DeleteTenant(ctx, &invalidRequest)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
 				})
 			})
 
 			When("input paramters are valid", func() {
-				It("should call tenant respository DeleteTenant method", func() {
+				It("should call tenant repository DeleteTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
 						DeleteTenant(ctx, gomock.Any()).
@@ -405,8 +405,8 @@ var _ = Describe("TenantService Tests", func() {
 						}).
 						Return(&repositoryContract.DeleteTenantResponse{}, nil)
 
-					_, err := sut.DeleteTenant(ctx, &request)
-					Ω(err).Should(BeNil())
+					response, _ := sut.DeleteTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
 				})
 			})
 
@@ -417,9 +417,9 @@ var _ = Describe("TenantService Tests", func() {
 						DeleteTenant(gomock.Any(), gomock.Any()).
 						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
 
-					response, err := sut.DeleteTenant(ctx, &request)
-					Ω(response).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, err)
+					response, _ := sut.DeleteTenant(ctx, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertTenantNotFoundError(request.TenantID, response.Err)
 				})
 			})
 			When("tenant repository DeleteTenant is faced with any error rather than TenantNotFoundError", func() {
@@ -430,21 +430,21 @@ var _ = Describe("TenantService Tests", func() {
 						DeleteTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.DeleteTenant(ctx, &request)
-					Ω(response).Should(BeNil())
-					assertUnknowError(expectedError.Error(), err)
+					response, _ := sut.DeleteTenant(ctx, &request)
+					Ω(response.Err).ShouldNot(BeNil())
+					assertUnknowError(expectedError.Error(), response.Err)
 				})
 			})
 
-			When("tenant repository DeleteTenant compelets successfully", func() {
+			When("tenant repository DeleteTenant completes successfully", func() {
 				It("should return no error", func() {
 					mockTenantRepositoryService.
 						EXPECT().
 						DeleteTenant(gomock.Any(), gomock.Any()).
 						Return(&repositoryContract.DeleteTenantResponse{}, nil)
 
-					_, err := sut.DeleteTenant(ctx, &request)
-					Ω(err).Should(BeNil())
+					response, _ := sut.DeleteTenant(ctx, &request)
+					Ω(response.Err).Should(BeNil())
 				})
 			})
 		})

@@ -19,7 +19,7 @@ func (e UnknownError) Error() string {
 func NewUnknownError(errorMessage string) error {
 	return UnknownError{
 		ErrorMessage: errorMessage,
-		message:      fmt.Sprintf("Unknow error occurs. Error message is: %s", errorMessage),
+		message:      fmt.Sprintf("Unknown error occurs. Error message is: %s", errorMessage),
 	}
 }
 

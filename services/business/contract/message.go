@@ -11,6 +11,7 @@ type CreateTenantRequest struct {
 // CreateTenantResponse contains the result of creating a new tenant
 type CreateTenantResponse struct {
 	TenantID string
+	Err      error
 }
 
 // ReadTenantRequest contains the request to read an existing tenant
@@ -21,6 +22,7 @@ type ReadTenantRequest struct {
 // ReadTenantResponse contains the result of reading an existing tenant
 type ReadTenantResponse struct {
 	Tenant models.Tenant
+	Err    error
 }
 
 // UpdateTenantRequest contains the request to update an existing tenant
@@ -31,6 +33,7 @@ type UpdateTenantRequest struct {
 
 // UpdateTenantResponse contains the result of updating an existing tenant
 type UpdateTenantResponse struct {
+	Err error
 }
 
 // DeleteTenantRequest contains the request to delete an existing tenant
@@ -40,4 +43,5 @@ type DeleteTenantRequest struct {
 
 // DeleteTenantResponse contains the result of deleting an existing tenant
 type DeleteTenantResponse struct {
+	Err error
 }
