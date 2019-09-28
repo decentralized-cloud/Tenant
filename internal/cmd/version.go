@@ -2,7 +2,7 @@
 package cmd
 
 import (
-	"github.com/decentralized-cloud/tenant/pkg/util"
+	"github.com/micro-business/go-core/pkg/util"
 	"github.com/spf13/cobra"
 )
 
