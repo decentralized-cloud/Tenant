@@ -9,12 +9,12 @@ import (
 	commonErrors "github.com/micro-business/go-core/system/errors"
 )
 
-// TenantService implements the service that create new tenant, read, update and delete existing tenants.
-type TenantService struct {
+type tenantService struct {
 	repositoryService repositoryContract.TenantRepositoryServiceContract
 }
 
 // NewTenantService creates new instance of the TenantService, setting up all dependencies and returns the instance
+// repositoryService: Mandatory. Reference to the repository service that can persist the tenant related data
 // Returns the new service or error if something goes wrong
 func NewTenantService(
 	repositoryService repositoryContract.TenantRepositoryServiceContract) (contract.TenantServiceContract, error) {
@@ -22,7 +22,7 @@ func NewTenantService(
 		return nil, commonErrors.NewArgumentError("repositoryService", "repositoryService is required")
 	}
 
-	return &TenantService{
+	return &tenantService{
 		repositoryService: repositoryService,
 	}, nil
 }
@@ -31,7 +31,7 @@ func NewTenantService(
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to create a new tenant
 // Returns either the result of creating new tenant or error if something goes wrong.
-func (service *TenantService) CreateTenant(
+func (service *tenantService) CreateTenant(
 	ctx context.Context,
 	request *contract.CreateTenantRequest) (*contract.CreateTenantResponse, error) {
 	if ctx == nil {
@@ -67,7 +67,7 @@ func (service *TenantService) CreateTenant(
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to read an esiting tenant
 // Returns either the result of reading an exiting tenant or error if something goes wrong.
-func (service *TenantService) ReadTenant(
+func (service *tenantService) ReadTenant(
 	ctx context.Context,
 	request *contract.ReadTenantRequest) (*contract.ReadTenantResponse, error) {
 	if ctx == nil {
@@ -103,7 +103,7 @@ func (service *TenantService) ReadTenant(
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to update an esiting tenant
 // Returns either the result of updateing an exiting tenant or error if something goes wrong.
-func (service *TenantService) UpdateTenant(
+func (service *tenantService) UpdateTenant(
 	ctx context.Context,
 	request *contract.UpdateTenantRequest) (*contract.UpdateTenantResponse, error) {
 	if ctx == nil {
@@ -138,7 +138,7 @@ func (service *TenantService) UpdateTenant(
 // context: Mandatory The reference to the context
 // request: Mandatory. The request to delete an esiting tenant
 // Returns either the result of deleting an exiting tenant or error if something goes wrong.
-func (service *TenantService) DeleteTenant(
+func (service *tenantService) DeleteTenant(
 	ctx context.Context,
 	request *contract.DeleteTenantRequest) (*contract.DeleteTenantResponse, error) {
 	if ctx == nil {

@@ -8,19 +8,18 @@ import (
 	"github.com/decentralized-cloud/tenant/services/configuration/contract"
 )
 
-// ConfigurationService implements the service that provides configuration required by different Tenat modules
-type ConfigurationService struct {
+type configurationService struct {
 }
 
 // NewConfigurationService creates new instance of the ConfigurationService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
 func NewConfigurationService() (contract.ConfigurationServiceContract, error) {
-	return &ConfigurationService{}, nil
+	return &configurationService{}, nil
 }
 
-// GetPort retrieves port number from environment variable
-// Returns the port number or error if something goes wrong
-func (service *ConfigurationService) GetPort() (int, error) {
+// GetGRPCPort retrieves gRPC port number from environment variable
+// Returns the gRPC port number or error if something goes wrong
+func (service *configurationService) GetGRPCPort() (int, error) {
 	portNumberString := os.Getenv("PORT")
 	portNumber, err := strconv.Atoi(portNumberString)
 
@@ -31,9 +30,9 @@ func (service *ConfigurationService) GetPort() (int, error) {
 	return portNumber, nil
 }
 
-// GetHost retrieves host from environment variable
-// Returns the host or error if something goes wrong
-func (service *ConfigurationService) GetHost() (string, error) {
+// GetGRPCHostName retrieves gRPC host name from environment variable
+// Returns the gRPC host name or error if something goes wrong
+func (service *configurationService) GetGRPCHost() (string, error) {
 	hostName := os.Getenv("HOST")
 
 	return hostName, nil
