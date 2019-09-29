@@ -7,6 +7,7 @@ import (
 	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
 	"github.com/decentralized-cloud/tenant/models"
 	businessContract "github.com/decentralized-cloud/tenant/services/business/contract"
+	commonErrors "github.com/micro-business/go-core/system/errors"
 )
 
 // decodeCreateTenantRequest decodes CreateTenant request message from GRPC object to business object
@@ -33,8 +34,17 @@ func encodeCreateTenantResponse(
 	response interface{}) (interface{}, error) {
 	castedResponse := response.(*businessContract.CreateTenantResponse)
 
+	if castedResponse.Err == nil {
+		return &tenantGRPCContract.CreateTenantResponse{
+			TenantID: castedResponse.TenantID,
+			Error:    tenantGRPCContract.Error_NO_ERROR,
+		}, nil
+	}
+
+	err := mapError(castedResponse.Err)
 	return &tenantGRPCContract.CreateTenantResponse{
-		TenantID: castedResponse.TenantID,
+		Error:        err,
+		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
 
@@ -61,10 +71,20 @@ func encodeReadTenantResponse(
 	response interface{}) (interface{}, error) {
 	castedResponse := response.(*businessContract.ReadTenantResponse)
 
+	if castedResponse.Err == nil {
+		return &tenantGRPCContract.ReadTenantResponse{
+			Tenant: &tenantGRPCContract.Tenant{
+				Name: castedResponse.Tenant.Name,
+			},
+			Error: tenantGRPCContract.Error_NO_ERROR,
+		}, nil
+	}
+
+	err := mapError(castedResponse.Err)
 	return &tenantGRPCContract.ReadTenantResponse{
-		Tenant: &tenantGRPCContract.Tenant{
-			Name: castedResponse.Tenant.Name,
-		}}, nil
+		Error:        err,
+		ErrorMessage: castedResponse.Err.Error(),
+	}, nil
 }
 
 // decodeUpdateTenantRequest decodes UpdateTenant request message from GRPC object to business object
@@ -90,7 +110,19 @@ func decodeUpdateTenantRequest(
 func encodeUpdateTenantResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	return &tenantGRPCContract.UpdateTenantResponse{}, nil
+	castedResponse := response.(*businessContract.UpdateTenantResponse)
+
+	if castedResponse.Err == nil {
+		return &tenantGRPCContract.UpdateTenantResponse{
+			Error: tenantGRPCContract.Error_NO_ERROR,
+		}, nil
+	}
+
+	err := mapError(castedResponse.Err)
+	return &tenantGRPCContract.UpdateTenantResponse{
+		Error:        err,
+		ErrorMessage: castedResponse.Err.Error(),
+	}, nil
 }
 
 // decodeDeleteTenantRequest decodes DeleteTenant request message from GRPC object to business object
@@ -114,5 +146,32 @@ func decodeDeleteTenantRequest(
 func encodeDeleteTenantResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	return &tenantGRPCContract.DeleteTenantResponse{}, nil
+	castedResponse := response.(*businessContract.DeleteTenantResponse)
+	if castedResponse.Err == nil {
+		return &tenantGRPCContract.DeleteTenantResponse{
+			Error: tenantGRPCContract.Error_NO_ERROR,
+		}, nil
+	}
+
+	err := mapError(castedResponse.Err)
+	return &tenantGRPCContract.DeleteTenantResponse{
+		Error:        err,
+		ErrorMessage: castedResponse.Err.Error(),
+	}, nil
+}
+
+func mapError(err error) tenantGRPCContract.Error {
+
+	switch err.(type) {
+	case businessContract.UnknownError:
+		return tenantGRPCContract.Error_UNKNOWN
+	case businessContract.TenantAlreadyExistsError:
+		return tenantGRPCContract.Error_TENANT_ALREADY_EXISTS
+	case businessContract.TenantNotFoundError:
+		return tenantGRPCContract.Error_TENANT_NOT_FOUND
+	case commonErrors.ArgumentError:
+		return tenantGRPCContract.Error_BAD_REQUEST
+	}
+
+	panic("Error type undefined.")
 }
