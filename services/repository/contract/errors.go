@@ -3,7 +3,7 @@ package contract
 
 import "fmt"
 
-// UnknownError indicates that the tenant with the given information already exists
+// UnknownError indicates that an unknown error has happened
 type UnknownError struct {
 	Message string
 	Err     error
