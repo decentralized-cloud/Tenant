@@ -69,6 +69,7 @@ func (service *tenantRepositoryService) UpdateTenant(
 	if !ok {
 		return nil, contract.NewTenantNotFoundError(request.TenantID)
 	}
+
 	tenants[request.TenantID] = request.Tenant
 
 	return &contract.UpdateTenantResponse{}, nil
@@ -86,6 +87,7 @@ func (service *tenantRepositoryService) DeleteTenant(
 	if !ok {
 		return nil, contract.NewTenantNotFoundError(request.TenantID)
 	}
+
 	delete(tenants, request.TenantID)
 
 	return &contract.DeleteTenantResponse{}, nil

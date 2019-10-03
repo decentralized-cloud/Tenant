@@ -41,9 +41,8 @@ func encodeCreateTenantResponse(
 		}, nil
 	}
 
-	err := mapError(castedResponse.Err)
 	return &tenantGRPCContract.CreateTenantResponse{
-		Error:        err,
+		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
@@ -80,9 +79,8 @@ func encodeReadTenantResponse(
 		}, nil
 	}
 
-	err := mapError(castedResponse.Err)
 	return &tenantGRPCContract.ReadTenantResponse{
-		Error:        err,
+		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
@@ -118,9 +116,8 @@ func encodeUpdateTenantResponse(
 		}, nil
 	}
 
-	err := mapError(castedResponse.Err)
 	return &tenantGRPCContract.UpdateTenantResponse{
-		Error:        err,
+		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
@@ -153,23 +150,26 @@ func encodeDeleteTenantResponse(
 		}, nil
 	}
 
-	err := mapError(castedResponse.Err)
 	return &tenantGRPCContract.DeleteTenantResponse{
-		Error:        err,
+		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
 
 func mapError(err error) tenantGRPCContract.Error {
-
-	switch err.(type) {
-	case businessContract.UnknownError:
+	if businessContract.IsUnknownError(err) {
 		return tenantGRPCContract.Error_UNKNOWN
-	case businessContract.TenantAlreadyExistsError:
+	}
+
+	if businessContract.IsTenantAlreadyExistsError(err) {
 		return tenantGRPCContract.Error_TENANT_ALREADY_EXISTS
-	case businessContract.TenantNotFoundError:
+	}
+
+	if businessContract.IsTenantNotFoundError(err) {
 		return tenantGRPCContract.Error_TENANT_NOT_FOUND
-	case commonErrors.ArgumentError:
+	}
+
+	if commonErrors.IsArgumentNilError(err) || commonErrors.IsArgumentError(err) {
 		return tenantGRPCContract.Error_BAD_REQUEST
 	}
 

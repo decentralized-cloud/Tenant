@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/decentralized-cloud/tenant/models"
@@ -96,8 +97,11 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				notFoundErr, ok := err.(contract.TenantNotFoundError)
-				Ω(ok).Should(BeTrue())
+				Ω(contract.IsTenantNotFoundError(err)).Should(BeTrue())
+
+				var notFoundErr contract.TenantNotFoundError
+				_ = errors.As(err, &notFoundErr)
+
 				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
 			})
 		})
@@ -118,8 +122,11 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				notFoundErr, ok := err.(contract.TenantNotFoundError)
-				Ω(ok).Should(BeTrue())
+				Ω(contract.IsTenantNotFoundError(err)).Should(BeTrue())
+
+				var notFoundErr contract.TenantNotFoundError
+				_ = errors.As(err, &notFoundErr)
+
 				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
 			})
 		})
@@ -135,8 +142,11 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				notFoundErr, ok := err.(contract.TenantNotFoundError)
-				Ω(ok).Should(BeTrue())
+				Ω(contract.IsTenantNotFoundError(err)).Should(BeTrue())
+
+				var notFoundErr contract.TenantNotFoundError
+				_ = errors.As(err, &notFoundErr)
+
 				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
 			})
 		})
@@ -147,8 +157,11 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				notFoundErr, ok := err.(contract.TenantNotFoundError)
-				Ω(ok).Should(BeTrue())
+				Ω(contract.IsTenantNotFoundError(err)).Should(BeTrue())
+
+				var notFoundErr contract.TenantNotFoundError
+				_ = errors.As(err, &notFoundErr)
+
 				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
 			})
 		})
