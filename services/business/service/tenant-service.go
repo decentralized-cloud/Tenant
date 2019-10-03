@@ -57,14 +57,14 @@ func (service *tenantService) CreateTenant(
 	})
 
 	if err != nil {
-		if _, ok := err.(repositoryContract.TenantAlreadyExistsError); ok {
+		if repositoryContract.IsTenantAlreadyExistsError(err) {
 			return &contract.CreateTenantResponse{
-				Err: contract.NewTenantAlreadyExistsError(),
+				Err: contract.NewTenantAlreadyExistsErrorWithError(err),
 			}, nil
 		}
 
 		return &contract.CreateTenantResponse{
-			Err: contract.NewUnknownError(err.Error()),
+			Err: contract.NewUnknownErrorWithError("", err),
 		}, nil
 	}
 
@@ -103,14 +103,14 @@ func (service *tenantService) ReadTenant(
 	})
 
 	if err != nil {
-		if _, ok := err.(repositoryContract.TenantNotFoundError); ok {
+		if repositoryContract.IsTenantNotFoundError(err) {
 			return &contract.ReadTenantResponse{
-				Err: contract.NewTenantNotFoundError(request.TenantID),
+				Err: contract.NewTenantNotFoundErrorWithError(request.TenantID, err),
 			}, nil
 		}
 
 		return &contract.ReadTenantResponse{
-			Err: contract.NewUnknownError(err.Error()),
+			Err: contract.NewUnknownErrorWithError("", err),
 		}, nil
 	}
 
@@ -150,14 +150,14 @@ func (service *tenantService) UpdateTenant(
 	})
 
 	if err != nil {
-		if _, ok := err.(repositoryContract.TenantNotFoundError); ok {
+		if repositoryContract.IsTenantNotFoundError(err) {
 			return &contract.UpdateTenantResponse{
-				Err: contract.NewTenantNotFoundError(request.TenantID),
+				Err: contract.NewTenantNotFoundErrorWithError(request.TenantID, err),
 			}, nil
 		}
 
 		return &contract.UpdateTenantResponse{
-			Err: contract.NewUnknownError(err.Error()),
+			Err: contract.NewUnknownErrorWithError("", err),
 		}, nil
 	}
 
@@ -194,14 +194,14 @@ func (service *tenantService) DeleteTenant(
 	})
 
 	if err != nil {
-		if _, ok := err.(repositoryContract.TenantNotFoundError); ok {
+		if repositoryContract.IsTenantNotFoundError(err) {
 			return &contract.DeleteTenantResponse{
-				Err: contract.NewTenantNotFoundError(request.TenantID),
+				Err: contract.NewTenantNotFoundErrorWithError(request.TenantID, err),
 			}, nil
 		}
 
 		return &contract.DeleteTenantResponse{
-			Err: contract.NewUnknownError(err.Error()),
+			Err: contract.NewUnknownErrorWithError("", err),
 		}, nil
 	}
 

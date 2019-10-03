@@ -117,14 +117,15 @@ var _ = Describe("TenantService Tests", func() {
 
 				When("And tenant repository CreateTenant return TenantAlreadyExistError", func() {
 					It("should return TenantAlreadyExistsError", func() {
+						expectedError := repositoryContract.NewTenantAlreadyExistsError()
 						mockTenantRepositoryService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
-							Return(nil, repositoryContract.NewTenantAlreadyExistsError())
+							Return(nil, expectedError)
 
 						response, err := sut.CreateTenant(ctx, &request)
 						Ω(err).Should(BeNil())
-						assertTenantAlreadyExistsError(response.Err)
+						assertTenantAlreadyExistsError(response.Err, expectedError)
 					})
 				})
 
@@ -138,7 +139,7 @@ var _ = Describe("TenantService Tests", func() {
 
 						response, err := sut.CreateTenant(ctx, &request)
 						Ω(err).Should(BeNil())
-						assertUnknowError(expectedError.Error(), response.Err)
+						assertUnknowError(expectedError.Error(), response.Err, expectedError)
 					})
 				})
 
@@ -220,14 +221,15 @@ var _ = Describe("TenantService Tests", func() {
 
 			When("And tenant repository ReadTenant return TenantNotFoundError", func() {
 				It("should return TenantNotFoundError", func() {
+					expectedError := repositoryContract.NewTenantNotFoundError(request.TenantID)
 					mockTenantRepositoryService.
 						EXPECT().
 						ReadTenant(gomock.Any(), gomock.Any()).
-						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
+						Return(nil, expectedError)
 
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, response.Err)
+					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
 				})
 			})
 
@@ -241,7 +243,7 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err)
+					assertUnknowError(expectedError.Error(), response.Err, expectedError)
 				})
 			})
 
@@ -325,14 +327,15 @@ var _ = Describe("TenantService Tests", func() {
 
 			When("And tenant repository UpdateTenant return TenantNotFoundError", func() {
 				It("should return TenantNotFoundError", func() {
+					expectedError := repositoryContract.NewTenantNotFoundError(request.TenantID)
 					mockTenantRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).
-						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
+						Return(nil, expectedError)
 
 					response, err := sut.UpdateTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, response.Err)
+					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
 				})
 			})
 
@@ -346,7 +349,7 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.UpdateTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err)
+					assertUnknowError(expectedError.Error(), response.Err, expectedError)
 				})
 			})
 
@@ -424,14 +427,15 @@ var _ = Describe("TenantService Tests", func() {
 
 			When("tenant repository DeleteTenant can not find matched tenant", func() {
 				It("should return TenantNotFoundError", func() {
+					expectedError := repositoryContract.NewTenantNotFoundError(request.TenantID)
 					mockTenantRepositoryService.
 						EXPECT().
 						DeleteTenant(gomock.Any(), gomock.Any()).
-						Return(nil, repositoryContract.NewTenantNotFoundError(request.TenantID))
+						Return(nil, expectedError)
 
 					response, err := sut.DeleteTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, response.Err)
+					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
 				})
 			})
 			When("tenant repository DeleteTenant is faced with any error rather than TenantNotFoundError", func() {
@@ -444,7 +448,7 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.DeleteTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err)
+					assertUnknowError(expectedError.Error(), response.Err, expectedError)
 				})
 			})
 
@@ -495,29 +499,27 @@ func assertArgumentError(expectedArgumentName, expectedMessage string, err error
 	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
-func assertUnknowError(expectedErrorMessage string, err error) {
-	Ω(err).Should(HaveOccurred())
+func assertUnknowError(expectedMessage string, err error, nestedErr error) {
+	Ω(contract.IsUnknownError(err)).Should(BeTrue())
 
-	castedErr, ok := err.(contract.UnknownError)
-	Ω(ok).Should(BeTrue())
+	var unknownErr contract.UnknownError
+	_ = errors.As(err, &unknownErr)
 
-	if expectedErrorMessage != "" {
-		Ω(castedErr.ErrorMessage).Should(Equal(expectedErrorMessage))
-	}
+	Ω(strings.Contains(unknownErr.Error(), expectedMessage)).Should(BeTrue())
+	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
-func assertTenantNotFoundError(expectedTenantID string, err error) {
-	Ω(err).Should(HaveOccurred())
-
-	castedErr, ok := err.(contract.TenantNotFoundError)
-	Ω(ok).Should(BeTrue())
-
-	Ω(castedErr.TenantID).Should(Equal(expectedTenantID))
+func assertTenantAlreadyExistsError(err error, nestedErr error) {
+	Ω(contract.IsTenantAlreadyExistsError(err)).Should(BeTrue())
+	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
-func assertTenantAlreadyExistsError(err error) {
-	Ω(err).Should(HaveOccurred())
+func assertTenantNotFoundError(expectedTenantID string, err error, nestedErr error) {
+	Ω(contract.IsTenantNotFoundError(err)).Should(BeTrue())
 
-	_, ok := err.(contract.TenantAlreadyExistsError)
-	Ω(ok).Should(BeTrue())
+	var tenantNotFoundErr contract.TenantNotFoundError
+	_ = errors.As(err, &tenantNotFoundErr)
+
+	Ω(tenantNotFoundErr.TenantID).Should(Equal(expectedTenantID))
+	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
