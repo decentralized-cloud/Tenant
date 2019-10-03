@@ -3,6 +3,7 @@ package service_test
 import (
 	"context"
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/decentralized-cloud/tenant/models"
@@ -40,10 +41,10 @@ var _ = Describe("TenantService Tests", func() {
 
 	Context("user tries to instantiate TenantService", func() {
 		When("tenant repository service is not provided and NewTenantService is called", func() {
-			It("should return ArgumentError", func() {
+			It("should return ArgumentNilError", func() {
 				service, err := service.NewTenantService(nil)
 				Ω(service).Should(BeNil())
-				assertArgumentError("repositoryService", "", err)
+				assertArgumentNilError("repositoryService", "", err)
 			})
 		})
 
@@ -70,25 +71,23 @@ var _ = Describe("TenantService Tests", func() {
 
 		Context("tenant service is instantiated", func() {
 			When("CreateTenant is called without context", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					response, err := sut.CreateTenant(nil, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("ctx", "", response.Err)
+					assertArgumentNilError("ctx", "", response.Err)
 				})
 			})
 
 			When("CreateTenant is called without request", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					response, err := sut.CreateTenant(ctx, nil)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", "", response.Err)
+					assertArgumentNilError("request", "", response.Err)
 				})
 			})
 
 			When("CreateTenant is called with invalid request", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					invalidRequest := contract.CreateTenantRequest{
 						Tenant: models.Tenant{
 							Name: "",
@@ -96,8 +95,8 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.CreateTenant(ctx, &invalidRequest)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
+					validationErr := invalidRequest.Validate()
+					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
 				})
 			})
 
@@ -125,7 +124,6 @@ var _ = Describe("TenantService Tests", func() {
 
 						response, err := sut.CreateTenant(ctx, &request)
 						Ω(err).Should(BeNil())
-						Ω(response.Err).ShouldNot(BeNil())
 						assertTenantAlreadyExistsError(response.Err)
 					})
 				})
@@ -140,7 +138,6 @@ var _ = Describe("TenantService Tests", func() {
 
 						response, err := sut.CreateTenant(ctx, &request)
 						Ω(err).Should(BeNil())
-						Ω(response.Err).ShouldNot(BeNil())
 						assertUnknowError(expectedError.Error(), response.Err)
 					})
 				})
@@ -177,33 +174,31 @@ var _ = Describe("TenantService Tests", func() {
 
 		Context("tenant service is instantiated", func() {
 			When("ReadTenant is called without context", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					response, err := sut.ReadTenant(nil, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("ctx", "", response.Err)
+					assertArgumentNilError("ctx", "", response.Err)
 				})
 			})
 
 			When("ReadTenant is called without request", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					response, err := sut.ReadTenant(ctx, nil)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", "", response.Err)
+					assertArgumentNilError("request", "", response.Err)
 				})
 			})
 
 			When("ReadTenant is called with invalid request", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					invalidRequest := contract.ReadTenantRequest{
 						TenantID: "",
 					}
 
 					response, err := sut.ReadTenant(ctx, &invalidRequest)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
+					validationErr := invalidRequest.Validate()
+					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
 				})
 			})
 
@@ -232,7 +227,6 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
 					assertTenantNotFoundError(request.TenantID, response.Err)
 				})
 			})
@@ -247,7 +241,6 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
 					assertUnknowError(expectedError.Error(), response.Err)
 				})
 			})
@@ -284,25 +277,23 @@ var _ = Describe("TenantService Tests", func() {
 
 		Context("tenant service is instantiated", func() {
 			When("UpdateTenant is called without context", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					response, err := sut.UpdateTenant(nil, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("ctx", "", response.Err)
+					assertArgumentNilError("ctx", "", response.Err)
 				})
 			})
 
 			When("UpdateTenant is called without request", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					response, err := sut.UpdateTenant(ctx, nil)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", "", response.Err)
+					assertArgumentNilError("request", "", response.Err)
 				})
 			})
 
 			When("UpdateTenant is called with invalid request", func() {
-				It("should return ArgumentError", func() {
+				It("should return ArgumentNilError", func() {
 					invalidRequest := contract.UpdateTenantRequest{
 						TenantID: "",
 						Tenant:   models.Tenant{Name: ""},
@@ -310,8 +301,8 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.UpdateTenant(ctx, &invalidRequest)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
+					validationErr := invalidRequest.Validate()
+					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
 				})
 			})
 
@@ -341,7 +332,6 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.UpdateTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
 					assertTenantNotFoundError(request.TenantID, response.Err)
 				})
 			})
@@ -356,7 +346,6 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.UpdateTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
 					assertUnknowError(expectedError.Error(), response.Err)
 				})
 			})
@@ -389,33 +378,31 @@ var _ = Describe("TenantService Tests", func() {
 
 		Context("tenant service is instantiated", func() {
 			When("context is null", func() {
-				It("should return ArgumentError and ArgumentName matches the context argument name", func() {
+				It("should return ArgumentNilError and ArgumentName matches the context argument name", func() {
 					response, err := sut.DeleteTenant(nil, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("ctx", "", response.Err)
+					assertArgumentNilError("ctx", "", response.Err)
 				})
 			})
 
 			When("request is null", func() {
-				It("should return ArgumentError and ArgumentName matches the request argument name", func() {
+				It("should return ArgumentNilError and ArgumentName matches the request argument name", func() {
 					response, err := sut.DeleteTenant(ctx, nil)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", "", response.Err)
+					assertArgumentNilError("request", "", response.Err)
 				})
 			})
 
 			When("request is invalid", func() {
-				It("should return ArgumentError and both ArgumentName and ErrorMessage are matched", func() {
+				It("should return ArgumentNilError and both ArgumentName and ErrorMessage are matched", func() {
 					invalidRequest := contract.DeleteTenantRequest{
 						TenantID: "",
 					}
 
 					response, err := sut.DeleteTenant(ctx, &invalidRequest)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
-					assertArgumentError("request", invalidRequest.Validate().Error(), response.Err)
+					validationErr := invalidRequest.Validate()
+					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
 				})
 			})
 
@@ -444,7 +431,6 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.DeleteTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
 					assertTenantNotFoundError(request.TenantID, response.Err)
 				})
 			})
@@ -458,7 +444,6 @@ var _ = Describe("TenantService Tests", func() {
 
 					response, err := sut.DeleteTenant(ctx, &request)
 					Ω(err).Should(BeNil())
-					Ω(response.Err).ShouldNot(BeNil())
 					assertUnknowError(expectedError.Error(), response.Err)
 				})
 			})
@@ -484,19 +469,30 @@ func TestTenantService(t *testing.T) {
 	RunSpecs(t, "TenantService Tests")
 }
 
-func assertArgumentError(expectedArgumentName, expectedErrorMessage string, err error) {
-	Ω(err).Should(HaveOccurred())
+func assertArgumentNilError(expectedArgumentName, expectedMessage string, err error) {
+	Ω(commonErrors.IsArgumentNilError(err)).Should(BeTrue())
 
-	castedErr, ok := err.(commonErrors.ArgumentError)
-	Ω(ok).Should(BeTrue())
+	var argumentNilErr commonErrors.ArgumentNilError
+	_ = errors.As(err, &argumentNilErr)
 
 	if expectedArgumentName != "" {
-		Ω(castedErr.ArgumentName).Should(Equal(expectedArgumentName))
+		Ω(argumentNilErr.ArgumentName).Should(Equal(expectedArgumentName))
 	}
 
-	if expectedErrorMessage != "" {
-		Ω(castedErr.ErrorMessage).Should(Equal(expectedErrorMessage))
+	if expectedMessage != "" {
+		Ω(strings.Contains(argumentNilErr.Error(), expectedMessage)).Should(BeTrue())
 	}
+}
+
+func assertArgumentError(expectedArgumentName, expectedMessage string, err error, nestedErr error) {
+	Ω(commonErrors.IsArgumentError(err)).Should(BeTrue())
+
+	var argumentErr commonErrors.ArgumentError
+	_ = errors.As(err, &argumentErr)
+
+	Ω(argumentErr.ArgumentName).Should(Equal(expectedArgumentName))
+	Ω(strings.Contains(argumentErr.Error(), expectedMessage)).Should(BeTrue())
+	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
 func assertUnknowError(expectedErrorMessage string, err error) {
