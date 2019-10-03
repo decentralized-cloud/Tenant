@@ -7,6 +7,7 @@ import (
 	"github.com/micro-business/go-core/pkg/util"
 )
 
+// NewRootCommand returns root CLI application command interface
 func NewRootCommand() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use: "tenant",

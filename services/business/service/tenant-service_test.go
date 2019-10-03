@@ -100,7 +100,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("CreateTenant is called with correct input paramters", func() {
+			When("CreateTenant is called with correct input parameters", func() {
 				It("should call tenant repository CreateTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -203,7 +203,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("ReadTenant is called with correct input paramters", func() {
+			When("ReadTenant is called with correct input parameters", func() {
 				It("should call tenant repository ReadTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -308,7 +308,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("UpdateTenant is called with correct input paramters", func() {
+			When("UpdateTenant is called with correct input parameters", func() {
 				It("should call tenant repository UpdateTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -409,7 +409,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("input paramters are valid", func() {
+			When("input parameters are valid", func() {
 				It("should call tenant repository DeleteTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().

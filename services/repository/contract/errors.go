@@ -19,10 +19,12 @@ func (e UnknownError) Error() string {
 	return fmt.Sprintf("Unknown error occurred. Error message: %s. Error: %s", e.Message, e.Err.Error())
 }
 
+// Unwrap returns the err if provided through NewUnknownErrorWithError function, otherwise returns nil
 func (e UnknownError) Unwrap() error {
 	return e.Err
 }
 
+// IsUnknownError indicates whether the error is of type UnknownError
 func IsUnknownError(err error) bool {
 	_, ok := err.(UnknownError)
 
@@ -59,10 +61,12 @@ func (e TenantAlreadyExistsError) Error() string {
 	return fmt.Sprintf("Tenant already exists. Error: %s", e.Err.Error())
 }
 
+// Unwrap returns the err if provided through NewTenantAlreadyExistsErrorWithError function, otherwise returns nil
 func (e TenantAlreadyExistsError) Unwrap() error {
 	return e.Err
 }
 
+// IsTenantAlreadyExistsError indicates whether the error is of type TenantAlreadyExistsError
 func IsTenantAlreadyExistsError(err error) bool {
 	_, ok := err.(TenantAlreadyExistsError)
 
@@ -97,10 +101,12 @@ func (e TenantNotFoundError) Error() string {
 	return fmt.Sprintf("Tenant not found. TenantID: %s. Error: %s", e.TenantID, e.Err.Error())
 }
 
+// Unwrap returns the err if provided through NewTenantNotFoundErrorWithError function, otherwise returns nil
 func (e TenantNotFoundError) Unwrap() error {
 	return e.Err
 }
 
+// IsTenantNotFoundError indicates whether the error is of type TenantNotFoundError
 func IsTenantNotFoundError(err error) bool {
 	_, ok := err.(TenantNotFoundError)
 
