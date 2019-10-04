@@ -117,7 +117,7 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 		})
 
 		When("user reads the tenant", func() {
-			It("should return NotgFoundError", func() {
+			It("should return NotFoundError", func() {
 				response, err := sut.ReadTenant(ctx, &contract.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
@@ -132,7 +132,7 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 		})
 
 		When("user tries to update the tenant", func() {
-			It("should return NotgFoundError", func() {
+			It("should return NotFoundError", func() {
 				updateRequest := contract.UpdateTenantRequest{
 					TenantID: tenantID,
 					Tenant: models.Tenant{
@@ -152,7 +152,7 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 		})
 
 		When("user tries to delete the tenant", func() {
-			It("should return NotgFoundError", func() {
+			It("should return NotFoundError", func() {
 				response, err := sut.DeleteTenant(ctx, &contract.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
