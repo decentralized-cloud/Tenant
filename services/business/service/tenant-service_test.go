@@ -129,7 +129,7 @@ var _ = Describe("TenantService Tests", func() {
 					})
 				})
 
-				When("And tenant repository CreateTenant return any error rather than TenantAlreadyExistsError", func() {
+				When("And tenant repository CreateTenant return any other error", func() {
 					It("should return UnknownError", func() {
 						expectedError := errors.New(cuid.New())
 						mockTenantRepositoryService.
@@ -219,7 +219,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("And tenant repository ReadTenant return TenantNotFoundError", func() {
+			When("And tenant repository ReadTenant cannot find provided tenant", func() {
 				It("should return TenantNotFoundError", func() {
 					expectedError := repositoryContract.NewTenantNotFoundError(request.TenantID)
 					mockTenantRepositoryService.
@@ -233,7 +233,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("And tenant repository ReadTenant return any error rather than TenantNotFoundError", func() {
+			When("And tenant repository ReadTenant return any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockTenantRepositoryService.
@@ -325,7 +325,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("And tenant repository UpdateTenant return TenantNotFoundError", func() {
+			When("And tenant repository UpdateTenant cannot find provided tenant", func() {
 				It("should return TenantNotFoundError", func() {
 					expectedError := repositoryContract.NewTenantNotFoundError(request.TenantID)
 					mockTenantRepositoryService.
@@ -339,7 +339,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("And tenant repository UpdateTenant return any error rather than TenantNotFoundError", func() {
+			When("And tenant repository UpdateTenant return any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockTenantRepositoryService.
@@ -425,7 +425,7 @@ var _ = Describe("TenantService Tests", func() {
 				})
 			})
 
-			When("tenant repository DeleteTenant can not find matched tenant", func() {
+			When("tenant repository DeleteTenant cannot find provided tenant", func() {
 				It("should return TenantNotFoundError", func() {
 					expectedError := repositoryContract.NewTenantNotFoundError(request.TenantID)
 					mockTenantRepositoryService.
@@ -438,7 +438,7 @@ var _ = Describe("TenantService Tests", func() {
 					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
 				})
 			})
-			When("tenant repository DeleteTenant is faced with any error rather than TenantNotFoundError", func() {
+			When("tenant repository DeleteTenant is faced with any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockTenantRepositoryService.

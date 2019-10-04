@@ -57,14 +57,8 @@ func (service *tenantService) CreateTenant(
 	})
 
 	if err != nil {
-		if repositoryContract.IsTenantAlreadyExistsError(err) {
-			return &contract.CreateTenantResponse{
-				Err: contract.NewTenantAlreadyExistsErrorWithError(err),
-			}, nil
-		}
-
 		return &contract.CreateTenantResponse{
-			Err: contract.NewUnknownErrorWithError("", err),
+			Err: mapRepositoryError(err, ""),
 		}, nil
 	}
 
@@ -103,14 +97,8 @@ func (service *tenantService) ReadTenant(
 	})
 
 	if err != nil {
-		if repositoryContract.IsTenantNotFoundError(err) {
-			return &contract.ReadTenantResponse{
-				Err: contract.NewTenantNotFoundErrorWithError(request.TenantID, err),
-			}, nil
-		}
-
 		return &contract.ReadTenantResponse{
-			Err: contract.NewUnknownErrorWithError("", err),
+			Err: mapRepositoryError(err, request.TenantID),
 		}, nil
 	}
 
@@ -150,14 +138,8 @@ func (service *tenantService) UpdateTenant(
 	})
 
 	if err != nil {
-		if repositoryContract.IsTenantNotFoundError(err) {
-			return &contract.UpdateTenantResponse{
-				Err: contract.NewTenantNotFoundErrorWithError(request.TenantID, err),
-			}, nil
-		}
-
 		return &contract.UpdateTenantResponse{
-			Err: contract.NewUnknownErrorWithError("", err),
+			Err: mapRepositoryError(err, request.TenantID),
 		}, nil
 	}
 
@@ -194,16 +176,22 @@ func (service *tenantService) DeleteTenant(
 	})
 
 	if err != nil {
-		if repositoryContract.IsTenantNotFoundError(err) {
-			return &contract.DeleteTenantResponse{
-				Err: contract.NewTenantNotFoundErrorWithError(request.TenantID, err),
-			}, nil
-		}
-
 		return &contract.DeleteTenantResponse{
-			Err: contract.NewUnknownErrorWithError("", err),
+			Err: mapRepositoryError(err, request.TenantID),
 		}, nil
 	}
 
 	return &contract.DeleteTenantResponse{}, nil
+}
+
+func mapRepositoryError(err error, tenantID string) error {
+	if repositoryContract.IsTenantAlreadyExistsError(err) {
+		return contract.NewTenantAlreadyExistsErrorWithError(err)
+	}
+
+	if repositoryContract.IsTenantNotFoundError(err) {
+		return contract.NewTenantNotFoundErrorWithError(tenantID, err)
+	}
+
+	return contract.NewUnknownErrorWithError("", err)
 }
