@@ -34,24 +34,6 @@ func NewTenantService(
 func (service *tenantService) CreateTenant(
 	ctx context.Context,
 	request *contract.CreateTenantRequest) (*contract.CreateTenantResponse, error) {
-	if ctx == nil {
-		return &contract.CreateTenantResponse{
-			Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
-		}, nil
-	}
-
-	if request == nil {
-		return &contract.CreateTenantResponse{
-			Err: commonErrors.NewArgumentNilError("request", "request is required"),
-		}, nil
-	}
-
-	if err := request.Validate(); err != nil {
-		return &contract.CreateTenantResponse{
-			Err: commonErrors.NewArgumentErrorWithError("request", "", err),
-		}, nil
-	}
-
 	response, err := service.repositoryService.CreateTenant(ctx, &repositoryContract.CreateTenantRequest{
 		Tenant: request.Tenant,
 	})
@@ -74,24 +56,6 @@ func (service *tenantService) CreateTenant(
 func (service *tenantService) ReadTenant(
 	ctx context.Context,
 	request *contract.ReadTenantRequest) (*contract.ReadTenantResponse, error) {
-	if ctx == nil {
-		return &contract.ReadTenantResponse{
-			Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
-		}, nil
-	}
-
-	if request == nil {
-		return &contract.ReadTenantResponse{
-			Err: commonErrors.NewArgumentNilError("request", "request is required"),
-		}, nil
-	}
-
-	if err := request.Validate(); err != nil {
-		return &contract.ReadTenantResponse{
-			Err: commonErrors.NewArgumentErrorWithError("request", "", err),
-		}, nil
-	}
-
 	response, err := service.repositoryService.ReadTenant(ctx, &repositoryContract.ReadTenantRequest{
 		TenantID: request.TenantID,
 	})
@@ -114,24 +78,6 @@ func (service *tenantService) ReadTenant(
 func (service *tenantService) UpdateTenant(
 	ctx context.Context,
 	request *contract.UpdateTenantRequest) (*contract.UpdateTenantResponse, error) {
-	if ctx == nil {
-		return &contract.UpdateTenantResponse{
-			Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
-		}, nil
-	}
-
-	if request == nil {
-		return &contract.UpdateTenantResponse{
-			Err: commonErrors.NewArgumentNilError("request", "request is required"),
-		}, nil
-	}
-
-	if err := request.Validate(); err != nil {
-		return &contract.UpdateTenantResponse{
-			Err: commonErrors.NewArgumentErrorWithError("request", "", err),
-		}, nil
-	}
-
 	_, err := service.repositoryService.UpdateTenant(ctx, &repositoryContract.UpdateTenantRequest{
 		TenantID: request.TenantID,
 		Tenant:   request.Tenant,
@@ -153,24 +99,6 @@ func (service *tenantService) UpdateTenant(
 func (service *tenantService) DeleteTenant(
 	ctx context.Context,
 	request *contract.DeleteTenantRequest) (*contract.DeleteTenantResponse, error) {
-	if ctx == nil {
-		return &contract.DeleteTenantResponse{
-			Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
-		}, nil
-	}
-
-	if request == nil {
-		return &contract.DeleteTenantResponse{
-			Err: commonErrors.NewArgumentNilError("request", "request is required"),
-		}, nil
-	}
-
-	if err := request.Validate(); err != nil {
-		return &contract.DeleteTenantResponse{
-			Err: commonErrors.NewArgumentErrorWithError("request", "", err),
-		}, nil
-	}
-
 	_, err := service.repositoryService.DeleteTenant(ctx, &repositoryContract.DeleteTenantRequest{
 		TenantID: request.TenantID,
 	})

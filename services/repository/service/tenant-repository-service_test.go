@@ -14,8 +14,12 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("TenantRepositoryService Tests", func() {
+func TestTenantRepositoryService(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "TenantRepositoryService Tests")
+}
 
+var _ = Describe("TenantRepositoryService Tests", func() {
 	var (
 		sut           contract.TenantRepositoryServiceContract
 		ctx           context.Context
@@ -167,8 +171,3 @@ var _ = Describe("TenantRepositoryService Tests", func() {
 		})
 	})
 })
-
-func TestTenantRepositoryService(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "TenantRepositoryService Tests")
-}
