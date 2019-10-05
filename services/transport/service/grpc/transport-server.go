@@ -9,7 +9,7 @@ import (
 	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
 	configurationServiceContract "github.com/decentralized-cloud/tenant/services/configuration/contract"
 	endpointContract "github.com/decentralized-cloud/tenant/services/endpoint/contract"
-	transportContract "github.com/decentralized-cloud/tenant/transport/contract"
+	transportContract "github.com/decentralized-cloud/tenant/services/transport/contract"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"go.uber.org/zap"

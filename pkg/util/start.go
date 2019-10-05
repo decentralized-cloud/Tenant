@@ -12,7 +12,7 @@ import (
 	endpointContract "github.com/decentralized-cloud/tenant/services/endpoint/contract"
 	endpoint "github.com/decentralized-cloud/tenant/services/endpoint/service"
 	repository "github.com/decentralized-cloud/tenant/services/repository/service"
-	grpctransport "github.com/decentralized-cloud/tenant/transport/grpc"
+	grpctransport "github.com/decentralized-cloud/tenant/services/transport/service/grpc"
 	"go.uber.org/zap"
 )
 
