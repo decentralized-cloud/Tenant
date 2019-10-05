@@ -36,15 +36,15 @@ func NewTransportService(
 	configurationService configurationServiceContract.ConfigurationServiceContract,
 	endpointCreatorService endpointContract.EndpointCreatorContract) (transportContract.TransportServiceContract, error) {
 	if logger == nil {
-		return nil, commonErrors.NewArgumentError("logger", "logger is required")
+		return nil, commonErrors.NewArgumentNilError("logger", "logger is required")
 	}
 
 	if configurationService == nil {
-		return nil, commonErrors.NewArgumentError("configurationService", "configurationService is required")
+		return nil, commonErrors.NewArgumentNilError("configurationService", "configurationService is required")
 	}
 
 	if endpointCreatorService == nil {
-		return nil, commonErrors.NewArgumentError("endpointCreatorService", "endpointCreatorService is required")
+		return nil, commonErrors.NewArgumentNilError("endpointCreatorService", "endpointCreatorService is required")
 	}
 
 	return &transportService{

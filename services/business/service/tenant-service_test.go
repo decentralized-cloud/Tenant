@@ -19,6 +19,11 @@ import (
 	. "github.com/onsi/gomega"
 )
 
+func TestTenantService(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "TenantService Tests")
+}
+
 var _ = Describe("TenantService Tests", func() {
 	var (
 		mockCtrl                    *gomock.Controller
@@ -70,37 +75,7 @@ var _ = Describe("TenantService Tests", func() {
 		})
 
 		Context("tenant service is instantiated", func() {
-			When("CreateTenant is called without context", func() {
-				It("should return ArgumentNilError", func() {
-					response, err := sut.CreateTenant(nil, &request)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("ctx", "", response.Err)
-				})
-			})
-
-			When("CreateTenant is called without request", func() {
-				It("should return ArgumentNilError", func() {
-					response, err := sut.CreateTenant(ctx, nil)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("request", "", response.Err)
-				})
-			})
-
-			When("CreateTenant is called with invalid request", func() {
-				It("should return ArgumentNilError", func() {
-					invalidRequest := contract.CreateTenantRequest{
-						Tenant: models.Tenant{
-							Name: "",
-						}}
-
-					response, err := sut.CreateTenant(ctx, &invalidRequest)
-					Ω(err).Should(BeNil())
-					validationErr := invalidRequest.Validate()
-					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
-				})
-			})
-
-			When("CreateTenant is called with correct input parameters", func() {
+			When("CreateTenant is called", func() {
 				It("should call tenant repository CreateTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -174,36 +149,7 @@ var _ = Describe("TenantService Tests", func() {
 		})
 
 		Context("tenant service is instantiated", func() {
-			When("ReadTenant is called without context", func() {
-				It("should return ArgumentNilError", func() {
-					response, err := sut.ReadTenant(nil, &request)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("ctx", "", response.Err)
-				})
-			})
-
-			When("ReadTenant is called without request", func() {
-				It("should return ArgumentNilError", func() {
-					response, err := sut.ReadTenant(ctx, nil)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("request", "", response.Err)
-				})
-			})
-
-			When("ReadTenant is called with invalid request", func() {
-				It("should return ArgumentNilError", func() {
-					invalidRequest := contract.ReadTenantRequest{
-						TenantID: "",
-					}
-
-					response, err := sut.ReadTenant(ctx, &invalidRequest)
-					Ω(err).Should(BeNil())
-					validationErr := invalidRequest.Validate()
-					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
-				})
-			})
-
-			When("ReadTenant is called with correct input parameters", func() {
+			When("ReadTenant is called", func() {
 				It("should call tenant repository ReadTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -278,37 +224,7 @@ var _ = Describe("TenantService Tests", func() {
 		})
 
 		Context("tenant service is instantiated", func() {
-			When("UpdateTenant is called without context", func() {
-				It("should return ArgumentNilError", func() {
-					response, err := sut.UpdateTenant(nil, &request)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("ctx", "", response.Err)
-				})
-			})
-
-			When("UpdateTenant is called without request", func() {
-				It("should return ArgumentNilError", func() {
-					response, err := sut.UpdateTenant(ctx, nil)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("request", "", response.Err)
-				})
-			})
-
-			When("UpdateTenant is called with invalid request", func() {
-				It("should return ArgumentNilError", func() {
-					invalidRequest := contract.UpdateTenantRequest{
-						TenantID: "",
-						Tenant:   models.Tenant{Name: ""},
-					}
-
-					response, err := sut.UpdateTenant(ctx, &invalidRequest)
-					Ω(err).Should(BeNil())
-					validationErr := invalidRequest.Validate()
-					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
-				})
-			})
-
-			When("UpdateTenant is called with correct input parameters", func() {
+			When("UpdateTenant is called", func() {
 				It("should call tenant repository UpdateTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -380,36 +296,7 @@ var _ = Describe("TenantService Tests", func() {
 		})
 
 		Context("tenant service is instantiated", func() {
-			When("context is null", func() {
-				It("should return ArgumentNilError and ArgumentName matches the context argument name", func() {
-					response, err := sut.DeleteTenant(nil, &request)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("ctx", "", response.Err)
-				})
-			})
-
-			When("request is null", func() {
-				It("should return ArgumentNilError and ArgumentName matches the request argument name", func() {
-					response, err := sut.DeleteTenant(ctx, nil)
-					Ω(err).Should(BeNil())
-					assertArgumentNilError("request", "", response.Err)
-				})
-			})
-
-			When("request is invalid", func() {
-				It("should return ArgumentNilError and both ArgumentName and ErrorMessage are matched", func() {
-					invalidRequest := contract.DeleteTenantRequest{
-						TenantID: "",
-					}
-
-					response, err := sut.DeleteTenant(ctx, &invalidRequest)
-					Ω(err).Should(BeNil())
-					validationErr := invalidRequest.Validate()
-					assertArgumentError("request", validationErr.Error(), response.Err, validationErr)
-				})
-			})
-
-			When("input parameters are valid", func() {
+			When("DeleteTenant is called", func() {
 				It("should call tenant repository DeleteTenant method", func() {
 					mockTenantRepositoryService.
 						EXPECT().
@@ -467,11 +354,6 @@ var _ = Describe("TenantService Tests", func() {
 		})
 	})
 })
-
-func TestTenantService(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "TenantService Tests")
-}
 
 func assertArgumentNilError(expectedArgumentName, expectedMessage string, err error) {
 	Ω(commonErrors.IsArgumentNilError(err)).Should(BeTrue())
