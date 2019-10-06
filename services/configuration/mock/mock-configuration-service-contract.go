@@ -32,32 +32,32 @@ func (m *MockConfigurationServiceContract) EXPECT() *MockConfigurationServiceCon
 	return m.recorder
 }
 
-// GetPort mocks base method
-func (m *MockConfigurationServiceContract) GetPort() (int, error) {
+// GetGRPCPort mocks base method
+func (m *MockConfigurationServiceContract) GetGRPCPort() (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPort")
+	ret := m.ctrl.Call(m, "GetGRPCPort")
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetPort indicates an expected call of GetPort
-func (mr *MockConfigurationServiceContractMockRecorder) GetPort() *gomock.Call {
+// GetGRPCPort indicates an expected call of GetGRPCPort
+func (mr *MockConfigurationServiceContractMockRecorder) GetGRPCPort() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPort", reflect.TypeOf((*MockConfigurationServiceContract)(nil).GetPort))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGRPCPort", reflect.TypeOf((*MockConfigurationServiceContract)(nil).GetGRPCPort))
 }
 
-// GetHost mocks base method
-func (m *MockConfigurationServiceContract) GetHost() (string, error) {
+// GetGRPCHost mocks base method
+func (m *MockConfigurationServiceContract) GetGRPCHost() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetHost")
+	ret := m.ctrl.Call(m, "GetGRPCHost")
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetHost indicates an expected call of GetHost
-func (mr *MockConfigurationServiceContractMockRecorder) GetHost() *gomock.Call {
+// GetGRPCHost indicates an expected call of GetGRPCHost
+func (mr *MockConfigurationServiceContractMockRecorder) GetGRPCHost() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockConfigurationServiceContract)(nil).GetHost))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGRPCHost", reflect.TypeOf((*MockConfigurationServiceContract)(nil).GetGRPCHost))
 }
