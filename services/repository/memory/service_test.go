@@ -1,5 +1,5 @@
 // Package repository implements different repository services required by the tenant service
-package repository_test
+package memory_test
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/repository"
+	"github.com/decentralized-cloud/tenant/services/repository/memory"
 	"github.com/lucsky/cuid"
 
 	. "github.com/onsi/ginkgo"
@@ -27,7 +28,7 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 	)
 
 	BeforeEach(func() {
-		sut, _ = repository.NewInMemoryRepositoryService()
+		sut, _ = memory.NewRepositoryService()
 		ctx = context.Background()
 		createRequest = repository.CreateTenantRequest{
 			Tenant: models.Tenant{
@@ -36,9 +37,9 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 	})
 
 	Context("user tries to instantiate RepositoryService", func() {
-		When("all dependecies are resolved and NewInMemoryRepositoryService is called", func() {
+		When("all dependecies are resolved and NewRepositoryService is called", func() {
 			It("should instantiate the new RepositoryService", func() {
-				service, err := repository.NewInMemoryRepositoryService()
+				service, err := memory.NewRepositoryService()
 				Ω(err).Should(BeNil())
 				Ω(service).ShouldNot(BeNil())
 			})

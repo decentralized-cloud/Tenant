@@ -1,5 +1,5 @@
-// Package grpctransport implements functions to expose Tenant service endpoint using GRPC protocol.
-package grpctransport
+// Package grpc implements functions to expose Tenant service endpoint using GRPC protocol.
+package grpc
 
 import (
 	"context"

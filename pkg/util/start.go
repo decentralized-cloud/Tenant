@@ -9,8 +9,8 @@ import (
 	"github.com/decentralized-cloud/tenant/services/business"
 	"github.com/decentralized-cloud/tenant/services/configuration"
 	"github.com/decentralized-cloud/tenant/services/endpoint"
-	"github.com/decentralized-cloud/tenant/services/repository"
-	grpctransport "github.com/decentralized-cloud/tenant/services/transport/grpc"
+	"github.com/decentralized-cloud/tenant/services/repository/memory"
+	"github.com/decentralized-cloud/tenant/services/transport/grpc"
 	"go.uber.org/zap"
 )
 
@@ -31,7 +31,7 @@ func StartService() {
 		logger.Fatal("Failed to setup dependecies", zap.Error(err))
 	}
 
-	grpcTransportService, err := grpctransport.NewTransportService(
+	grpcTransportService, err := grpc.NewTransportService(
 		logger,
 		configurationService,
 		endpointCreatorService)
@@ -63,7 +63,7 @@ func setupDependencies() (err error) {
 		return
 	}
 
-	repositoryService, err := repository.NewInMemoryRepositoryService()
+	repositoryService, err := memory.NewRepositoryService()
 
 	if err != nil {
 		return

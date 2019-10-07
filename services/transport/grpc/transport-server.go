@@ -1,5 +1,5 @@
-// Package grpctransport implements functions to expose Tenant service endpoint using GRPC protocol.
-package grpctransport
+// Package grpc implements functions to expose Tenant service endpoint using GRPC protocol.
+package grpc
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
+	googlegrpc "google.golang.org/grpc"
 )
 
 type transportService struct {
@@ -75,7 +75,7 @@ func (service *transportService) Start() error {
 		return err
 	}
 
-	gRPCServer := grpc.NewServer()
+	gRPCServer := googlegrpc.NewServer()
 	tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, service)
 	service.logger.Info("gRPC server started", zap.String("address", address))
 
