@@ -64,13 +64,11 @@ func setupDependencies() (err error) {
 	}
 
 	repositoryService, err := memory.NewRepositoryService()
-
 	if err != nil {
 		return
 	}
 
 	businessService, err := business.NewBusinessService(repositoryService)
-
 	if err != nil {
 		return err
 	}
