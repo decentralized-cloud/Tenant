@@ -6,7 +6,6 @@ ARG COVERALLS_TOKEN
 
 ADD . /src
 WORKDIR /src
-
 RUN make dep
 RUN make test
 RUN make publish-test-results
