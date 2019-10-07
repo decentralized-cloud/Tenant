@@ -25,17 +25,17 @@ func TestBusinessService(t *testing.T) {
 
 var _ = Describe("Business Service Tests", func() {
 	var (
-		mockCtrl                    *gomock.Controller
-		sut                         business.BusinessContract
-		mockTenantRepositoryService *repsoitoryMock.MockRepositoryContract
-		ctx                         context.Context
+		mockCtrl              *gomock.Controller
+		sut                   business.BusinessContract
+		mockRepositoryService *repsoitoryMock.MockRepositoryContract
+		ctx                   context.Context
 	)
 
 	BeforeEach(func() {
 		mockCtrl = gomock.NewController(GinkgoT())
 
-		mockTenantRepositoryService = repsoitoryMock.NewMockRepositoryContract(mockCtrl)
-		sut, _ = business.NewBusinessService(mockTenantRepositoryService)
+		mockRepositoryService = repsoitoryMock.NewMockRepositoryContract(mockCtrl)
+		sut, _ = business.NewBusinessService(mockRepositoryService)
 		ctx = context.Background()
 	})
 
@@ -54,7 +54,7 @@ var _ = Describe("Business Service Tests", func() {
 
 		When("all dependencies are resolved and NewBusinessService is called", func() {
 			It("should instantiate the new BusinessService", func() {
-				service, err := business.NewBusinessService(mockTenantRepositoryService)
+				service, err := business.NewBusinessService(mockRepositoryService)
 				Ω(err).Should(BeNil())
 				Ω(service).ShouldNot(BeNil())
 			})
@@ -76,7 +76,7 @@ var _ = Describe("Business Service Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("CreateTenant is called", func() {
 				It("should call tenant repository CreateTenant method", func() {
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						CreateTenant(ctx, gomock.Any()).
 						Do(func(_ context.Context, mappedRequest *repository.CreateTenantRequest) {
@@ -92,7 +92,7 @@ var _ = Describe("Business Service Tests", func() {
 				When("And tenant repository CreateTenant return TenantAlreadyExistError", func() {
 					It("should return TenantAlreadyExistsError", func() {
 						expectedError := repository.NewTenantAlreadyExistsError()
-						mockTenantRepositoryService.
+						mockRepositoryService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedError)
@@ -106,7 +106,7 @@ var _ = Describe("Business Service Tests", func() {
 				When("And tenant repository CreateTenant return any other error", func() {
 					It("should return UnknownError", func() {
 						expectedError := errors.New(cuid.New())
-						mockTenantRepositoryService.
+						mockRepositoryService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedError)
@@ -120,7 +120,7 @@ var _ = Describe("Business Service Tests", func() {
 				When("And tenant repository CreateTenant return no error", func() {
 					It("should return the new tenantID", func() {
 						tenantID := cuid.New()
-						mockTenantRepositoryService.
+						mockRepositoryService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(&repository.CreateTenantResponse{TenantID: tenantID}, nil)
@@ -150,7 +150,7 @@ var _ = Describe("Business Service Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("ReadTenant is called", func() {
 				It("should call tenant repository ReadTenant method", func() {
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						ReadTenant(ctx, gomock.Any()).
 						Do(func(_ context.Context, mappedRequest *repository.ReadTenantRequest) {
@@ -167,7 +167,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("And tenant repository ReadTenant cannot find provided tenant", func() {
 				It("should return TenantNotFoundError", func() {
 					expectedError := repository.NewTenantNotFoundError(request.TenantID)
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						ReadTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
@@ -181,7 +181,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("And tenant repository ReadTenant return any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						ReadTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
@@ -195,7 +195,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("And tenant repository ReadTenant return no error", func() {
 				It("should return the tenantID", func() {
 					tenant := models.Tenant{Name: cuid.New()}
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						ReadTenant(gomock.Any(), gomock.Any()).
 						Return(&repository.ReadTenantResponse{Tenant: tenant}, nil)
@@ -225,7 +225,7 @@ var _ = Describe("Business Service Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("UpdateTenant is called", func() {
 				It("should call tenant repository UpdateTenant method", func() {
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						UpdateTenant(ctx, gomock.Any()).
 						Do(func(_ context.Context, mappedRequest *repository.UpdateTenantRequest) {
@@ -243,7 +243,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("And tenant repository UpdateTenant cannot find provided tenant", func() {
 				It("should return TenantNotFoundError", func() {
 					expectedError := repository.NewTenantNotFoundError(request.TenantID)
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
@@ -257,7 +257,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("And tenant repository UpdateTenant return any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
@@ -270,7 +270,7 @@ var _ = Describe("Business Service Tests", func() {
 
 			When("And tenant repository UpdateTenant return no error", func() {
 				It("should return no error", func() {
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).
 						Return(&repository.UpdateTenantResponse{}, nil)
@@ -297,7 +297,7 @@ var _ = Describe("Business Service Tests", func() {
 		Context("tenant service is instantiated", func() {
 			When("DeleteTenant is called", func() {
 				It("should call tenant repository DeleteTenant method", func() {
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						DeleteTenant(ctx, gomock.Any()).
 						Do(func(_ context.Context, mappedRequest *repository.DeleteTenantRequest) {
@@ -314,7 +314,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("tenant repository DeleteTenant cannot find provided tenant", func() {
 				It("should return TenantNotFoundError", func() {
 					expectedError := repository.NewTenantNotFoundError(request.TenantID)
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						DeleteTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
@@ -327,7 +327,7 @@ var _ = Describe("Business Service Tests", func() {
 			When("tenant repository DeleteTenant is faced with any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						DeleteTenant(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
@@ -340,7 +340,7 @@ var _ = Describe("Business Service Tests", func() {
 
 			When("tenant repository DeleteTenant completes successfully", func() {
 				It("should return no error", func() {
-					mockTenantRepositoryService.
+					mockRepositoryService.
 						EXPECT().
 						DeleteTenant(gomock.Any(), gomock.Any()).
 						Return(&repository.DeleteTenantResponse{}, nil)

@@ -22,22 +22,22 @@ import (
 
 func TestEndpointCreatorService(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "EndpointCreatorService Tests")
+	RunSpecs(t, "Endpoint Creator Service Tests")
 }
 
-var _ = Describe("EndpointCreatorService Tests", func() {
+var _ = Describe("Endpoint Creator Service Tests", func() {
 	var (
-		mockCtrl                  *gomock.Controller
-		sut                       endpoint.EndpointCreatorContract
-		mockTenantBusinessService *businessMock.MockBusinessContract
-		ctx                       context.Context
+		mockCtrl            *gomock.Controller
+		sut                 endpoint.EndpointCreatorContract
+		mockBusinessService *businessMock.MockBusinessContract
+		ctx                 context.Context
 	)
 
 	BeforeEach(func() {
 		mockCtrl = gomock.NewController(GinkgoT())
 
-		mockTenantBusinessService = businessMock.NewMockBusinessContract(mockCtrl)
-		sut, _ = endpoint.NewEndpointCreatorService(mockTenantBusinessService)
+		mockBusinessService = businessMock.NewMockBusinessContract(mockCtrl)
+		sut, _ = endpoint.NewEndpointCreatorService(mockBusinessService)
 		ctx = context.Background()
 	})
 
@@ -56,7 +56,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 		When("all dependencies are resolved and NewEndpointCreatorService is called", func() {
 			It("should instantiate the new EndpointCreatorService", func() {
-				service, err := endpoint.NewEndpointCreatorService(mockTenantBusinessService)
+				service, err := endpoint.NewEndpointCreatorService(mockBusinessService)
 				Ω(err).Should(BeNil())
 				Ω(service).ShouldNot(BeNil())
 			})
@@ -130,7 +130,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("endpoint is called with valid request", func() {
 					It("should call business service CreateTenant method", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							CreateTenant(ctx, gomock.Any()).
 							Do(func(_ context.Context, mappedRequest *business.CreateTenantRequest) {
@@ -150,7 +150,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 				When("business service CreateTenant returns error", func() {
 					It("should return the same error", func() {
 						expectedErr := errors.New(cuid.New())
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedErr)
@@ -163,7 +163,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("business service CreateTenant returns response", func() {
 					It("should return the same response", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
 							Return(&response, nil)
@@ -244,7 +244,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("endpoint is called with valid request", func() {
 					It("should call business service ReadTenant method", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							ReadTenant(ctx, gomock.Any()).
 							Do(func(_ context.Context, mappedRequest *business.ReadTenantRequest) {
@@ -264,7 +264,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 				When("business service ReadTenant returns error", func() {
 					It("should return the same error", func() {
 						expectedErr := errors.New(cuid.New())
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							ReadTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedErr)
@@ -277,7 +277,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("business service ReadTenant returns response", func() {
 					It("should return the same response", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							ReadTenant(gomock.Any(), gomock.Any()).
 							Return(&response, nil)
@@ -358,7 +358,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("endpoint is called with valid request", func() {
 					It("should call business service UpdateTenant method", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							UpdateTenant(ctx, gomock.Any()).
 							Do(func(_ context.Context, mappedRequest *business.UpdateTenantRequest) {
@@ -378,7 +378,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 				When("business service UpdateTenant returns error", func() {
 					It("should return the same error", func() {
 						expectedErr := errors.New(cuid.New())
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							UpdateTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedErr)
@@ -391,7 +391,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("business service UpdateTenant returns response", func() {
 					It("should return the same response", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							UpdateTenant(gomock.Any(), gomock.Any()).
 							Return(&response, nil)
@@ -468,7 +468,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("endpoint is called with valid request", func() {
 					It("should call business service DeleteTenant method", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							DeleteTenant(ctx, gomock.Any()).
 							Do(func(_ context.Context, mappedRequest *business.DeleteTenantRequest) {
@@ -488,7 +488,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 				When("business service DeleteTenant returns error", func() {
 					It("should return the same error", func() {
 						expectedErr := errors.New(cuid.New())
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							DeleteTenant(gomock.Any(), gomock.Any()).
 							Return(nil, expectedErr)
@@ -501,7 +501,7 @@ var _ = Describe("EndpointCreatorService Tests", func() {
 
 				When("business service DeleteTenant returns response", func() {
 					It("should return the same response", func() {
-						mockTenantBusinessService.
+						mockBusinessService.
 							EXPECT().
 							DeleteTenant(gomock.Any(), gomock.Any()).
 							Return(&response, nil)
