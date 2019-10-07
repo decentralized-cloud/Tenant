@@ -1,40 +1,41 @@
-// Package repository implements different repository services required by the tenant service
-package repository
+// Package memory implements im-memory repository services
+package memory
 
 import (
 	"context"
 
 	"github.com/decentralized-cloud/tenant/models"
+	"github.com/decentralized-cloud/tenant/services/repository"
 	"github.com/lucsky/cuid"
 )
 
 var tenants map[string]models.Tenant
 
-type inMemoryRepositoryService struct {
+type repositoryService struct {
 }
 
 func init() {
 	tenants = make(map[string]models.Tenant)
 }
 
-// NewInMemoryRepositoryService creates new instance of the InMemoryRepositoryService, setting up all dependencies and returns the instance
+// NewRepositoryService creates new instance of the RepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
-func NewInMemoryRepositoryService() (RepositoryContract, error) {
-	return &inMemoryRepositoryService{}, nil
+func NewRepositoryService() (repository.RepositoryContract, error) {
+	return &repositoryService{}, nil
 }
 
 // CreateTenant creates a new tenant.
 // context: Optional The reference to the context
 // request: Mandatory. The request to create a new tenant
 // Returns either the result of creating new tenant or error if something goes wrong.
-func (service *inMemoryRepositoryService) CreateTenant(
+func (service *repositoryService) CreateTenant(
 	ctx context.Context,
-	request *CreateTenantRequest) (*CreateTenantResponse, error) {
+	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
 
 	tenantID := cuid.New()
 	tenants[tenantID] = request.Tenant
 
-	return &CreateTenantResponse{
+	return &repository.CreateTenantResponse{
 		TenantID: tenantID,
 	}, nil
 }
@@ -43,50 +44,50 @@ func (service *inMemoryRepositoryService) CreateTenant(
 // context: Optional The reference to the context
 // request: Mandatory. The request to read an existing tenant
 // Returns either the result of reading an exiting tenant or error if something goes wrong.
-func (service *inMemoryRepositoryService) ReadTenant(
+func (service *repositoryService) ReadTenant(
 	ctx context.Context,
-	request *ReadTenantRequest) (*ReadTenantResponse, error) {
+	request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
 
 	tenant, ok := tenants[request.TenantID]
 	if !ok {
-		return nil, NewTenantNotFoundError(request.TenantID)
+		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
-	return &ReadTenantResponse{Tenant: tenant}, nil
+	return &repository.ReadTenantResponse{Tenant: tenant}, nil
 }
 
 // UpdateTenant update an existing tenant
 // context: Optional The reference to the context
 // request: Mandatory. The request to update an existing tenant
 // Returns either the result of updateing an exiting tenant or error if something goes wrong.
-func (service *inMemoryRepositoryService) UpdateTenant(
+func (service *repositoryService) UpdateTenant(
 	ctx context.Context,
-	request *UpdateTenantRequest) (*UpdateTenantResponse, error) {
+	request *repository.UpdateTenantRequest) (*repository.UpdateTenantResponse, error) {
 
 	_, ok := tenants[request.TenantID]
 	if !ok {
-		return nil, NewTenantNotFoundError(request.TenantID)
+		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
 	tenants[request.TenantID] = request.Tenant
 
-	return &UpdateTenantResponse{}, nil
+	return &repository.UpdateTenantResponse{}, nil
 }
 
 // DeleteTenant delete an existing tenant
 // context: Optional The reference to the context
 // request: Mandatory. The request to delete an existing tenant
 // Returns either the result of deleting an exiting tenant or error if something goes wrong.
-func (service *inMemoryRepositoryService) DeleteTenant(
+func (service *repositoryService) DeleteTenant(
 	ctx context.Context,
-	request *DeleteTenantRequest) (*DeleteTenantResponse, error) {
+	request *repository.DeleteTenantRequest) (*repository.DeleteTenantResponse, error) {
 
 	_, ok := tenants[request.TenantID]
 	if !ok {
-		return nil, NewTenantNotFoundError(request.TenantID)
+		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
 	delete(tenants, request.TenantID)
 
-	return &DeleteTenantResponse{}, nil
+	return &repository.DeleteTenantResponse{}, nil
 }
