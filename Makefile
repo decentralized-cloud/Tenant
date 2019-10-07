@@ -23,7 +23,7 @@ export GOARCH ?= amd64
 GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go" -not -path "*.pb.go")
 
 .PHONY: all
-all: dep build-grpc build install ## Get deps, build grpc and build, and install binary
+all: build-grpc dep build install ## Build gRPC contract, get deps, and build, and install binary
 
 .PHONY: clean
 clean: ## Clean the working area and the project
