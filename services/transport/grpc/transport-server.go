@@ -1,4 +1,4 @@
-// Package grpc implements functions to expose Tenant service endpoint using GRPC protocol.
+// Package grpc implements functions to expose tenant service endpoint using GRPC protocol.
 package grpc
 
 import (
@@ -7,19 +7,19 @@ import (
 	"net"
 
 	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
-	configuration "github.com/decentralized-cloud/tenant/services/configuration"
+	"github.com/decentralized-cloud/tenant/services/configuration"
 	"github.com/decentralized-cloud/tenant/services/endpoint"
 	"github.com/decentralized-cloud/tenant/services/transport"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"go.uber.org/zap"
-	googlegrpc "google.golang.org/grpc"
+	"google.golang.org/grpc"
 )
 
 type transportService struct {
 	logger                 *zap.Logger
-	endpointCreatorService endpoint.EndpointCreatorContract
 	configurationService   configuration.ConfigurationContract
+	endpointCreatorService endpoint.EndpointCreatorContract
 	createTenantHandler    gokitgrpc.Handler
 	readTenantHandler      gokitgrpc.Handler
 	updateTenantHandler    gokitgrpc.Handler
@@ -75,7 +75,7 @@ func (service *transportService) Start() error {
 		return err
 	}
 
-	gRPCServer := googlegrpc.NewServer()
+	gRPCServer := grpc.NewServer()
 	tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, service)
 	service.logger.Info("gRPC server started", zap.String("address", address))
 
@@ -123,7 +123,6 @@ func (service *transportService) CreateTenant(
 	ctx context.Context,
 	request *tenantGRPCContract.CreateTenantRequest) (*tenantGRPCContract.CreateTenantResponse, error) {
 	_, response, err := service.createTenantHandler.ServeGRPC(ctx, request)
-
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +138,6 @@ func (service *transportService) ReadTenant(
 	ctx context.Context,
 	request *tenantGRPCContract.ReadTenantRequest) (*tenantGRPCContract.ReadTenantResponse, error) {
 	_, response, err := service.readTenantHandler.ServeGRPC(ctx, request)
-
 	if err != nil {
 		return nil, err
 	}
@@ -156,7 +154,6 @@ func (service *transportService) UpdateTenant(
 	ctx context.Context,
 	request *tenantGRPCContract.UpdateTenantRequest) (*tenantGRPCContract.UpdateTenantResponse, error) {
 	_, response, err := service.updateTenantHandler.ServeGRPC(ctx, request)
-
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +170,6 @@ func (service *transportService) DeleteTenant(
 	ctx context.Context,
 	request *tenantGRPCContract.DeleteTenantRequest) (*tenantGRPCContract.DeleteTenantResponse, error) {
 	_, response, err := service.deleteTenantHandler.ServeGRPC(ctx, request)
-
 	if err != nil {
 		return nil, err
 	}
