@@ -1,4 +1,4 @@
-// Package grpc implements functions to expose Tenant service endpoint using GRPC protocol.
+// Package grpc implements functions to expose tenant service endpoint using GRPC protocol.
 package grpc
 
 import (
