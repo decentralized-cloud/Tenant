@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net"
 
-	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
+	tenantGRPCContract "github.com/decentralized-cloud/tenant/contract/grpc/go"
 	"github.com/decentralized-cloud/tenant/services/configuration"
 	"github.com/decentralized-cloud/tenant/services/endpoint"
 	"github.com/decentralized-cloud/tenant/services/transport"

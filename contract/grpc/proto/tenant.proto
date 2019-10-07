@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package tenant;
+
+/**
+ * The different error types
+ */
+enum Error {
+  // Indicates the operation was successful
+  NO_ERROR = 0;
+  // Indicates the operation fail with unknown error
+  UNKNOWN = 1;
+  // Indicates the tenant already exists
+  TENANT_ALREADY_EXISTS = 2;
+  // Indicates the tenant does not exist
+  TENANT_NOT_FOUND = 3;
+  // Indicates the provided values for he operation were invalid
+  BAD_REQUEST = 4;
+}
+
+/**
+ * The tenant object
+ */
+message Tenant {
+  // The tenant name
+  string name = 1;
+}
+
+/**
+ * Request to create a new tenant
+ */
+message CreateTenantRequest {
+  // The tenant object
+  Tenant tenant = 1;
+}
+
+/**
+ * Response contains the result of creating a new tenant
+ */
+message CreateTenantResponse {
+  // Indicate whether the operation has any error
+  Error error = 1;
+
+  // Contains error message if the operation was unsuccessful
+  string errorMessage = 2;
+
+  // The unique tenant identifier
+  string tenantID = 3;
+}
+
+/** Request to read an existing tenant
+ */
+message ReadTenantRequest {
+  // The unique tenant identifier
+  string tenantID = 1;
+}
+
+/**
+ * Response contains the result of reading an existing tenant
+ */
+message ReadTenantResponse {
+  // Indicate whether the operation has any error
+  Error error = 1;
+
+  // Contains error message if the operation was unsuccessful
+  string errorMessage = 2;
+
+  // The tenant object
+  Tenant tenant = 3;
+}
+
+/**
+ * Request to update an existing tenant
+ */
+message UpdateTenantRequest {
+  // The unique tenant identifier
+  string tenantID = 1;
+
+  // The tenant object contains the updated tenant details to update
+  Tenant tenant = 2;
+}
+
+/**
+ * Response contains the result of updating an existing tenant
+ */
+message UpdateTenantResponse {
+  // Indicate whether the operation has any error
+  Error error = 1;
+
+  // Contains error message if the operation was unsuccessful
+  string errorMessage = 2;
+}
+
+/**
+ * Request to delete an existing tenant
+ */
+message DeleteTenantRequest {
+  // The unique tenant identifier
+  string tenantID = 1;
+}
+
+/**
+ * Response contains the result of deleting an existing tenant
+ */
+message DeleteTenantResponse {
+  // Indicate whether the operation has any error
+  Error error = 1;
+
+  // Contains error message if the operation was unsuccessful
+  string errorMessage = 2;
+}
+
+/**
+ * The tenant servcie that can create new tenant, read, update and delete existing tenant
+ */
+service TenantService {
+  // CreateTenant creates a new tenant
+  // request: The request to create a new tenant
+  // Returns the result of creating new tenant
+  rpc CreateTenant(CreateTenantRequest) returns (CreateTenantResponse);
+
+  // ReadTenant read an exsiting tenant
+  // request: The request to read an esiting tenant
+  // Returns the result of reading an exiting tenant
+  rpc ReadTenant(ReadTenantRequest) returns (ReadTenantResponse);
+
+  // UpdateTenant update an exsiting tenant
+  // request: The request to update an esiting tenant
+  // Returns the result of updateing an exiting tenant
+  rpc UpdateTenant(UpdateTenantRequest) returns (UpdateTenantResponse);
+
+  // DeleteTenant delete an exsiting tenant
+  // request: The request to delete an esiting tenant
+  // Returns the result of deleting an exiting tenant
+  rpc DeleteTenant(DeleteTenantRequest) returns (DeleteTenantResponse);
+}
+

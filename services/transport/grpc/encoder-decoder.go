@@ -4,7 +4,7 @@ package grpc
 import (
 	"context"
 
-	tenantGRPCContract "github.com/decentralized-cloud/tenant-contract/grpc"
+	tenantGRPCContract "github.com/decentralized-cloud/tenant/contract/grpc/go"
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/business"
 	commonErrors "github.com/micro-business/go-core/system/errors"

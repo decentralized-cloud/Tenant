@@ -1,5 +1,6 @@
 SHELL = /bin/bash
 OS = $(shell uname -s | tr '[:upper:]' '[:lower:]')
+CURRENT_DIRECTORY = $(shell pwd)
 
 # Build variables
 BINARY_NAME = tenant
@@ -13,20 +14,21 @@ LDFLAGS += -X $(PREFIX).version=$(VERSION) -X $(PREFIX).commit=$(COMMIT) -X $(PR
 REPORTS_DIR ?= reports
 CI_SERVICE ?=
 COVERALLS_TOKEN ?=
+PROTOBUF_BUILDER_CONTAINER_VERSION = v0.0.2
 
 # Go variables
 export CGO_ENABLED ?= 0
 export GOOS ?= $(OS)
 export GOARCH ?= amd64
-GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go")
+GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go" -not -path "*.pb.go")
 
 .PHONY: all
-all: dep build install ## Get deps, build, and install binary
+all: dep build-grpc build install ## Get deps, build grpc and build, and install binary
 
 .PHONY: clean
 clean: ## Clean the working area and the project
-	rm -rf $(BUILD_DIR)/
-	rm -rf $(REPORTS_DIR)
+	@rm -rf $(BUILD_DIR)/
+	@rm -rf $(REPORTS_DIR)
 
 .PHONY: dep
 dep: ## Install dependencies
@@ -34,6 +36,10 @@ dep: ## Install dependencies
 	@go get github.com/mattn/goveralls
 	@go mod tidy
 	@go get -v -t ./...
+
+.PHONY: build-grpc
+build-grpc: ## Build grpc
+	@$(CURRENT_DIRECTORY)/script/compile-grpc.sh
 
 .PHONY: build
 build: GOARGS += -tags "$(GOTAGS)" -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)
@@ -50,8 +56,8 @@ format: ## Format the source
 
 .PHONY: test
 test: ## Run unit tests
-	mkdir -p $(REPORTS_DIR)
-	rm -f $(REPORTS_DIR)/*
+	@mkdir -p $(REPORTS_DIR)
+	@rm -f $(REPORTS_DIR)/*
 	@go test -ldflags "$(LDFLAGS)" -v -covermode=count -coverprofile="$(REPORTS_DIR)/coverage.out" ./...
 
 .PHONY: publish-test-results
