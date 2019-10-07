@@ -6,18 +6,16 @@ import (
 	"os"
 	"os/signal"
 
-	business "github.com/decentralized-cloud/tenant/services/business/service"
-	configurationServiceContract "github.com/decentralized-cloud/tenant/services/configuration/contract"
-	configuration "github.com/decentralized-cloud/tenant/services/configuration/service"
-	endpointContract "github.com/decentralized-cloud/tenant/services/endpoint/contract"
-	endpoint "github.com/decentralized-cloud/tenant/services/endpoint/service"
-	repository "github.com/decentralized-cloud/tenant/services/repository/service"
-	grpctransport "github.com/decentralized-cloud/tenant/services/transport/service/grpc"
+	"github.com/decentralized-cloud/tenant/services/business"
+	"github.com/decentralized-cloud/tenant/services/configuration"
+	"github.com/decentralized-cloud/tenant/services/endpoint"
+	"github.com/decentralized-cloud/tenant/services/repository"
+	grpctransport "github.com/decentralized-cloud/tenant/services/transport/grpc"
 	"go.uber.org/zap"
 )
 
-var configurationService configurationServiceContract.ConfigurationServiceContract
-var endpointCreatorService endpointContract.EndpointCreatorContract
+var configurationService configuration.ConfigurationContract
+var endpointCreatorService endpoint.EndpointCreatorContract
 
 // StartService setups all dependecies required to start the tenant service and
 // start the service
@@ -61,23 +59,23 @@ func StartService() {
 }
 
 func setupDependencies() (err error) {
-	if configurationService, err = configuration.NewConfigurationService(); err != nil {
+	if configurationService, err = configuration.NewEnvConfigurationService(); err != nil {
 		return
 	}
 
-	repositoryService, err := repository.NewTenantRepositoryService()
+	repositoryService, err := repository.NewInMemoryRepositoryService()
 
 	if err != nil {
 		return
 	}
 
-	businessServer, err := business.NewTenantService(repositoryService)
+	businessService, err := business.NewBusinessService(repositoryService)
 
 	if err != nil {
 		return err
 	}
 
-	if endpointCreatorService, err = endpoint.NewEndpointCreatorService(businessServer); err != nil {
+	if endpointCreatorService, err = endpoint.NewEndpointCreatorService(businessService); err != nil {
 		return
 	}
 

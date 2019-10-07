@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a // indirect
-	github.com/decentralized-cloud/tenant-contract v0.3.0
+	github.com/decentralized-cloud/tenant-contract v0.5.0
 	github.com/go-kit/kit v0.9.0
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
@@ -14,6 +14,7 @@ require (
 	github.com/micro-business/go-core v0.0.8
 	github.com/onsi/ginkgo v1.10.2
 	github.com/onsi/gomega v1.7.0
+	github.com/pkg/errors v0.8.1 // indirect
 	github.com/spf13/cobra v0.0.5
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.2.0 // indirect
