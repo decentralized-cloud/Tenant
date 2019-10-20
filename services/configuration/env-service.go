@@ -4,6 +4,7 @@ package configuration
 import (
 	"os"
 	"strconv"
+	"strings"
 )
 
 type envConfigurationService struct {
@@ -25,10 +26,13 @@ func (service *envConfigurationService) GetHost() (string, error) {
 // Returns the port number or error if something goes wrong
 func (service *envConfigurationService) GetPort() (int, error) {
 	portNumberString := os.Getenv("PORT")
-	portNumber, err := strconv.Atoi(portNumberString)
+	if strings.Trim(portNumberString, " ") == "" {
+		return 0, NewUnknownError("PORT is required")
+	}
 
+	portNumber, err := strconv.Atoi(portNumberString)
 	if err != nil {
-		return 0, NewUnknownError(err.Error())
+		return 0, NewUnknownErrorWithError("Failed to convert PORT to integer", err)
 	}
 
 	return portNumber, nil
