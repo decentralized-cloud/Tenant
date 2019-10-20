@@ -19,7 +19,7 @@ type transportService struct {
 	configurationService configuration.ConfigurationContract
 }
 
-// NewTransportService creates new instance of the GRPCService, setting up all dependencies and returns the instance
+// NewTransportService creates new instance of the transportService, setting up all dependencies and returns the instance
 // logger: Mandatory. Reference to the logger service
 // configurationService: Mandatory. Reference to the service that provides required configurations
 // Returns the new service or error if something goes wrong
@@ -62,7 +62,7 @@ func (service *transportService) Start() error {
 	server.Path("GET", "/live", service.livenessCheckHandler)
 	server.Path("GET", "/ready", service.readinessCheckHandler)
 	server.NetHTTPPath("GET", "/metrics", promhttp.Handler())
-	service.logger.Info("HTTPS server started", zap.String("address", config.Addr))
+	service.logger.Info("HTTPS service started", zap.String("address", config.Addr))
 
 	return server.ListenAndServe()
 }

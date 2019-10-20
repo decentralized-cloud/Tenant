@@ -34,7 +34,7 @@ func init() {
 	Ready = false
 }
 
-// NewTransportService creates new instance of the grapcService, setting up all dependencies and returns the instance
+// NewTransportService creates new instance of the transportService, setting up all dependencies and returns the instance
 // logger: Mandatory. Reference to the logger service
 // configurationService: Mandatory. Reference to the service that provides required configurations
 // endpointCreatorService: Mandatory. Reference to the service that creates go-kit compatible endpoints
@@ -85,7 +85,7 @@ func (service *transportService) Start() error {
 
 	gRPCServer := grpc.NewServer()
 	tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, service)
-	service.logger.Info("gRPC server started", zap.String("address", address))
+	service.logger.Info("gRPC service started", zap.String("address", address))
 
 	Live = true
 	Ready = true
