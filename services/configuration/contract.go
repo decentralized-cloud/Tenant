@@ -3,11 +3,19 @@ package configuration
 
 // ConfigurationContract declares the service that provides configuration required by different Tenat modules
 type ConfigurationContract interface {
-	// GetHost retrieves host name
-	// Returns the host name or error if something goes wrong
-	GetHost() (string, error)
+	// GetGrpcHost retrieves gRPC host name
+	// Returns the gRPC host name or error if something goes wrong
+	GetGrpcHost() (string, error)
 
-	// GetPort retrieves port number
-	// Returns the port number or error if something goes wrong
-	GetPort() (int, error)
+	// GetGrpcPort retrieves gRPC port number
+	// Returns the gRPC port number or error if something goes wrong
+	GetGrpcPort() (int, error)
+
+	// GetHttpsHost retrieves HTTPS host name
+	// Returns the HTTPS host name or error if something goes wrong
+	GetHttpsHost() (string, error)
+
+	// GetHttpsPort retrieves HTTPS port number
+	// Returns the HTTPS port number or error if something goes wrong
+	GetHttpsPort() (int, error)
 }

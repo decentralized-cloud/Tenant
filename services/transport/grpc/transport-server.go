@@ -26,6 +26,14 @@ type transportService struct {
 	deleteTenantHandler    gokitgrpc.Handler
 }
 
+var Live bool
+var Ready bool
+
+func init() {
+	Live = false
+	Ready = false
+}
+
 // NewTransportService creates new instance of the grapcService, setting up all dependencies and returns the instance
 // logger: Mandatory. Reference to the logger service
 // configurationService: Mandatory. Reference to the service that provides required configurations
@@ -59,12 +67,12 @@ func NewTransportService(
 func (service *transportService) Start() error {
 	service.setupHandlers()
 
-	host, err := service.configurationService.GetHost()
+	host, err := service.configurationService.GetGrpcHost()
 	if err != nil {
 		return err
 	}
 
-	port, err := service.configurationService.GetPort()
+	port, err := service.configurationService.GetGrpcPort()
 	if err != nil {
 		return err
 	}
@@ -79,7 +87,15 @@ func (service *transportService) Start() error {
 	tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, service)
 	service.logger.Info("gRPC server started", zap.String("address", address))
 
-	return gRPCServer.Serve(listener)
+	Live = true
+	Ready = true
+
+	err = gRPCServer.Serve(listener)
+
+	Live = false
+	Ready = false
+
+	return err
 }
 
 // Stop stops the GRPC transport service
