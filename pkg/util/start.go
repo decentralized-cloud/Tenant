@@ -72,7 +72,7 @@ func StartService() {
 		}
 
 		if err := httpsTansportService.Stop(); err != nil {
-			logger.Error("Failed to stop gRPC transport service", zap.Error(err))
+			logger.Error("Failed to stop HTTPS transport service", zap.Error(err))
 		}
 
 		close(cleanupDone)
