@@ -59,3 +59,15 @@ func (service *envConfigurationService) GetHttpsPort() (int, error) {
 
 	return portNumber, nil
 }
+
+// GetDbConnectionString retrieves database connection string
+// Returns the database connection string or error if something goes wrong
+func (service *envConfigurationService) GetDbConnectionString() (string, error) {
+	connectionString := os.Getenv("DB_CONNECTION_STRING")
+
+	if strings.Trim(connectionString, " ") == "" {
+		return "", NewUnknownError("DB_CONNECTION_STRING is required")
+	}
+
+	return connectionString, nil
+}
