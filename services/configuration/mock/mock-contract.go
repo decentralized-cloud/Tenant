@@ -91,3 +91,18 @@ func (mr *MockConfigurationContractMockRecorder) GetHttpsPort() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHttpsPort", reflect.TypeOf((*MockConfigurationContract)(nil).GetHttpsPort))
 }
+
+// GetDbConnectionString mocks base method
+func (m *MockConfigurationContract) GetDbConnectionString() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDbConnectionString")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDbConnectionString indicates an expected call of GetDbConnectionString
+func (mr *MockConfigurationContractMockRecorder) GetDbConnectionString() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDbConnectionString", reflect.TypeOf((*MockConfigurationContract)(nil).GetDbConnectionString))
+}
