@@ -21,4 +21,8 @@ type EndpointCreatorContract interface {
 	// DeleteTenantEndpoint creates Delete Tenant endpoint
 	// Returns the Delete Tenant endpoint
 	DeleteTenantEndpoint() endpoint.Endpoint
+
+	// SearchEndpoint creates Search Tenant endpoint
+	// Returns the Search Tenant endpoint
+	SearchEndpoint() endpoint.Endpoint
 }

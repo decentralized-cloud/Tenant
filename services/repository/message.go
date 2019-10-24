@@ -1,7 +1,10 @@
 // Package repository implements different repository services required by the tenant service
 package repository
 
-import "github.com/decentralized-cloud/tenant/models"
+import (
+	"github.com/decentralized-cloud/tenant/models"
+	"github.com/micro-business/go-core/common"
+)
 
 // CreateTenantRequest contains the request to create a new tenant
 type CreateTenantRequest struct {
@@ -40,4 +43,16 @@ type DeleteTenantRequest struct {
 
 // DeleteTenantResponse contains the result of deleting an existing tenant
 type DeleteTenantResponse struct {
+}
+
+// SearchRequest contains the filter criteria to look for existing tenants
+type SearchRequest struct {
+	Pagination     common.Pagination
+	SortingOptions []common.SortingOptionPair
+	TenantIDs      []string
+}
+
+// SearchResponse contains the list of the tenants that matched the result
+type SearchResponse struct {
+	Tenants []models.TenantWithCursor
 }

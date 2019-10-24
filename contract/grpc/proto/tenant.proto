@@ -111,6 +111,86 @@ message DeleteTenantResponse {
 }
 
 /**
+ * The pagination information compatible with graphql-relay connection definition, for more information visit:
+ * https://facebook.github.io/relay/graphql/connections.htm
+ */
+message Pagination {
+  string after = 1;
+
+  int32 first = 2;
+
+  string before = 3;
+
+  int32 last = 4;
+}
+
+/**
+ * The different sorting direction
+ */
+enum SortingDirection {
+  // Indicates result data must be sorted from low to high sequence
+  ACSENDING = 0;
+
+  // Indicates result data must be sorted from high to low sequence
+  DESCENDING = 1;
+}
+
+/**
+ * Defines the pair of values that are used to determine how the result data should be sorted.
+ */
+message SortingOptionPair {
+  // The name of the field on
+   string name = 1;
+
+   // THe sorting direction
+   SortingDirection direction = 2;
+}
+
+/**
+ * Request to search for tenants
+ */
+message SearchRequest {
+  // The pagination information
+  Pagination pagination = 1;
+
+  // The collection of sorting option determines how the returned data must be sorted
+  repeated SortingOptionPair sortingOptions = 2;
+
+  // The unique tenant identifiers
+  repeated string tenantIDs = 3;
+}
+
+/*
+ * The pair of tenant and a cursor that defines the logical position of the tenant in the repository
+ * that can later referred to using pagination information.
+ */
+message TenantWithCursor {
+  // The tenant object
+  Tenant tenant = 1;
+
+  // The unique tenant identifier
+  string tenantID = 2;
+
+  // The cursor defines the logical position of the tenant in the repository that can be later
+  // referred to using pagination information
+  string cursor = 3;
+}
+
+/**
+ * Response contains the result of searching for tenants
+ */
+message SearchResponse {
+  // Indicate whether the operation has any error
+  Error error = 1;
+
+  // Contains error message if the operation was unsuccessful
+  string errorMessage = 2;
+
+  // The list contains the tenants that matched the search criteria
+  repeated TenantWithCursor tenants = 3;
+}
+
+/**
  * The tenant servcie that can create new tenant, read, update and delete existing tenant
  */
 service TenantService {
@@ -133,5 +213,10 @@ service TenantService {
   // request: The request to delete an esiting tenant
   // Returns the result of deleting an exiting tenant
   rpc DeleteTenant(DeleteTenantRequest) returns (DeleteTenantResponse);
+
+  // Search returns the list of tenants that matched the criteria
+  // request: The request contains the search criteria
+  // Returns the list of tenants that matched the criteria
+  rpc Search(SearchRequest) returns (SearchResponse);
 }
 

@@ -27,7 +27,7 @@ func NewBusinessService(
 }
 
 // CreateTenant creates a new tenant.
-// context: Mandatory The reference to the context
+// ctx: Mandatory The reference to the context
 // request: Mandatory. The request to create a new tenant
 // Returns either the result of creating new tenant or error if something goes wrong.
 func (service *businessService) CreateTenant(
@@ -49,7 +49,7 @@ func (service *businessService) CreateTenant(
 }
 
 // ReadTenant read an existing tenant
-// context: Mandatory The reference to the context
+// ctx: Mandatory The reference to the context
 // request: Mandatory. The request to read an existing tenant
 // Returns either the result of reading an existing tenant or error if something goes wrong.
 func (service *businessService) ReadTenant(
@@ -71,7 +71,7 @@ func (service *businessService) ReadTenant(
 }
 
 // UpdateTenant update an existing tenant
-// context: Mandatory The reference to the context
+// ctx: Mandatory The reference to the context
 // request: Mandatory. The request to update an existing tenant
 // Returns either the result of updateing an existing tenant or error if something goes wrong.
 func (service *businessService) UpdateTenant(
@@ -92,7 +92,7 @@ func (service *businessService) UpdateTenant(
 }
 
 // DeleteTenant delete an existing tenant
-// context: Mandatory The reference to the context
+// ctx: Mandatory The reference to the context
 // request: Mandatory. The request to delete an existing tenant
 // Returns either the result of deleting an existing tenant or error if something goes wrong.
 func (service *businessService) DeleteTenant(
@@ -109,6 +109,30 @@ func (service *businessService) DeleteTenant(
 	}
 
 	return &DeleteTenantResponse{}, nil
+}
+
+// Search returns the list of tenants that matched the criteria
+// ctx: Mandatory The reference to the context
+// request: Mandatory. The request contains the search criteria
+// Returns the list of tenants that matched the criteria
+func (service *businessService) Search(
+	ctx context.Context,
+	request *SearchRequest) (*SearchResponse, error) {
+	result, err := service.repositoryService.Search(ctx, &repository.SearchRequest{
+		Pagination:     request.Pagination,
+		SortingOptions: request.SortingOptions,
+		TenantIDs:      request.TenantIDs,
+	})
+
+	if err != nil {
+		return &SearchResponse{
+			Err: mapRepositoryError(err, ""),
+		}, nil
+	}
+
+	return &SearchResponse{
+		Tenants: result.Tenants,
+	}, nil
 }
 
 func mapRepositoryError(err error, tenantID string) error {

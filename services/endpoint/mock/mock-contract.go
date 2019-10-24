@@ -88,3 +88,17 @@ func (mr *MockEndpointCreatorContractMockRecorder) DeleteTenantEndpoint() *gomoc
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTenantEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).DeleteTenantEndpoint))
 }
+
+// SearchEndpoint mocks base method
+func (m *MockEndpointCreatorContract) SearchEndpoint() endpoint.Endpoint {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchEndpoint")
+	ret0, _ := ret[0].(endpoint.Endpoint)
+	return ret0
+}
+
+// SearchEndpoint indicates an expected call of SearchEndpoint
+func (mr *MockEndpointCreatorContractMockRecorder) SearchEndpoint() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).SearchEndpoint))
+}

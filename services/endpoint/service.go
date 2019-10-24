@@ -134,3 +134,30 @@ func (service *endpointCreatorService) DeleteTenantEndpoint() endpoint.Endpoint 
 		return service.businessService.DeleteTenant(ctx, castedRequest)
 	}
 }
+
+// SearchEndpoint creates Search Tenant endpoint
+// Returns the Search Tenant endpoint
+func (service *endpointCreatorService) SearchEndpoint() endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		if ctx == nil {
+			return &business.SearchResponse{
+				Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
+			}, nil
+		}
+
+		if request == nil {
+			return &business.SearchResponse{
+				Err: commonErrors.NewArgumentNilError("request", "request is required"),
+			}, nil
+		}
+
+		castedRequest := request.(*business.SearchRequest)
+		if err := castedRequest.Validate(); err != nil {
+			return &business.SearchResponse{
+				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
+			}, nil
+		}
+
+		return service.businessService.Search(ctx, castedRequest)
+	}
+}

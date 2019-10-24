@@ -4,12 +4,15 @@ package memory_test
 import (
 	"context"
 	"errors"
+	"math/rand"
 	"testing"
 
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/repository"
 	"github.com/decentralized-cloud/tenant/services/repository/memory"
 	"github.com/lucsky/cuid"
+	"github.com/micro-business/go-core/common"
+	"github.com/thoas/go-funk"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -168,6 +171,165 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 				_ = errors.As(err, &notFoundErr)
 
 				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
+			})
+		})
+	})
+
+	Context("tenants exist", func() {
+		var (
+			tenantIDs []string
+			names     []string
+		)
+
+		BeforeEach(func() {
+			rand.Seed(42)
+			names = []string{}
+			for idx := 0; idx < rand.Intn(20)+10; idx++ {
+				names = append(names, cuid.New())
+			}
+
+			tenantIDs = funk.Map(names, func(name string) string {
+				response, _ := sut.CreateTenant(ctx, &repository.CreateTenantRequest{
+					Tenant: models.Tenant{
+						Name: name,
+					},
+				})
+
+				return response.TenantID
+			}).([]string)
+		})
+
+		When("user search for tenants without any tenant ID provided", func() {
+			It("should return all tenants", func() {
+				response, err := sut.Search(ctx, &repository.SearchRequest{})
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).Should(HaveLen(len(tenantIDs)))
+
+				filteredTenants := funk.Filter(response.Tenants, func(tenantWithCursor models.TenantWithCursor) bool {
+					return !funk.Contains(tenantIDs, tenantWithCursor.TenantID)
+				}).([]models.TenantWithCursor)
+
+				Ω(filteredTenants).Should(HaveLen(0))
+			})
+
+			It("should sort the result ascending when no sorting direction is provided", func() {
+				response, _ := sut.Search(ctx, &repository.SearchRequest{})
+				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
+					return tenantWithCursor.Tenant.Name
+				}).([]string)
+
+				for idx := range names[:len(names)-1] {
+					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				}
+			})
+
+			It("should sort the result ascending when sorting direction is ascending", func() {
+				response, _ := sut.Search(ctx, &repository.SearchRequest{
+					SortingOptions: []common.SortingOptionPair{
+						common.SortingOptionPair{
+							Name:      "name",
+							Direction: common.Acsending,
+						}}})
+				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
+					return tenantWithCursor.Tenant.Name
+				}).([]string)
+
+				for idx := range names[:len(names)-1] {
+					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				}
+			})
+
+			It("should sort the result descending when sorting direction is descending", func() {
+				response, _ := sut.Search(ctx, &repository.SearchRequest{
+					SortingOptions: []common.SortingOptionPair{
+						common.SortingOptionPair{
+							Name:      "name",
+							Direction: common.Descending,
+						}}})
+				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
+					return tenantWithCursor.Tenant.Name
+				}).([]string)
+
+				for idx := range names[:len(names)-1] {
+					Ω(names[idx] > names[idx+1]).Should(BeTrue())
+				}
+			})
+		})
+
+		When("user search for tenants with tenant IDs provided", func() {
+			var (
+				numberOfTenantIDs  int
+				shuffeledTenantIDs []string
+			)
+
+			BeforeEach(func() {
+				shuffeledTenantIDs = funk.ShuffleString(tenantIDs)
+				numberOfTenantIDs = rand.Intn(10)
+			})
+
+			It("should return filtered tenant list", func() {
+				response, err := sut.Search(ctx, &repository.SearchRequest{
+					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
+				})
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).Should(HaveLen(numberOfTenantIDs))
+
+				filteredTenants := funk.Filter(response.Tenants, func(tenantWithCursor models.TenantWithCursor) bool {
+					return !funk.Contains(tenantIDs, tenantWithCursor.TenantID)
+				}).([]models.TenantWithCursor)
+
+				Ω(filteredTenants).Should(HaveLen(0))
+			})
+
+			It("should sort the result ascending when no sorting direction is provided", func() {
+				response, _ := sut.Search(ctx, &repository.SearchRequest{
+					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
+				})
+				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
+					return tenantWithCursor.Tenant.Name
+				}).([]string)
+
+				for idx := range names[:len(names)-1] {
+					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				}
+			})
+
+			It("should sort the result ascending when sorting direction is ascending", func() {
+				response, _ := sut.Search(ctx, &repository.SearchRequest{
+					SortingOptions: []common.SortingOptionPair{
+						common.SortingOptionPair{
+							Name:      "name",
+							Direction: common.Acsending,
+						},
+					},
+					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
+				})
+				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
+					return tenantWithCursor.Tenant.Name
+				}).([]string)
+
+				for idx := range names[:len(names)-1] {
+					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				}
+			})
+
+			It("should sort the result descending when sorting direction is descending", func() {
+				response, _ := sut.Search(ctx, &repository.SearchRequest{
+					SortingOptions: []common.SortingOptionPair{
+						common.SortingOptionPair{
+							Name:      "name",
+							Direction: common.Descending,
+						},
+					},
+					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
+				})
+				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
+					return tenantWithCursor.Tenant.Name
+				}).([]string)
+
+				for idx := range names[:len(names)-1] {
+					Ω(names[idx] > names[idx+1]).Should(BeTrue())
+				}
 			})
 		})
 	})

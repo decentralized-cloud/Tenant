@@ -26,7 +26,9 @@ func StartService() {
 		log.Fatal(err)
 	}
 
-	defer logger.Sync()
+	defer func() {
+		_ = logger.Sync()
+	}()
 
 	if err = setupDependencies(); err != nil {
 		logger.Fatal("Failed to setup dependecies", zap.Error(err))
