@@ -369,17 +369,6 @@ func assertArgumentNilError(expectedArgumentName, expectedMessage string, err er
 	}
 }
 
-func assertArgumentError(expectedArgumentName, expectedMessage string, err error, nestedErr error) {
-	Ω(commonErrors.IsArgumentError(err)).Should(BeTrue())
-
-	var argumentErr commonErrors.ArgumentError
-	_ = errors.As(err, &argumentErr)
-
-	Ω(argumentErr.ArgumentName).Should(Equal(expectedArgumentName))
-	Ω(strings.Contains(argumentErr.Error(), expectedMessage)).Should(BeTrue())
-	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
-}
-
 func assertUnknowError(expectedMessage string, err error, nestedErr error) {
 	Ω(business.IsUnknownError(err)).Should(BeTrue())
 

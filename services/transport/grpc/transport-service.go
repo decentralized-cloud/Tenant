@@ -24,6 +24,7 @@ type transportService struct {
 	readTenantHandler      gokitgrpc.Handler
 	updateTenantHandler    gokitgrpc.Handler
 	deleteTenantHandler    gokitgrpc.Handler
+	searchHandler          gokitgrpc.Handler
 }
 
 var Live bool
@@ -129,6 +130,12 @@ func (service *transportService) setupHandlers() {
 		decodeDeleteTenantRequest,
 		encodeDeleteTenantResponse,
 	)
+
+	service.searchHandler = gokitgrpc.NewServer(
+		service.endpointCreatorService.SearchEndpoint(),
+		decodeSearchRequest,
+		encodeSearchResponse,
+	)
 }
 
 // CreateTenant creates a new tenant
@@ -191,5 +198,21 @@ func (service *transportService) DeleteTenant(
 	}
 
 	return response.(*tenantGRPCContract.DeleteTenantResponse), nil
+
+}
+
+// Search returns the list  of tenants matched the provided criteria
+// context: Mandatory. The reference to the context
+// request: Mandatory. The request to delete an existing tenant
+// Returns the result of deleting an exiting tenant
+func (service *transportService) Search(
+	ctx context.Context,
+	request *tenantGRPCContract.SearchRequest) (*tenantGRPCContract.SearchResponse, error) {
+	_, response, err := service.searchHandler.ServeGRPC(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	return response.(*tenantGRPCContract.SearchResponse), nil
 
 }

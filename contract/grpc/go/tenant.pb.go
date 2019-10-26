@@ -66,6 +66,35 @@ func (Error) EnumDescriptor() ([]byte, []int) {
 }
 
 //*
+// The different sorting direction
+type SortingDirection int32
+
+const (
+	// Indicates result data must be sorted from low to high sequence
+	SortingDirection_ACSENDING SortingDirection = 0
+	// Indicates result data must be sorted from high to low sequence
+	SortingDirection_DESCENDING SortingDirection = 1
+)
+
+var SortingDirection_name = map[int32]string{
+	0: "ACSENDING",
+	1: "DESCENDING",
+}
+
+var SortingDirection_value = map[string]int32{
+	"ACSENDING":  0,
+	"DESCENDING": 1,
+}
+
+func (x SortingDirection) String() string {
+	return proto.EnumName(SortingDirection_name, int32(x))
+}
+
+func (SortingDirection) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_3d6a2cff6c84df7e, []int{1}
+}
+
+//*
 // The tenant object
 type Tenant struct {
 	// The tenant name
@@ -505,8 +534,308 @@ func (m *DeleteTenantResponse) GetErrorMessage() string {
 	return ""
 }
 
+//*
+// The pagination information compatible with graphql-relay connection definition, for more information visit:
+// https://facebook.github.io/relay/graphql/connections.htm
+type Pagination struct {
+	After                string   `protobuf:"bytes,1,opt,name=after,proto3" json:"after,omitempty"`
+	First                int32    `protobuf:"varint,2,opt,name=first,proto3" json:"first,omitempty"`
+	Before               string   `protobuf:"bytes,3,opt,name=before,proto3" json:"before,omitempty"`
+	Last                 int32    `protobuf:"varint,4,opt,name=last,proto3" json:"last,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Pagination) Reset()         { *m = Pagination{} }
+func (m *Pagination) String() string { return proto.CompactTextString(m) }
+func (*Pagination) ProtoMessage()    {}
+func (*Pagination) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3d6a2cff6c84df7e, []int{9}
+}
+
+func (m *Pagination) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Pagination.Unmarshal(m, b)
+}
+func (m *Pagination) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Pagination.Marshal(b, m, deterministic)
+}
+func (m *Pagination) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Pagination.Merge(m, src)
+}
+func (m *Pagination) XXX_Size() int {
+	return xxx_messageInfo_Pagination.Size(m)
+}
+func (m *Pagination) XXX_DiscardUnknown() {
+	xxx_messageInfo_Pagination.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Pagination proto.InternalMessageInfo
+
+func (m *Pagination) GetAfter() string {
+	if m != nil {
+		return m.After
+	}
+	return ""
+}
+
+func (m *Pagination) GetFirst() int32 {
+	if m != nil {
+		return m.First
+	}
+	return 0
+}
+
+func (m *Pagination) GetBefore() string {
+	if m != nil {
+		return m.Before
+	}
+	return ""
+}
+
+func (m *Pagination) GetLast() int32 {
+	if m != nil {
+		return m.Last
+	}
+	return 0
+}
+
+//*
+// Defines the pair of values that are used to determine how the result data should be sorted.
+type SortingOptionPair struct {
+	// The name of the field on
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// THe sorting direction
+	Direction            SortingDirection `protobuf:"varint,2,opt,name=direction,proto3,enum=tenant.SortingDirection" json:"direction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *SortingOptionPair) Reset()         { *m = SortingOptionPair{} }
+func (m *SortingOptionPair) String() string { return proto.CompactTextString(m) }
+func (*SortingOptionPair) ProtoMessage()    {}
+func (*SortingOptionPair) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3d6a2cff6c84df7e, []int{10}
+}
+
+func (m *SortingOptionPair) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SortingOptionPair.Unmarshal(m, b)
+}
+func (m *SortingOptionPair) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SortingOptionPair.Marshal(b, m, deterministic)
+}
+func (m *SortingOptionPair) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SortingOptionPair.Merge(m, src)
+}
+func (m *SortingOptionPair) XXX_Size() int {
+	return xxx_messageInfo_SortingOptionPair.Size(m)
+}
+func (m *SortingOptionPair) XXX_DiscardUnknown() {
+	xxx_messageInfo_SortingOptionPair.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SortingOptionPair proto.InternalMessageInfo
+
+func (m *SortingOptionPair) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *SortingOptionPair) GetDirection() SortingDirection {
+	if m != nil {
+		return m.Direction
+	}
+	return SortingDirection_ACSENDING
+}
+
+//*
+// Request to search for tenants
+type SearchRequest struct {
+	// The pagination information
+	Pagination *Pagination `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	// The collection of sorting option determines how the returned data must be sorted
+	SortingOptions []*SortingOptionPair `protobuf:"bytes,2,rep,name=sortingOptions,proto3" json:"sortingOptions,omitempty"`
+	// The unique tenant identifiers
+	TenantIDs            []string `protobuf:"bytes,3,rep,name=tenantIDs,proto3" json:"tenantIDs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SearchRequest) Reset()         { *m = SearchRequest{} }
+func (m *SearchRequest) String() string { return proto.CompactTextString(m) }
+func (*SearchRequest) ProtoMessage()    {}
+func (*SearchRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3d6a2cff6c84df7e, []int{11}
+}
+
+func (m *SearchRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SearchRequest.Unmarshal(m, b)
+}
+func (m *SearchRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SearchRequest.Marshal(b, m, deterministic)
+}
+func (m *SearchRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SearchRequest.Merge(m, src)
+}
+func (m *SearchRequest) XXX_Size() int {
+	return xxx_messageInfo_SearchRequest.Size(m)
+}
+func (m *SearchRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SearchRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SearchRequest proto.InternalMessageInfo
+
+func (m *SearchRequest) GetPagination() *Pagination {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+func (m *SearchRequest) GetSortingOptions() []*SortingOptionPair {
+	if m != nil {
+		return m.SortingOptions
+	}
+	return nil
+}
+
+func (m *SearchRequest) GetTenantIDs() []string {
+	if m != nil {
+		return m.TenantIDs
+	}
+	return nil
+}
+
+//
+// The pair of tenant and a cursor that defines the logical position of the tenant in the repository
+// that can later referred to using pagination information.
+type TenantWithCursor struct {
+	// The tenant object
+	Tenant *Tenant `protobuf:"bytes,1,opt,name=tenant,proto3" json:"tenant,omitempty"`
+	// The unique tenant identifier
+	TenantID string `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
+	// The cursor defines the logical position of the tenant in the repository that can be later
+	// referred to using pagination information
+	Cursor               string   `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *TenantWithCursor) Reset()         { *m = TenantWithCursor{} }
+func (m *TenantWithCursor) String() string { return proto.CompactTextString(m) }
+func (*TenantWithCursor) ProtoMessage()    {}
+func (*TenantWithCursor) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3d6a2cff6c84df7e, []int{12}
+}
+
+func (m *TenantWithCursor) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_TenantWithCursor.Unmarshal(m, b)
+}
+func (m *TenantWithCursor) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_TenantWithCursor.Marshal(b, m, deterministic)
+}
+func (m *TenantWithCursor) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TenantWithCursor.Merge(m, src)
+}
+func (m *TenantWithCursor) XXX_Size() int {
+	return xxx_messageInfo_TenantWithCursor.Size(m)
+}
+func (m *TenantWithCursor) XXX_DiscardUnknown() {
+	xxx_messageInfo_TenantWithCursor.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TenantWithCursor proto.InternalMessageInfo
+
+func (m *TenantWithCursor) GetTenant() *Tenant {
+	if m != nil {
+		return m.Tenant
+	}
+	return nil
+}
+
+func (m *TenantWithCursor) GetTenantID() string {
+	if m != nil {
+		return m.TenantID
+	}
+	return ""
+}
+
+func (m *TenantWithCursor) GetCursor() string {
+	if m != nil {
+		return m.Cursor
+	}
+	return ""
+}
+
+//*
+// Response contains the result of searching for tenants
+type SearchResponse struct {
+	// Indicate whether the operation has any error
+	Error Error `protobuf:"varint,1,opt,name=error,proto3,enum=tenant.Error" json:"error,omitempty"`
+	// Contains error message if the operation was unsuccessful
+	ErrorMessage string `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
+	// The list contains the tenants that matched the search criteria
+	Tenants              []*TenantWithCursor `protobuf:"bytes,3,rep,name=tenants,proto3" json:"tenants,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *SearchResponse) Reset()         { *m = SearchResponse{} }
+func (m *SearchResponse) String() string { return proto.CompactTextString(m) }
+func (*SearchResponse) ProtoMessage()    {}
+func (*SearchResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3d6a2cff6c84df7e, []int{13}
+}
+
+func (m *SearchResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SearchResponse.Unmarshal(m, b)
+}
+func (m *SearchResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SearchResponse.Marshal(b, m, deterministic)
+}
+func (m *SearchResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SearchResponse.Merge(m, src)
+}
+func (m *SearchResponse) XXX_Size() int {
+	return xxx_messageInfo_SearchResponse.Size(m)
+}
+func (m *SearchResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SearchResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SearchResponse proto.InternalMessageInfo
+
+func (m *SearchResponse) GetError() Error {
+	if m != nil {
+		return m.Error
+	}
+	return Error_NO_ERROR
+}
+
+func (m *SearchResponse) GetErrorMessage() string {
+	if m != nil {
+		return m.ErrorMessage
+	}
+	return ""
+}
+
+func (m *SearchResponse) GetTenants() []*TenantWithCursor {
+	if m != nil {
+		return m.Tenants
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterEnum("tenant.Error", Error_name, Error_value)
+	proto.RegisterEnum("tenant.SortingDirection", SortingDirection_name, SortingDirection_value)
 	proto.RegisterType((*Tenant)(nil), "tenant.Tenant")
 	proto.RegisterType((*CreateTenantRequest)(nil), "tenant.CreateTenantRequest")
 	proto.RegisterType((*CreateTenantResponse)(nil), "tenant.CreateTenantResponse")
@@ -516,38 +845,59 @@ func init() {
 	proto.RegisterType((*UpdateTenantResponse)(nil), "tenant.UpdateTenantResponse")
 	proto.RegisterType((*DeleteTenantRequest)(nil), "tenant.DeleteTenantRequest")
 	proto.RegisterType((*DeleteTenantResponse)(nil), "tenant.DeleteTenantResponse")
+	proto.RegisterType((*Pagination)(nil), "tenant.Pagination")
+	proto.RegisterType((*SortingOptionPair)(nil), "tenant.SortingOptionPair")
+	proto.RegisterType((*SearchRequest)(nil), "tenant.SearchRequest")
+	proto.RegisterType((*TenantWithCursor)(nil), "tenant.TenantWithCursor")
+	proto.RegisterType((*SearchResponse)(nil), "tenant.SearchResponse")
 }
 
 func init() { proto.RegisterFile("tenant.proto", fileDescriptor_3d6a2cff6c84df7e) }
 
 var fileDescriptor_3d6a2cff6c84df7e = []byte{
-	// 409 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x94, 0xcf, 0x4f, 0xa3, 0x40,
-	0x14, 0xc7, 0x17, 0xfa, 0x63, 0xbb, 0xaf, 0xb4, 0xcb, 0xbe, 0x76, 0x93, 0x96, 0xed, 0x61, 0xc3,
-	0x26, 0x9b, 0xcd, 0x1e, 0x6a, 0xac, 0x67, 0x0f, 0x58, 0x30, 0x21, 0xea, 0x10, 0x07, 0x88, 0xf6,
-	0x44, 0xd0, 0x4e, 0x8c, 0x89, 0x42, 0x05, 0xf4, 0xe2, 0xd9, 0x3f, 0xc9, 0xff, 0xcf, 0x74, 0x00,
-	0x01, 0x4b, 0x9a, 0x98, 0xf4, 0x36, 0x33, 0xef, 0x7d, 0xbe, 0xf9, 0xbe, 0x1f, 0x00, 0x52, 0xc2,
-	0x02, 0x3f, 0x48, 0xa6, 0xab, 0x28, 0x4c, 0x42, 0x6c, 0xa7, 0x37, 0x75, 0x02, 0x6d, 0x87, 0x9f,
-	0x10, 0xa1, 0x19, 0xf8, 0xf7, 0x6c, 0x24, 0xfc, 0x16, 0xfe, 0x7d, 0xa3, 0xfc, 0xac, 0x1e, 0xc2,
-	0x60, 0x1e, 0x31, 0x3f, 0x61, 0x69, 0x0e, 0x65, 0x0f, 0x8f, 0x2c, 0x4e, 0xf0, 0x2f, 0x64, 0x38,
-	0x4f, 0xee, 0xce, 0xfa, 0xd3, 0x4c, 0x3b, 0x4b, 0xcb, 0xc5, 0x9f, 0x61, 0x58, 0xc5, 0xe3, 0x55,
-	0x18, 0xc4, 0x0c, 0xff, 0x40, 0x8b, 0x45, 0x51, 0x18, 0x71, 0xbc, 0x3f, 0xeb, 0xe5, 0xb8, 0xb1,
-	0x7e, 0xa4, 0x69, 0x0c, 0x55, 0x90, 0xf8, 0xe1, 0x8c, 0xc5, 0xb1, 0x7f, 0xc3, 0x46, 0x22, 0xf7,
-	0x55, 0x79, 0x43, 0x05, 0x3a, 0x29, 0x6a, 0xea, 0xa3, 0x06, 0x8f, 0xbf, 0xdf, 0xd5, 0x3d, 0xf8,
-	0x41, 0x99, 0xbf, 0xac, 0x3a, 0x2f, 0x03, 0xc2, 0x07, 0xe0, 0x45, 0x00, 0x2c, 0x13, 0xbb, 0x36,
-	0x5b, 0x74, 0xad, 0xb1, 0xb5, 0x6b, 0x0b, 0x18, 0xb8, 0xab, 0xe5, 0x46, 0xd3, 0xb7, 0x58, 0x2f,
-	0x49, 0x8b, 0x5b, 0xa5, 0x3d, 0x18, 0x56, 0xa5, 0x77, 0x5c, 0xa3, 0xba, 0x0f, 0x03, 0x9d, 0xdd,
-	0xb1, 0x4f, 0x78, 0x5f, 0x7b, 0xaa, 0x22, 0x3b, 0xf6, 0xf4, 0x7f, 0x09, 0x2d, 0xce, 0xa0, 0x04,
-	0x1d, 0x62, 0x79, 0x06, 0xa5, 0x16, 0x95, 0xbf, 0x60, 0x17, 0xbe, 0xba, 0xe4, 0x84, 0x58, 0x17,
-	0x44, 0x16, 0x70, 0x0c, 0x3f, 0x1d, 0x83, 0x68, 0xc4, 0xf1, 0xb4, 0x53, 0x6a, 0x68, 0xfa, 0xc2,
-	0x33, 0x2e, 0x4d, 0xdb, 0xb1, 0x65, 0x11, 0x87, 0x20, 0x67, 0x21, 0x62, 0x39, 0xde, 0xb1, 0xe5,
-	0x12, 0x5d, 0x6e, 0xe0, 0x77, 0xe8, 0x1e, 0x69, 0xba, 0x47, 0x8d, 0x73, 0xd7, 0xb0, 0x1d, 0xb9,
-	0x39, 0x7b, 0x15, 0xa1, 0x97, 0x56, 0x60, 0xb3, 0xe8, 0xe9, 0xf6, 0x9a, 0xa1, 0x09, 0x52, 0x79,
-	0xfb, 0xf1, 0x57, 0x5e, 0x41, 0xcd, 0x27, 0xa5, 0x4c, 0xea, 0x83, 0x59, 0x2f, 0xe6, 0x00, 0xc5,
-	0x66, 0xe2, 0x38, 0xcf, 0xdd, 0xd8, 0x6f, 0x45, 0xa9, 0x0b, 0x65, 0x22, 0x26, 0x48, 0xe5, 0xe1,
-	0x17, 0x7e, 0x6a, 0xb6, 0xad, 0xf0, 0x53, 0xbb, 0x2f, 0x26, 0x48, 0xe5, 0x99, 0x15, 0x52, 0x35,
-	0xc3, 0x2f, 0xa4, 0xea, 0xc6, 0x7c, 0xd5, 0xe6, 0xff, 0xa3, 0x83, 0xb7, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0x1c, 0x8e, 0xac, 0x79, 0x9f, 0x04, 0x00, 0x00,
+	// 664 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0xae, 0x93, 0x26, 0x6d, 0x26, 0x3f, 0xb8, 0xd3, 0xb4, 0x72, 0x43, 0x0f, 0x95, 0x91, 0x50,
+	0xd5, 0x43, 0x51, 0x8d, 0x04, 0x27, 0x0e, 0x21, 0x36, 0x28, 0x02, 0x9c, 0xb2, 0x4e, 0x54, 0x7a,
+	0xb2, 0xdc, 0x64, 0xdb, 0x5a, 0x2a, 0x76, 0x58, 0xbb, 0x5c, 0x38, 0x73, 0xe4, 0x2d, 0x78, 0x3e,
+	0x9e, 0x01, 0x79, 0x77, 0x1d, 0xff, 0xd4, 0xaa, 0x40, 0xca, 0x6d, 0x67, 0x67, 0xbe, 0xf1, 0x37,
+	0xb3, 0x33, 0x9f, 0xa1, 0x13, 0xd3, 0xc0, 0x0b, 0xe2, 0xd3, 0x25, 0x0b, 0xe3, 0x10, 0x9b, 0xc2,
+	0xd2, 0x0f, 0xa1, 0x39, 0xe5, 0x27, 0x44, 0xd8, 0x0c, 0xbc, 0xaf, 0x54, 0x53, 0x8e, 0x94, 0xe3,
+	0x16, 0xe1, 0x67, 0xfd, 0x0d, 0xec, 0x8e, 0x18, 0xf5, 0x62, 0x2a, 0x62, 0x08, 0xfd, 0x76, 0x4f,
+	0xa3, 0x18, 0x9f, 0x83, 0x84, 0xf3, 0xe0, 0xb6, 0xd1, 0x3b, 0x95, 0xb9, 0x65, 0x58, 0x9a, 0xfc,
+	0x07, 0xf4, 0x8b, 0xf0, 0x68, 0x19, 0x06, 0x11, 0xc5, 0x67, 0xd0, 0xa0, 0x8c, 0x85, 0x8c, 0xc3,
+	0x7b, 0x46, 0x37, 0x85, 0x5b, 0xc9, 0x25, 0x11, 0x3e, 0xd4, 0xa1, 0xc3, 0x0f, 0x9f, 0x68, 0x14,
+	0x79, 0x37, 0x54, 0xab, 0x71, 0x5e, 0x85, 0x3b, 0x1c, 0xc0, 0xb6, 0x80, 0x8e, 0x4d, 0xad, 0xce,
+	0xfd, 0x2b, 0x5b, 0x7f, 0x01, 0x3b, 0x84, 0x7a, 0x8b, 0x22, 0xf3, 0x3c, 0x40, 0x29, 0x01, 0x7e,
+	0x2a, 0x80, 0x79, 0xc4, 0xba, 0xc9, 0x66, 0x5d, 0xab, 0x3f, 0xda, 0xb5, 0x4b, 0xd8, 0x9d, 0x2d,
+	0x17, 0x0f, 0x9a, 0xfe, 0x08, 0xf5, 0x5c, 0xea, 0xda, 0xa3, 0xa9, 0x5d, 0xe8, 0x17, 0x53, 0xaf,
+	0xb9, 0x46, 0xfd, 0x0c, 0x76, 0x4d, 0x7a, 0x47, 0xff, 0x83, 0x7b, 0xc2, 0xa9, 0x08, 0x59, 0x37,
+	0xa7, 0x05, 0xc0, 0xb9, 0x77, 0xe3, 0x07, 0x5e, 0xec, 0x87, 0x01, 0xf6, 0xa1, 0xe1, 0x5d, 0xc7,
+	0x94, 0x49, 0x1e, 0xc2, 0x48, 0x6e, 0xaf, 0x7d, 0x16, 0x89, 0xfe, 0x35, 0x88, 0x30, 0x70, 0x1f,
+	0x9a, 0x57, 0xf4, 0x3a, 0x64, 0x54, 0x0e, 0x97, 0xb4, 0x92, 0x55, 0xb9, 0xf3, 0xa2, 0x58, 0xdb,
+	0xe4, 0xc1, 0xfc, 0xac, 0xbb, 0xb0, 0xe3, 0x84, 0x2c, 0xf6, 0x83, 0x9b, 0xc9, 0x32, 0xf9, 0xd0,
+	0xb9, 0xe7, 0xb3, 0xaa, 0x9d, 0xc2, 0x57, 0xd0, 0x5a, 0xf8, 0x8c, 0xce, 0x93, 0x20, 0xfe, 0xb9,
+	0x9e, 0xa1, 0xa5, 0xb5, 0xc9, 0x0c, 0x66, 0xea, 0x27, 0x59, 0xa8, 0xfe, 0x5b, 0x81, 0xae, 0x43,
+	0x3d, 0x36, 0xbf, 0x4d, 0xbb, 0x6a, 0x00, 0x2c, 0x57, 0x85, 0xc9, 0x55, 0xc4, 0x34, 0x55, 0x56,
+	0x32, 0xc9, 0x45, 0xe1, 0x10, 0x7a, 0x51, 0x9e, 0x66, 0xa4, 0xd5, 0x8e, 0xea, 0xc7, 0x6d, 0xe3,
+	0xa0, 0x44, 0x21, 0x2b, 0x82, 0x94, 0x00, 0x78, 0x08, 0xad, 0xf4, 0xf1, 0x22, 0xad, 0x7e, 0x54,
+	0x3f, 0x6e, 0x91, 0xec, 0x42, 0x0f, 0x40, 0x15, 0x0f, 0x79, 0xe1, 0xc7, 0xb7, 0xa3, 0x7b, 0x16,
+	0x85, 0xec, 0x5f, 0xf5, 0xa2, 0x30, 0x26, 0xb5, 0xd2, 0x88, 0xef, 0x43, 0x73, 0xce, 0xb3, 0xa5,
+	0x6f, 0x21, 0x2c, 0xfd, 0x97, 0x02, 0xbd, 0xb4, 0x2d, 0xeb, 0xde, 0x58, 0x03, 0xb6, 0x04, 0x54,
+	0xd4, 0xd9, 0xce, 0x1e, 0xaa, 0x5c, 0x22, 0x49, 0x03, 0x4f, 0x16, 0xd0, 0xe0, 0xdf, 0xc1, 0x0e,
+	0x6c, 0xdb, 0x13, 0xd7, 0x22, 0x64, 0x42, 0xd4, 0x0d, 0x6c, 0xc3, 0xd6, 0xcc, 0xfe, 0x60, 0x4f,
+	0x2e, 0x6c, 0x55, 0xc1, 0x03, 0xd8, 0x9b, 0x5a, 0xf6, 0xd0, 0x9e, 0xba, 0xc3, 0x8f, 0xc4, 0x1a,
+	0x9a, 0x97, 0xae, 0xf5, 0x65, 0xec, 0x4c, 0x1d, 0xb5, 0x86, 0x7d, 0x50, 0xa5, 0xcb, 0x9e, 0x4c,
+	0xdd, 0x77, 0x93, 0x99, 0x6d, 0xaa, 0x75, 0x7c, 0x02, 0xed, 0xb7, 0x43, 0xd3, 0x25, 0xd6, 0xe7,
+	0x99, 0xe5, 0x4c, 0xd5, 0xcd, 0x93, 0x33, 0x50, 0xcb, 0xb3, 0x82, 0x5d, 0x68, 0x0d, 0x47, 0x8e,
+	0x65, 0x9b, 0x63, 0xfb, 0xbd, 0xba, 0x81, 0x3d, 0x00, 0xd3, 0x72, 0x46, 0xd2, 0x56, 0x8c, 0x3f,
+	0x35, 0xe8, 0x0a, 0xda, 0x0e, 0x65, 0xdf, 0xfd, 0x39, 0xc5, 0x31, 0x74, 0xf2, 0xf2, 0x8c, 0x4f,
+	0xd3, 0xea, 0x2a, 0x34, 0x7f, 0x70, 0x58, 0xed, 0x94, 0x2d, 0x1f, 0x01, 0x64, 0xd2, 0x89, 0xab,
+	0x61, 0x7a, 0x20, 0xc0, 0x83, 0x41, 0x95, 0x4b, 0x26, 0x19, 0x43, 0x27, 0xaf, 0x4e, 0x19, 0x9f,
+	0x0a, 0x39, 0xcc, 0xf8, 0x54, 0x0a, 0xda, 0x18, 0x3a, 0x79, 0x51, 0xc9, 0x52, 0x55, 0xa8, 0x53,
+	0x96, 0xaa, 0x52, 0x87, 0x5e, 0x43, 0x53, 0xcc, 0x17, 0xee, 0xad, 0x76, 0x24, 0xbf, 0x86, 0x83,
+	0xfd, 0xf2, 0xb5, 0x00, 0x5e, 0x35, 0xf9, 0x9f, 0xf6, 0xe5, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0x8a, 0x2c, 0xa1, 0x6f, 0x79, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -578,6 +928,10 @@ type TenantServiceClient interface {
 	// request: The request to delete an esiting tenant
 	// Returns the result of deleting an exiting tenant
 	DeleteTenant(ctx context.Context, in *DeleteTenantRequest, opts ...grpc.CallOption) (*DeleteTenantResponse, error)
+	// Search returns the list of tenants that matched the criteria
+	// request: The request contains the search criteria
+	// Returns the list of tenants that matched the criteria
+	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
 }
 
 type tenantServiceClient struct {
@@ -624,6 +978,15 @@ func (c *tenantServiceClient) DeleteTenant(ctx context.Context, in *DeleteTenant
 	return out, nil
 }
 
+func (c *tenantServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
+	out := new(SearchResponse)
+	err := c.cc.Invoke(ctx, "/tenant.TenantService/Search", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TenantServiceServer is the server API for TenantService service.
 type TenantServiceServer interface {
 	// CreateTenant creates a new tenant
@@ -642,6 +1005,10 @@ type TenantServiceServer interface {
 	// request: The request to delete an esiting tenant
 	// Returns the result of deleting an exiting tenant
 	DeleteTenant(context.Context, *DeleteTenantRequest) (*DeleteTenantResponse, error)
+	// Search returns the list of tenants that matched the criteria
+	// request: The request contains the search criteria
+	// Returns the list of tenants that matched the criteria
+	Search(context.Context, *SearchRequest) (*SearchResponse, error)
 }
 
 // UnimplementedTenantServiceServer can be embedded to have forward compatible implementations.
@@ -659,6 +1026,9 @@ func (*UnimplementedTenantServiceServer) UpdateTenant(ctx context.Context, req *
 }
 func (*UnimplementedTenantServiceServer) DeleteTenant(ctx context.Context, req *DeleteTenantRequest) (*DeleteTenantResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTenant not implemented")
+}
+func (*UnimplementedTenantServiceServer) Search(ctx context.Context, req *SearchRequest) (*SearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
 
 func RegisterTenantServiceServer(s *grpc.Server, srv TenantServiceServer) {
@@ -737,6 +1107,24 @@ func _TenantService_DeleteTenant_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TenantService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServiceServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tenant.TenantService/Search",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServiceServer).Search(ctx, req.(*SearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _TenantService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tenant.TenantService",
 	HandlerType: (*TenantServiceServer)(nil),
@@ -756,6 +1144,10 @@ var _TenantService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTenant",
 			Handler:    _TenantService_DeleteTenant_Handler,
+		},
+		{
+			MethodName: "Search",
+			Handler:    _TenantService_Search_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

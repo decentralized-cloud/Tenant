@@ -42,3 +42,9 @@ func (val DeleteTenantRequest) Validate() error {
 		validation.Field(&val.TenantID, validation.Required),
 	)
 }
+
+// Validate validates the SearchRequest model and return error if the validation failes
+// Returns error if validation failes
+func (val SearchRequest) Validate() error {
+	return nil
+}

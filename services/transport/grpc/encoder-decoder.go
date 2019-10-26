@@ -7,7 +7,9 @@ import (
 	tenantGRPCContract "github.com/decentralized-cloud/tenant/contract/grpc/go"
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/business"
+	"github.com/micro-business/go-core/common"
 	commonErrors "github.com/micro-business/go-core/system/errors"
+	"github.com/thoas/go-funk"
 )
 
 // decodeCreateTenantRequest decodes CreateTenant request message from GRPC object to business object
@@ -151,6 +153,69 @@ func encodeDeleteTenantResponse(
 	}
 
 	return &tenantGRPCContract.DeleteTenantResponse{
+		Error:        mapError(castedResponse.Err),
+		ErrorMessage: castedResponse.Err.Error(),
+	}, nil
+}
+
+// decodeSearchRequest decodes Search request message from GRPC object to business object
+// context: Optional The reference to the context
+// request: Mandatory. The reference to the GRPC request
+// Returns either the decoded request or error if something goes wrongw
+func decodeSearchRequest(
+	ctx context.Context,
+	request interface{}) (interface{}, error) {
+	castedRequest := request.(*tenantGRPCContract.SearchRequest)
+
+	return &business.SearchRequest{
+		Pagination: common.Pagination{
+			After:  castedRequest.Pagination.After,
+			First:  int(castedRequest.Pagination.First),
+			Before: castedRequest.Pagination.Before,
+			Last:   int(castedRequest.Pagination.Last),
+		},
+		TenantIDs: castedRequest.TenantIDs,
+		SortingOptions: funk.Map(
+			castedRequest.SortingOptions,
+			func(sortingOption tenantGRPCContract.SortingOptionPair) common.SortingOptionPair {
+				direction := common.Acsending
+
+				if sortingOption.Direction == tenantGRPCContract.SortingDirection_DESCENDING {
+					direction = common.Descending
+				}
+
+				return common.SortingOptionPair{
+					Name:      sortingOption.Name,
+					Direction: direction,
+				}
+			}).([]common.SortingOptionPair),
+	}, nil
+}
+
+// encodeSearchResponse encodes Search response from business object to GRPC object
+// context: Optional The reference to the context
+// request: Mandatory. The reference to the business response
+// Returns either the decoded response or error if something goes wrong
+func encodeSearchResponse(
+	ctx context.Context,
+	response interface{}) (interface{}, error) {
+	castedResponse := response.(*business.SearchResponse)
+	if castedResponse.Err == nil {
+		return &tenantGRPCContract.SearchResponse{
+			Error: tenantGRPCContract.Error_NO_ERROR,
+			Tenants: funk.Map(castedResponse.Tenants, func(tenant models.TenantWithCursor) *tenantGRPCContract.TenantWithCursor {
+				return &tenantGRPCContract.TenantWithCursor{
+					TenantID: tenant.TenantID,
+					Tenant: &tenantGRPCContract.Tenant{
+						Name: tenant.Tenant.Name,
+					},
+					Cursor: tenant.Cursor,
+				}
+			}).([]*tenantGRPCContract.TenantWithCursor),
+		}, nil
+	}
+
+	return &tenantGRPCContract.SearchResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil

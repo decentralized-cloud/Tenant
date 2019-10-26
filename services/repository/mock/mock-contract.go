@@ -93,3 +93,18 @@ func (mr *MockRepositoryContractMockRecorder) DeleteTenant(ctx, request interfac
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTenant", reflect.TypeOf((*MockRepositoryContract)(nil).DeleteTenant), ctx, request)
 }
+
+// Search mocks base method
+func (m *MockRepositoryContract) Search(ctx context.Context, request *repository.SearchRequest) (*repository.SearchResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Search", ctx, request)
+	ret0, _ := ret[0].(*repository.SearchResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Search indicates an expected call of Search
+func (mr *MockRepositoryContractMockRecorder) Search(ctx, request interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockRepositoryContract)(nil).Search), ctx, request)
+}
