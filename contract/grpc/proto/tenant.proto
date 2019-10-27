@@ -129,7 +129,7 @@ message Pagination {
  */
 enum SortingDirection {
   // Indicates result data must be sorted from low to high sequence
-  ACSENDING = 0;
+  ASCENDING = 0;
 
   // Indicates result data must be sorted from high to low sequence
   DESCENDING = 1;
