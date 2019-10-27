@@ -71,3 +71,15 @@ func (service *envConfigurationService) GetDbConnectionString() (string, error) 
 
 	return connectionString, nil
 }
+
+// GetTenantDbName retrieves database name
+// Returns the database name or error if something goes wrong
+func (service *envConfigurationService) GetTenantDbName() (string, error) {
+	dbName := os.Getenv("TENANT_DB_NAME")
+
+	if strings.Trim(dbName, " ") == "" {
+		return "", NewUnknownError("TENANT_DB_NAME is required")
+	}
+
+	return dbName, nil
+}

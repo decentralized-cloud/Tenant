@@ -138,3 +138,16 @@ func (service *mongodbRepositoryService) DeleteTenant(
 
 	return &repository.DeleteTenantResponse{}, nil
 }
+
+// Search returns the list of tenants that matched the criteria
+// ctx: Mandatory The reference to the context
+// request: Mandatory. The request contains the search criteria
+// Returns the list of tenants that matched the criteria
+func (service *mongodbRepositoryService) Search(
+	ctx context.Context,
+	request *repository.SearchRequest) (*repository.SearchResponse, error) {
+
+	response := &repository.SearchResponse{}
+
+	return response, nil
+}

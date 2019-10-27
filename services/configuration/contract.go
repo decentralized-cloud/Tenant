@@ -22,4 +22,8 @@ type ConfigurationContract interface {
 	// GetDbConnectionString retrieves database connection string
 	// Returns the database connection string or error if something goes wrong
 	GetDbConnectionString() (string, error)
+
+	// GetTenantDbName retrieves database name
+	// Returns the database name or error if something goes wrong
+	GetTenantDbName() (string, error)
 }
