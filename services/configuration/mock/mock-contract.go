@@ -5,8 +5,9 @@
 package mock_configuration
 
 import (
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockConfigurationContract is a mock of ConfigurationContract interface
@@ -105,4 +106,19 @@ func (m *MockConfigurationContract) GetDbConnectionString() (string, error) {
 func (mr *MockConfigurationContractMockRecorder) GetDbConnectionString() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDbConnectionString", reflect.TypeOf((*MockConfigurationContract)(nil).GetDbConnectionString))
+}
+
+// GetTenantDbName mocks base method
+func (m *MockConfigurationContract) GetTenantDbName() (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTenantDbName")
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTenantDbName indicates an expected call of GetTenantDbName
+func (mr *MockConfigurationContractMockRecorder) GetTenantDbName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTenantDbName", reflect.TypeOf((*MockConfigurationContract)(nil).GetTenantDbName))
 }
