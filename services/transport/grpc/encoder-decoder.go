@@ -178,7 +178,7 @@ func decodeSearchRequest(
 		SortingOptions: funk.Map(
 			castedRequest.SortingOptions,
 			func(sortingOption tenantGRPCContract.SortingOptionPair) common.SortingOptionPair {
-				direction := common.Acsending
+				direction := common.Ascending
 
 				if sortingOption.Direction == tenantGRPCContract.SortingDirection_DESCENDING {
 					direction = common.Descending

@@ -3,6 +3,7 @@ package business_test
 import (
 	"context"
 	"errors"
+	"math/rand"
 	"strings"
 	"testing"
 
@@ -12,6 +13,7 @@ import (
 	repsoitoryMock "github.com/decentralized-cloud/tenant/services/repository/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
+	"github.com/micro-business/go-core/common"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 
 	. "github.com/onsi/ginkgo"
@@ -283,7 +285,7 @@ var _ = Describe("Business Service Tests", func() {
 		})
 	})
 
-	Describe("DeleteTenant is called.", func() {
+	Describe("DeleteTenant is called", func() {
 		var (
 			request business.DeleteTenantRequest
 		)
@@ -324,6 +326,7 @@ var _ = Describe("Business Service Tests", func() {
 					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
 				})
 			})
+
 			When("tenant repository DeleteTenant is faced with any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
@@ -348,6 +351,101 @@ var _ = Describe("Business Service Tests", func() {
 					response, err := sut.DeleteTenant(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
+				})
+			})
+		})
+	})
+
+	Describe("Search is called", func() {
+		var (
+			request   business.SearchRequest
+			tenantIDs []string
+		)
+
+		BeforeEach(func() {
+			rand.Seed(42)
+			tenantIDs = []string{}
+			for idx := 0; idx < rand.Intn(20)+1; idx++ {
+				tenantIDs = append(tenantIDs, cuid.New())
+			}
+
+			request = business.SearchRequest{
+				Pagination: common.Pagination{
+					After:  cuid.New(),
+					First:  rand.Intn(1000),
+					Before: cuid.New(),
+					Last:   rand.Intn(1000),
+				},
+				SortingOptions: []common.SortingOptionPair{
+					common.SortingOptionPair{
+						Name:      cuid.New(),
+						Direction: common.Ascending,
+					},
+					common.SortingOptionPair{
+						Name:      cuid.New(),
+						Direction: common.Descending,
+					},
+				},
+				TenantIDs: tenantIDs,
+			}
+		})
+
+		Context("tenant service is instantiated", func() {
+			When("Search is called", func() {
+				It("should call tenant repository Search method", func() {
+					mockRepositoryService.
+						EXPECT().
+						Search(ctx, gomock.Any()).
+						Do(func(_ context.Context, mappedRequest *repository.SearchRequest) {
+							Ω(mappedRequest.Pagination).Should(Equal(request.Pagination))
+							Ω(mappedRequest.SortingOptions).Should(Equal(request.SortingOptions))
+							Ω(mappedRequest.TenantIDs).Should(Equal(request.TenantIDs))
+						}).
+						Return(&repository.SearchResponse{}, nil)
+
+					response, err := sut.Search(ctx, &request)
+					Ω(err).Should(BeNil())
+					Ω(response.Err).Should(BeNil())
+				})
+			})
+
+			When("tenant repository Search is faced with any other error", func() {
+				It("should return UnknownError", func() {
+					expectedError := errors.New(cuid.New())
+					mockRepositoryService.
+						EXPECT().
+						Search(gomock.Any(), gomock.Any()).
+						Return(nil, expectedError)
+
+					response, err := sut.Search(ctx, &request)
+					Ω(err).Should(BeNil())
+					assertUnknowError(expectedError.Error(), response.Err, expectedError)
+				})
+			})
+
+			When("tenant repository Search completes successfully", func() {
+				It("should return the list of matched tenantIDs", func() {
+					tenants := []models.TenantWithCursor{}
+
+					for idx := 0; idx < rand.Intn(20)+1; idx++ {
+						tenants = append(tenants, models.TenantWithCursor{
+							TenantID: cuid.New(),
+							Tenant: models.Tenant{
+								Name: cuid.New(),
+							},
+							Cursor: cuid.New(),
+						})
+					}
+
+					mockRepositoryService.
+						EXPECT().
+						Search(gomock.Any(), gomock.Any()).
+						Return(&repository.SearchResponse{Tenants: tenants}, nil)
+
+					response, err := sut.Search(ctx, &request)
+					Ω(err).Should(BeNil())
+					Ω(response.Err).Should(BeNil())
+					Ω(response.Tenants).Should(Equal(tenants))
 				})
 			})
 		})

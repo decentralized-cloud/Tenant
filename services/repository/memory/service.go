@@ -114,13 +114,13 @@ func (service *repositoryService) Search(
 	response.Tenants = tenantsWithCursor.([]models.TenantWithCursor)
 
 	// Default sorting is acsending if not provided, aslo as we only have one field currenrly stored againsst a tenant, we are ignroing the provided field name to sort on
-	sortingDirection := common.Acsending
+	sortingDirection := common.Ascending
 	if len(request.SortingOptions) > 0 {
 		sortingDirection = request.SortingOptions[0].Direction
 	}
 
 	sort.Slice(response.Tenants, func(i, j int) bool {
-		if sortingDirection == common.Acsending {
+		if sortingDirection == common.Ascending {
 			return response.Tenants[i].Tenant.Name < response.Tenants[j].Tenant.Name
 		}
 

@@ -228,7 +228,7 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{
 						common.SortingOptionPair{
 							Name:      "name",
-							Direction: common.Acsending,
+							Direction: common.Ascending,
 						}}})
 				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
 					return tenantWithCursor.Tenant.Name
@@ -299,7 +299,7 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{
 						common.SortingOptionPair{
 							Name:      "name",
-							Direction: common.Acsending,
+							Direction: common.Ascending,
 						},
 					},
 					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
