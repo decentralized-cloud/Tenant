@@ -5,7 +5,9 @@ import (
 	"context"
 
 	"github.com/decentralized-cloud/tenant/models"
+	"github.com/decentralized-cloud/tenant/services/configuration"
 	"github.com/decentralized-cloud/tenant/services/repository"
+	commonErrors "github.com/micro-business/go-core/system/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,15 +15,22 @@ import (
 )
 
 type mongodbRepositoryService struct {
-	dbConnectionString string
+	configurationService configuration.ConfigurationContract
+	collectionName       string
 }
 
 // NewMongodbRepositoryService creates new instance of the RepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
-func NewMongodbRepositoryService() (repository.RepositoryContract, error) {
+func NewMongodbRepositoryService(
+	configurationService configuration.ConfigurationContract) (repository.RepositoryContract, error) {
+
+	if configurationService == nil {
+		return nil, commonErrors.NewArgumentNilError("configurationService", "configurationService is required")
+	}
 
 	return &mongodbRepositoryService{
-		dbConnectionString: "mongodb://localhost:27017",
+		configurationService: configurationService,
+		collectionName:       "tenants",
 	}, nil
 }
 
@@ -33,15 +42,23 @@ func (service *mongodbRepositoryService) ReadTenant(
 	ctx context.Context,
 	request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
 
-	dbConnectionString := "mongodb://localhost:27017"
-	//clientOptions := options.Client().ApplyURI(service.dbConnectionString)
+	dbConnectionString, err := service.configurationService.GetDbConnectionString()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
+	}
+
 	clientOptions := options.Client().ApplyURI(dbConnectionString)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	collection := client.Database("tenantdb").Collection("tenants")
+	tenantDbName, err := service.configurationService.GetTenantDbName()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
+	}
+
+	collection := client.Database(tenantDbName).Collection(service.collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{"_id", ObjectID}}
 	var tenant models.Tenant
@@ -62,15 +79,23 @@ func (service *mongodbRepositoryService) CreateTenant(
 	ctx context.Context,
 	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
 
-	// clientOptions := options.Client().ApplyURI(service.dbConnectionString)
-	dbConnectionString := "mongodb://localhost:27017"
+	dbConnectionString, err := service.configurationService.GetDbConnectionString()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
+	}
+
 	clientOptions := options.Client().ApplyURI(dbConnectionString)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	collection := client.Database("tenantdb").Collection("tenants")
+	tenantDbName, err := service.configurationService.GetTenantDbName()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
+	}
+
+	collection := client.Database(tenantDbName).Collection(service.collectionName)
 	insertResult, err := collection.InsertOne(ctx, request.Tenant)
 
 	if err != nil {
@@ -90,22 +115,35 @@ func (service *mongodbRepositoryService) UpdateTenant(
 	ctx context.Context,
 	request *repository.UpdateTenantRequest) (*repository.UpdateTenantResponse, error) {
 
-	clientOptions := options.Client().ApplyURI(service.dbConnectionString)
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	dbConnectionString, err := service.configurationService.GetDbConnectionString()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
+	}
+
+	clientOptions := options.Client().ApplyURI(dbConnectionString)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	//Todo : Do we need to have GetDbName in configuration service ? for now it is just hard coded
-	collection := client.Database("tenantdb").Collection("tenants")
-	filter := bson.D{{"_id", request.TenantID}}
-
-	newTenant := bson.D{
-		{"$set", request.Tenant},
+	tenantDbName, err := service.configurationService.GetTenantDbName()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
 	}
-	_, err = collection.UpdateOne(context.TODO(), filter, newTenant)
+
+	collection := client.Database(tenantDbName).Collection(service.collectionName)
+	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
+	filter := bson.D{{"_id", ObjectID}}
+
+	newTenant := bson.M{"$set": bson.M{"name": request.Tenant.Name}}
+	response, err := collection.UpdateOne(context.TODO(), filter, newTenant)
+
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Update tenant failed.", err)
+	}
+
+	if response.MatchedCount == 0 {
+		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
 	return &repository.UpdateTenantResponse{}, nil
@@ -119,21 +157,34 @@ func (service *mongodbRepositoryService) DeleteTenant(
 	ctx context.Context,
 	request *repository.DeleteTenantRequest) (*repository.DeleteTenantResponse, error) {
 
-	// clientOptions := options.Client().ApplyURI(service.dbConnectionString)
-	dbConnectionString := "mongodb://localhost:27017"
-	clientOptions := options.Client().ApplyURI(dbConnectionString)
+	dbConnectionString, err := service.configurationService.GetDbConnectionString()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
+	}
 
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	clientOptions := options.Client().ApplyURI(dbConnectionString)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	//Todo : Do we need to have GetDbName in configuration service ? for now it is just hard coded
-	collection := client.Database("tenantdb").Collection("tenants")
-	filter := bson.D{{"TenantID", request.TenantID}}
-	_, err = collection.DeleteOne(context.TODO(), filter)
+	tenantDbName, err := service.configurationService.GetTenantDbName()
+	if err != nil {
+		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
+	}
+
+	collection := client.Database(tenantDbName).Collection(service.collectionName)
+
+	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
+	filter := bson.D{{"_id", ObjectID}}
+	response, err := collection.DeleteOne(context.TODO(), filter)
+
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Delete tenant failed.", err)
+	}
+
+	if response.DeletedCount == 0 {
+		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
 	return &repository.DeleteTenantResponse{}, nil
