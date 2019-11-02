@@ -106,16 +106,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		When("user reads a tenant by Id", func() {
 			It("should return a tenant", func() {
 
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
-
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
 				Ω(response.Tenant.Name).Should(Equal(createRequest.Tenant.Name))
@@ -129,16 +119,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					Tenant: models.Tenant{
 						Name: cuid.New(),
 					}}
-
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
 
 				_, err := sut.UpdateTenant(ctx, &updateRequest)
 				Ω(err).Should(BeNil())
@@ -163,28 +143,8 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		When("user deletes the tenant", func() {
 			It("should delete the tenant", func() {
 
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
-
 				_, err := sut.DeleteTenant(ctx, &repository.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
-
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
 
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
@@ -211,15 +171,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user reads the tenant", func() {
 			It("should return NotFoundError", func() {
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
 
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
@@ -236,16 +187,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user tries to update the tenant", func() {
 			It("should return NotFoundError", func() {
-
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
 
 				updateRequest := repository.UpdateTenantRequest{
 					TenantID: tenantID,
@@ -267,15 +208,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user tries to delete the tenant", func() {
 			It("should return NotFoundError", func() {
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
 
 				response, err := sut.DeleteTenant(ctx, &repository.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
