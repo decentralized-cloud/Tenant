@@ -37,7 +37,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		mockConfigurationService = configurationMock.NewMockConfigurationContract(mockCtrl)
 		sut, _ = mongodb.NewMongodbRepositoryService(mockConfigurationService)
 		ctx = context.TODO()
-		expectedConnectionString = "mongodb://localhost:27017"
+		expectedConnectionString = "mongodb://mongodb:27017"
 		expectedTenantDbName = "tenants"
 		createRequest = repository.CreateTenantRequest{
 			Tenant: models.Tenant{
@@ -62,7 +62,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	Context("user going to create a new tenant", func() {
 		When("create tenant is called", func() {
 			It("should create the new tenant", func() {
-				expectedConnectionString := "mongodb://localhost:27017"
+				expectedConnectionString := "mongodb://mongodb:27017"
 				expectedTenantDbName := "tenants"
 
 				mockConfigurationService.

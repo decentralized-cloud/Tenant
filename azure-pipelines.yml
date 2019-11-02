@@ -32,6 +32,12 @@ steps:
     filePath: '$(system.defaultWorkingDirectory)/script/compile-grpc.sh'
     arguments: '$(system.defaultWorkingDirectory)/script'
 
+- task: Bash@3
+  displayName: "Integration Test"
+  inputs:
+    filePath: '$(system.defaultWorkingDirectory)/script/run-integration-test.sh'
+    arguments: '$(system.defaultWorkingDirectory)/script'
+
 - task: Docker@2
   displayName: "Build docker image"
   inputs:
