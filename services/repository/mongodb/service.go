@@ -89,7 +89,7 @@ func (service *mongodbRepositoryService) ReadTenant(
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
-	filter := bson.D{{"_id", ObjectID}}
+	filter := bson.D{{Key: "_id", Value: ObjectID}}
 	var tenant models.Tenant
 
 	err = collection.FindOne(ctx, filter).Decode(&tenant)
@@ -119,7 +119,7 @@ func (service *mongodbRepositoryService) UpdateTenant(
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
-	filter := bson.D{{"_id", ObjectID}}
+	filter := bson.D{{Key: "_id", Value: ObjectID}}
 
 	newTenant := bson.M{"$set": bson.M{"name": request.Tenant.Name}}
 	response, err := collection.UpdateOne(ctx, filter, newTenant)
@@ -152,7 +152,7 @@ func (service *mongodbRepositoryService) DeleteTenant(
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
-	filter := bson.D{{"_id", ObjectID}}
+	filter := bson.D{{Key: "_id", Value: ObjectID}}
 	response, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Delete tenant failed.", err)
