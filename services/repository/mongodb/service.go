@@ -15,7 +15,8 @@ import (
 )
 
 type mongodbRepositoryService struct {
-	configurationService configuration.ConfigurationContract
+	connectionString string
+	databaseName     string
 }
 
 const collectionName string = "tenants"
@@ -24,13 +25,49 @@ const collectionName string = "tenants"
 // Returns the new service or error if something goes wrong
 func NewMongodbRepositoryService(
 	configurationService configuration.ConfigurationContract) (repository.RepositoryContract, error) {
-
 	if configurationService == nil {
 		return nil, commonErrors.NewArgumentNilError("configurationService", "configurationService is required")
 	}
 
+	connectionString, err := configurationService.GetDatabaseConnectionString()
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Failed to get connection string to mongodb", err)
+	}
+
+	databaseName, err := configurationService.GetDatabaseName()
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Failed to get the database name", err)
+	}
+
 	return &mongodbRepositoryService{
-		configurationService: configurationService,
+		connectionString: connectionString,
+		databaseName:     databaseName,
+	}, nil
+}
+
+// CreateTenant creates a new tenant.
+// context: Optional The reference to the context
+// request: Mandatory. The request to create a new tenant
+// Returns either the result of creating new tenant or error if something goes wrong.
+func (service *mongodbRepositoryService) CreateTenant(
+	ctx context.Context,
+	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
+	clientOptions := options.Client().ApplyURI(service.connectionString)
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+	}
+
+	defer client.Disconnect(ctx)
+
+	collection := client.Database(service.databaseName).Collection(collectionName)
+	insertResult, err := collection.InsertOne(ctx, request.Tenant)
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Insert tenant failed.", err)
+	}
+
+	return &repository.CreateTenantResponse{
+		TenantID: insertResult.InsertedID.(primitive.ObjectID).Hex(),
 	}, nil
 }
 
@@ -42,12 +79,7 @@ func (service *mongodbRepositoryService) ReadTenant(
 	ctx context.Context,
 	request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
 
-	dbConnectionString, err := service.configurationService.GetDbConnectionString()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
-	}
-
-	clientOptions := options.Client().ApplyURI(dbConnectionString)
+	clientOptions := options.Client().ApplyURI(service.connectionString)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
@@ -55,12 +87,7 @@ func (service *mongodbRepositoryService) ReadTenant(
 
 	defer client.Disconnect(ctx)
 
-	tenantDbName, err := service.configurationService.GetTenantDbName()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
-	}
-
-	collection := client.Database(tenantDbName).Collection(collectionName)
+	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{"_id", ObjectID}}
 	var tenant models.Tenant
@@ -70,44 +97,8 @@ func (service *mongodbRepositoryService) ReadTenant(
 		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
-	return &repository.ReadTenantResponse{Tenant: tenant}, nil
-}
-
-// CreateTenant creates a new tenant.
-// context: Optional The reference to the context
-// request: Mandatory. The request to create a new tenant
-// Returns either the result of creating new tenant or error if something goes wrong.
-func (service *mongodbRepositoryService) CreateTenant(
-	ctx context.Context,
-	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
-
-	dbConnectionString, err := service.configurationService.GetDbConnectionString()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
-	}
-
-	clientOptions := options.Client().ApplyURI(dbConnectionString)
-	client, err := mongo.Connect(ctx, clientOptions)
-	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
-	}
-
-	defer client.Disconnect(ctx)
-
-	tenantDbName, err := service.configurationService.GetTenantDbName()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
-	}
-
-	collection := client.Database(tenantDbName).Collection(collectionName)
-	insertResult, err := collection.InsertOne(ctx, request.Tenant)
-
-	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Insert tenant failed.", err)
-	}
-
-	return &repository.CreateTenantResponse{
-		TenantID: insertResult.InsertedID.(primitive.ObjectID).Hex(),
+	return &repository.ReadTenantResponse{
+		Tenant: tenant,
 	}, nil
 }
 
@@ -118,13 +109,7 @@ func (service *mongodbRepositoryService) CreateTenant(
 func (service *mongodbRepositoryService) UpdateTenant(
 	ctx context.Context,
 	request *repository.UpdateTenantRequest) (*repository.UpdateTenantResponse, error) {
-
-	dbConnectionString, err := service.configurationService.GetDbConnectionString()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
-	}
-
-	clientOptions := options.Client().ApplyURI(dbConnectionString)
+	clientOptions := options.Client().ApplyURI(service.connectionString)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
@@ -132,17 +117,12 @@ func (service *mongodbRepositoryService) UpdateTenant(
 
 	defer client.Disconnect(ctx)
 
-	tenantDbName, err := service.configurationService.GetTenantDbName()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
-	}
-
-	collection := client.Database(tenantDbName).Collection(collectionName)
+	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{"_id", ObjectID}}
 
 	newTenant := bson.M{"$set": bson.M{"name": request.Tenant.Name}}
-	response, err := collection.UpdateOne(context.TODO(), filter, newTenant)
+	response, err := collection.UpdateOne(ctx, filter, newTenant)
 
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Update tenant failed.", err)
@@ -162,13 +142,7 @@ func (service *mongodbRepositoryService) UpdateTenant(
 func (service *mongodbRepositoryService) DeleteTenant(
 	ctx context.Context,
 	request *repository.DeleteTenantRequest) (*repository.DeleteTenantResponse, error) {
-
-	dbConnectionString, err := service.configurationService.GetDbConnectionString()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetDbConnectionString", "Database connection String is required.")
-	}
-
-	clientOptions := options.Client().ApplyURI(dbConnectionString)
+	clientOptions := options.Client().ApplyURI(service.connectionString)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
@@ -176,17 +150,10 @@ func (service *mongodbRepositoryService) DeleteTenant(
 
 	defer client.Disconnect(ctx)
 
-	tenantDbName, err := service.configurationService.GetTenantDbName()
-	if err != nil {
-		return nil, commonErrors.NewArgumentNilError("GetTenantDbName", "Database name is required.")
-	}
-
-	collection := client.Database(tenantDbName).Collection(collectionName)
-
+	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{"_id", ObjectID}}
-	response, err := collection.DeleteOne(context.TODO(), filter)
-
+	response, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Delete tenant failed.", err)
 	}
@@ -205,7 +172,6 @@ func (service *mongodbRepositoryService) DeleteTenant(
 func (service *mongodbRepositoryService) Search(
 	ctx context.Context,
 	request *repository.SearchRequest) (*repository.SearchResponse, error) {
-
 	response := &repository.SearchResponse{}
 
 	return response, nil

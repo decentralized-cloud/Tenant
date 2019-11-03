@@ -7,10 +7,13 @@ services:
     networks:
       - the_net
 
-  tenant:
+  tests:
     build:
       context: ../
-      dockerfile: docker/Dockerfile.integrationTest
+      dockerfile: docker/Dockerfile.testAndCoverage
+    environment:
+        - CI_SERVICE=${CI_SERVICE}
+        - COVERALLS_TOKEN=${COVERALLS_TOKEN}
     depends_on:
       - mongodb
     networks:

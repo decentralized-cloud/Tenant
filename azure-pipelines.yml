@@ -32,12 +32,6 @@ steps:
     filePath: '$(system.defaultWorkingDirectory)/script/compile-grpc.sh'
     arguments: '$(system.defaultWorkingDirectory)/script'
 
-- task: Bash@3
-  displayName: "Integration Test"
-  inputs:
-    filePath: '$(system.defaultWorkingDirectory)/script/run-integration-test.sh'
-    arguments: '$(system.defaultWorkingDirectory)/script'
-
 - task: Docker@2
   displayName: "Build docker image"
   inputs:
@@ -48,13 +42,11 @@ steps:
     arguments: '--build-arg VERSION=$(VERSION)'
     tags: $(VERSION)
 
-- task: Docker@2
+- task: Bash@3
   displayName: "Test and Coverage"
   inputs:
-    command: 'build'
-    Dockerfile: '$(system.defaultWorkingDirectory)/docker/Dockerfile.testAndCoverage'
-    buildContext: '$(system.defaultWorkingDirectory)'
-    arguments: '--build-arg CI_SERVICE=$(CI_SERVICE) --build-arg COVERALLS_TOKEN=$(COVERALLS_TOKEN)'
+    filePath: '$(system.defaultWorkingDirectory)/script/run-tests.sh'
+    arguments: '$(system.defaultWorkingDirectory)/script'
 
 - task: Docker@2
   displayName: "Docker Login"

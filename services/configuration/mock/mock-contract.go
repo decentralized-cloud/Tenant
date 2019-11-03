@@ -5,9 +5,8 @@
 package mock_configuration
 
 import (
-	reflect "reflect"
-
 	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
 )
 
 // MockConfigurationContract is a mock of ConfigurationContract interface
@@ -93,32 +92,32 @@ func (mr *MockConfigurationContractMockRecorder) GetHttpsPort() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHttpsPort", reflect.TypeOf((*MockConfigurationContract)(nil).GetHttpsPort))
 }
 
-// GetDbConnectionString mocks base method
-func (m *MockConfigurationContract) GetDbConnectionString() (string, error) {
+// GetDatabaseConnectionString mocks base method
+func (m *MockConfigurationContract) GetDatabaseConnectionString() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDbConnectionString")
+	ret := m.ctrl.Call(m, "GetDatabaseConnectionString")
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetDbConnectionString indicates an expected call of GetDbConnectionString
-func (mr *MockConfigurationContractMockRecorder) GetDbConnectionString() *gomock.Call {
+// GetDatabaseConnectionString indicates an expected call of GetDatabaseConnectionString
+func (mr *MockConfigurationContractMockRecorder) GetDatabaseConnectionString() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDbConnectionString", reflect.TypeOf((*MockConfigurationContract)(nil).GetDbConnectionString))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDatabaseConnectionString", reflect.TypeOf((*MockConfigurationContract)(nil).GetDatabaseConnectionString))
 }
 
-// GetTenantDbName mocks base method
-func (m *MockConfigurationContract) GetTenantDbName() (string, error) {
+// GetDatabaseName mocks base method
+func (m *MockConfigurationContract) GetDatabaseName() (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTenantDbName")
+	ret := m.ctrl.Call(m, "GetDatabaseName")
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetTenantDbName indicates an expected call of GetTenantDbName
-func (mr *MockConfigurationContractMockRecorder) GetTenantDbName() *gomock.Call {
+// GetDatabaseName indicates an expected call of GetDatabaseName
+func (mr *MockConfigurationContractMockRecorder) GetDatabaseName() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTenantDbName", reflect.TypeOf((*MockConfigurationContract)(nil).GetTenantDbName))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDatabaseName", reflect.TypeOf((*MockConfigurationContract)(nil).GetDatabaseName))
 }

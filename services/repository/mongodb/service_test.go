@@ -4,6 +4,8 @@ package mongodb_test
 import (
 	"context"
 	"errors"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/decentralized-cloud/tenant/models"
@@ -23,22 +25,32 @@ func TestMongodbRepositoryService(t *testing.T) {
 
 var _ = Describe("Mongodb Repository Service Tests", func() {
 	var (
-		mockCtrl                 *gomock.Controller
-		sut                      repository.RepositoryContract
-		mockConfigurationService *configurationMock.MockConfigurationContract
-		ctx                      context.Context
-		createRequest            repository.CreateTenantRequest
-		expectedConnectionString string
-		expectedTenantDbName     string
+		mockCtrl      *gomock.Controller
+		sut           repository.RepositoryContract
+		ctx           context.Context
+		createRequest repository.CreateTenantRequest
 	)
 
 	BeforeEach(func() {
+		connectionString := os.Getenv("DATABASE_CONNECTION_STRING")
+		if strings.Trim(connectionString, " ") == "" {
+			connectionString = "mongodb://mongodb:27017"
+		}
+
 		mockCtrl = gomock.NewController(GinkgoT())
-		mockConfigurationService = configurationMock.NewMockConfigurationContract(mockCtrl)
+		mockConfigurationService := configurationMock.NewMockConfigurationContract(mockCtrl)
+		mockConfigurationService.
+			EXPECT().
+			GetDatabaseConnectionString().
+			Return(connectionString, nil)
+
+		mockConfigurationService.
+			EXPECT().
+			GetDatabaseName().
+			Return("tenants", nil)
+
 		sut, _ = mongodb.NewMongodbRepositoryService(mockConfigurationService)
-		ctx = context.TODO()
-		expectedConnectionString = "mongodb://mongodb:27017"
-		expectedTenantDbName = "tenants"
+		ctx = context.Background()
 		createRequest = repository.CreateTenantRequest{
 			Tenant: models.Tenant{
 				Name: cuid.New(),
@@ -52,6 +64,16 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	Context("user tries to instantiate RepositoryService", func() {
 		When("all dependencies are resolved and NewRepositoryService is called", func() {
 			It("should instantiate the new RepositoryService", func() {
+				mockConfigurationService := configurationMock.NewMockConfigurationContract(mockCtrl)
+				mockConfigurationService.
+					EXPECT().
+					GetDatabaseConnectionString().
+					Return(cuid.New(), nil)
+
+				mockConfigurationService.
+					EXPECT().
+					GetDatabaseName().
+					Return(cuid.New(), nil)
 				service, err := mongodb.NewMongodbRepositoryService(mockConfigurationService)
 				Ω(err).Should(BeNil())
 				Ω(service).ShouldNot(BeNil())
@@ -62,19 +84,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	Context("user going to create a new tenant", func() {
 		When("create tenant is called", func() {
 			It("should create the new tenant", func() {
-				expectedConnectionString := "mongodb://mongodb:27017"
-				expectedTenantDbName := "tenants"
-
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
-
 				response, err := sut.CreateTenant(ctx, &createRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.TenantID).ShouldNot(BeNil())
@@ -83,29 +92,17 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	})
 
 	Context("tenant already exists", func() {
-
 		var (
 			tenantID string
 		)
 
 		BeforeEach(func() {
-			mockConfigurationService.
-				EXPECT().
-				GetDbConnectionString().
-				Return(expectedConnectionString, nil)
-
-			mockConfigurationService.
-				EXPECT().
-				GetTenantDbName().
-				Return(expectedTenantDbName, nil)
-
 			response, _ := sut.CreateTenant(ctx, &createRequest)
 			tenantID = response.TenantID
 		})
 
 		When("user reads a tenant by Id", func() {
 			It("should return a tenant", func() {
-
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
 				Ω(response.Tenant.Name).Should(Equal(createRequest.Tenant.Name))
@@ -122,16 +119,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				_, err := sut.UpdateTenant(ctx, &updateRequest)
 				Ω(err).Should(BeNil())
-
-				mockConfigurationService.
-					EXPECT().
-					GetDbConnectionString().
-					Return(expectedConnectionString, nil)
-
-				mockConfigurationService.
-					EXPECT().
-					GetTenantDbName().
-					Return(expectedTenantDbName, nil)
 
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
@@ -187,12 +174,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user tries to update the tenant", func() {
 			It("should return NotFoundError", func() {
-
 				updateRequest := repository.UpdateTenantRequest{
 					TenantID: tenantID,
 					Tenant: models.Tenant{
 						Name: cuid.New(),
 					}}
+
 				response, err := sut.UpdateTenant(ctx, &updateRequest)
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
