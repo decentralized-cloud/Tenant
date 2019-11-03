@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  mongodb:
+    image: mongo:4.2.1
+    ports:
+      - 27017
+    networks:
+      - the_net
+
+  tests:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.testAndCoverage
+    depends_on:
+      - mongodb
+    networks:
+      - the_net
+
+networks:
+  the_net:

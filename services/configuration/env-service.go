@@ -16,13 +16,13 @@ func NewEnvConfigurationService() (ConfigurationContract, error) {
 	return &envConfigurationService{}, nil
 }
 
-// GetGrpcHost retrieves gRPC host name
+// GetGrpcHost retrieves the gRPC host name
 // Returns the gRPC host name or error if something goes wrong
 func (service *envConfigurationService) GetGrpcHost() (string, error) {
 	return os.Getenv("GRPC_HOST"), nil
 }
 
-// GetGrpcPort retrieves gRPC port number
+// GetGrpcPort retrieves the gRPC port number
 // Returns the gRPC port number or error if something goes wrong
 func (service *envConfigurationService) GetGrpcPort() (int, error) {
 	portNumberString := os.Getenv("GRPC_PORT")
@@ -38,13 +38,13 @@ func (service *envConfigurationService) GetGrpcPort() (int, error) {
 	return portNumber, nil
 }
 
-// GetHttpsHost retrieves HTTPS host name
+// GetHttpsHost retrieves the HTTPS host name
 // Returns the HTTPS host name or error if something goes wrong
 func (service *envConfigurationService) GetHttpsHost() (string, error) {
 	return os.Getenv("HTTPS_HOST"), nil
 }
 
-// GetHttpsPort retrieves HTTPS port number
+// GetHttpsPort retrieves the HTTPS port number
 // Returns the HTTPS port number or error if something goes wrong
 func (service *envConfigurationService) GetHttpsPort() (int, error) {
 	portNumberString := os.Getenv("HTTPS_PORT")
@@ -60,14 +60,27 @@ func (service *envConfigurationService) GetHttpsPort() (int, error) {
 	return portNumber, nil
 }
 
-// GetDbConnectionString retrieves database connection string
+// GetDatabaseConnectionString retrieves the database connection string
 // Returns the database connection string or error if something goes wrong
-func (service *envConfigurationService) GetDbConnectionString() (string, error) {
-	connectionString := os.Getenv("DB_CONNECTION_STRING")
+func (service *envConfigurationService) GetDatabaseConnectionString() (string, error) {
+	connectionString := os.Getenv("DATABASE_CONNECTION_STRING")
 
 	if strings.Trim(connectionString, " ") == "" {
-		return "", NewUnknownError("DB_CONNECTION_STRING is required")
+		return "", NewUnknownError("DATABASE_CONNECTION_STRING is required")
 	}
 
 	return connectionString, nil
+}
+
+// GetDatabaseName retrieves the database name
+// Returns the database name or error if something goes wrong
+func (service *envConfigurationService) GetDatabaseName() (string, error) {
+	databaseName := os.Getenv("TENANT_DATABASE_NAME")
+
+	if strings.Trim(databaseName, " ") == "" {
+		return "", NewUnknownError("TENANT_DATABASE_NAME is required")
+	}
+
+	return databaseName, nil
+
 }

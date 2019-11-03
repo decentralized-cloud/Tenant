@@ -64,6 +64,9 @@ test: ## Run unit tests
 publish-test-results: ## Publish test results
 	@goveralls -coverprofile="$(REPORTS_DIR)/coverage.out" -service=$(CI_SERVICE) -repotoken $(COVERALLS_TOKEN)
 
+.PHONY: test-and-publish-test-results
+test-and-publish-test-results: test publish-test-results ## Test and publish test results
+
 .PHONY: build-and-push-helm-chart
 build-and-push-helm-chart: ## Build and push helm chart
 	@$(CURRENT_DIRECTORY)/script/build-and-push-helm-chart.sh
