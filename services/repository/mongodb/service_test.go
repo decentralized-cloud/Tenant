@@ -47,7 +47,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		mockConfigurationService.
 			EXPECT().
 			GetDatabaseName().
-			Return("tenants", nil)
+			Return("tenant", nil)
 
 		sut, _ = mongodb.NewMongodbRepositoryService(mockConfigurationService)
 		ctx = context.Background()
@@ -129,7 +129,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user deletes the tenant", func() {
 			It("should delete the tenant", func() {
-
 				_, err := sut.DeleteTenant(ctx, &repository.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
 
@@ -158,7 +157,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user reads the tenant", func() {
 			It("should return NotFoundError", func() {
-
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
@@ -195,7 +193,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user tries to delete the tenant", func() {
 			It("should return NotFoundError", func() {
-
 				response, err := sut.DeleteTenant(ctx, &repository.DeleteTenantRequest{TenantID: tenantID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())

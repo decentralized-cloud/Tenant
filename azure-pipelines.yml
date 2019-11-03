@@ -21,6 +21,12 @@ variables:
 
 steps:
 - task: Bash@3
+  displayName: "Test and Coverage"
+  inputs:
+    filePath: '$(system.defaultWorkingDirectory)/script/run-tests.sh'
+    arguments: '$(system.defaultWorkingDirectory)/script'
+
+- task: Bash@3
   displayName: "Generating version"
   inputs:
     filePath: '$(system.defaultWorkingDirectory)/script/generate-version.sh'
@@ -42,11 +48,6 @@ steps:
     arguments: '--build-arg VERSION=$(VERSION)'
     tags: $(VERSION)
 
-- task: Bash@3
-  displayName: "Test and Coverage"
-  inputs:
-    filePath: '$(system.defaultWorkingDirectory)/script/run-tests.sh'
-    arguments: '$(system.defaultWorkingDirectory)/script'
 
 - task: Docker@2
   displayName: "Docker Login"

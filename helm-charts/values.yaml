@@ -33,6 +33,9 @@ securityContext: {}
 pod:
   httpsport: 81
   grpcport: 80
+  database:
+    connection_string: "mongodb://mongodb:27017"
+    name: "tenant"
 
 service:
   type: ClusterIP

@@ -32,6 +32,10 @@ spec:
               value: "{{ .Values.pod.grpcport }}"
             - name: HTTPS_PORT
               value: "{{ .Values.pod.httpsport }}"
+            - name: DATABASE_CONNECTION_STRING
+              value: "{{ .Values.pod.database.connection_string }}"
+            - name: DATABASE_NAME
+              value: "{{ .Values.pod.database.name }}"
           ports:
             - name: grpc
               containerPort: {{ .Values.pod.grpcport }}

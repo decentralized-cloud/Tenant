@@ -66,7 +66,7 @@ func (service *envConfigurationService) GetDatabaseConnectionString() (string, e
 	connectionString := os.Getenv("DATABASE_CONNECTION_STRING")
 
 	if strings.Trim(connectionString, " ") == "" {
-		return "", NewUnknownError("DB_CONNECTION_STRING is required")
+		return "", NewUnknownError("DATABASE_CONNECTION_STRING is required")
 	}
 
 	return connectionString, nil
@@ -78,7 +78,7 @@ func (service *envConfigurationService) GetDatabaseName() (string, error) {
 	databaseName := os.Getenv("TENANT_DATABASE_NAME")
 
 	if strings.Trim(databaseName, " ") == "" {
-		return "", NewUnknownError("TENANT_DB_NAME is required")
+		return "", NewUnknownError("TENANT_DATABASE_NAME is required")
 	}
 
 	return databaseName, nil

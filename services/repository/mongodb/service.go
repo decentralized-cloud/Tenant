@@ -19,7 +19,7 @@ type mongodbRepositoryService struct {
 	databaseName     string
 }
 
-const collectionName string = "tenants"
+const collectionName string = "tenant"
 
 // NewMongodbRepositoryService creates new instance of the RepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
@@ -58,7 +58,7 @@ func (service *mongodbRepositoryService) CreateTenant(
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	defer client.Disconnect(ctx)
+	defer disconnect(ctx, client)
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	insertResult, err := collection.InsertOne(ctx, request.Tenant)
@@ -85,7 +85,7 @@ func (service *mongodbRepositoryService) ReadTenant(
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	defer client.Disconnect(ctx)
+	defer disconnect(ctx, client)
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
@@ -115,7 +115,7 @@ func (service *mongodbRepositoryService) UpdateTenant(
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	defer client.Disconnect(ctx)
+	defer disconnect(ctx, client)
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
@@ -148,7 +148,7 @@ func (service *mongodbRepositoryService) DeleteTenant(
 		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	defer client.Disconnect(ctx)
+	defer disconnect(ctx, client)
 
 	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
@@ -175,4 +175,8 @@ func (service *mongodbRepositoryService) Search(
 	response := &repository.SearchResponse{}
 
 	return response, nil
+}
+
+func disconnect(ctx context.Context, client *mongo.Client) {
+	_ = client.Disconnect(ctx)
 }
