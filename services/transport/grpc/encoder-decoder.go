@@ -40,6 +40,9 @@ func encodeCreateTenantResponse(
 		return &tenantGRPCContract.CreateTenantResponse{
 			TenantID: castedResponse.TenantID,
 			Error:    tenantGRPCContract.Error_NO_ERROR,
+			Tenant: &tenantGRPCContract.Tenant{
+				Name: castedResponse.Tenant.Name,
+			},
 		}, nil
 	}
 
@@ -115,6 +118,9 @@ func encodeUpdateTenantResponse(
 	if castedResponse.Err == nil {
 		return &tenantGRPCContract.UpdateTenantResponse{
 			Error: tenantGRPCContract.Error_NO_ERROR,
+			Tenant: &tenantGRPCContract.Tenant{
+				Name: castedResponse.Tenant.Name,
+			},
 		}, nil
 	}
 
@@ -202,7 +208,9 @@ func encodeSearchResponse(
 	castedResponse := response.(*business.SearchResponse)
 	if castedResponse.Err == nil {
 		return &tenantGRPCContract.SearchResponse{
-			Error: tenantGRPCContract.Error_NO_ERROR,
+			Error:           tenantGRPCContract.Error_NO_ERROR,
+			HasPreviousPage: castedResponse.HasPreviousPage,
+			HasNextPage:     castedResponse.HasNextPage,
 			Tenants: funk.Map(castedResponse.Tenants, func(tenant models.TenantWithCursor) *tenantGRPCContract.TenantWithCursor {
 				return &tenantGRPCContract.TenantWithCursor{
 					TenantID: tenant.TenantID,

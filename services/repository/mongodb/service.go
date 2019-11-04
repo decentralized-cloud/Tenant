@@ -68,6 +68,7 @@ func (service *mongodbRepositoryService) CreateTenant(
 
 	return &repository.CreateTenantResponse{
 		TenantID: insertResult.InsertedID.(primitive.ObjectID).Hex(),
+		Tenant:   request.Tenant,
 	}, nil
 }
 
@@ -132,7 +133,9 @@ func (service *mongodbRepositoryService) UpdateTenant(
 		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
-	return &repository.UpdateTenantResponse{}, nil
+	return &repository.UpdateTenantResponse{
+		Tenant: request.Tenant,
+	}, nil
 }
 
 // DeleteTenant delete an existing tenant

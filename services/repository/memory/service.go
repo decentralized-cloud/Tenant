@@ -36,6 +36,7 @@ func (service *repositoryService) CreateTenant(
 
 	return &repository.CreateTenantResponse{
 		TenantID: tenantID,
+		Tenant:   request.Tenant,
 	}, nil
 }
 
@@ -68,7 +69,9 @@ func (service *repositoryService) UpdateTenant(
 
 	service.tenants[request.TenantID] = request.Tenant
 
-	return &repository.UpdateTenantResponse{}, nil
+	return &repository.UpdateTenantResponse{
+		Tenant: request.Tenant,
+	}, nil
 }
 
 // DeleteTenant delete an existing tenant
@@ -95,7 +98,10 @@ func (service *repositoryService) DeleteTenant(
 func (service *repositoryService) Search(
 	ctx context.Context,
 	request *repository.SearchRequest) (*repository.SearchResponse, error) {
-	response := &repository.SearchResponse{}
+	response := &repository.SearchResponse{
+		HasPreviousPage: false,
+		HasNextPage:     false,
+	}
 
 	tenantsWithCursor := funk.Map(service.tenants, func(tenantID string, tenant models.Tenant) models.TenantWithCursor {
 		return models.TenantWithCursor{

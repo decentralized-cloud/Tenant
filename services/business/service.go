@@ -45,6 +45,7 @@ func (service *businessService) CreateTenant(
 
 	return &CreateTenantResponse{
 		TenantID: response.TenantID,
+		Tenant:   response.Tenant,
 	}, nil
 }
 
@@ -77,7 +78,7 @@ func (service *businessService) ReadTenant(
 func (service *businessService) UpdateTenant(
 	ctx context.Context,
 	request *UpdateTenantRequest) (*UpdateTenantResponse, error) {
-	_, err := service.repositoryService.UpdateTenant(ctx, &repository.UpdateTenantRequest{
+	response, err := service.repositoryService.UpdateTenant(ctx, &repository.UpdateTenantRequest{
 		TenantID: request.TenantID,
 		Tenant:   request.Tenant,
 	})
@@ -88,7 +89,9 @@ func (service *businessService) UpdateTenant(
 		}, nil
 	}
 
-	return &UpdateTenantResponse{}, nil
+	return &UpdateTenantResponse{
+		Tenant: response.Tenant,
+	}, nil
 }
 
 // DeleteTenant delete an existing tenant
@@ -131,7 +134,9 @@ func (service *businessService) Search(
 	}
 
 	return &SearchResponse{
-		Tenants: result.Tenants,
+		HasPreviousPage: result.HasPreviousPage,
+		HasNextPage:     result.HasNextPage,
+		Tenants:         result.Tenants,
 	}, nil
 }
 

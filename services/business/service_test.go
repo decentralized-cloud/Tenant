@@ -120,18 +120,24 @@ var _ = Describe("Business Service Tests", func() {
 				})
 
 				When("And tenant repository CreateTenant return no error", func() {
-					It("should return the new tenantID", func() {
-						tenantID := cuid.New()
+					It("should return expected details", func() {
+						expectedResponse := repository.CreateTenantResponse{
+							TenantID: cuid.New(),
+							Tenant: models.Tenant{
+								Name: cuid.New(),
+							}}
+
 						mockRepositoryService.
 							EXPECT().
 							CreateTenant(gomock.Any(), gomock.Any()).
-							Return(&repository.CreateTenantResponse{TenantID: tenantID}, nil)
+							Return(&expectedResponse, nil)
 
 						response, err := sut.CreateTenant(ctx, &request)
 						Ω(err).Should(BeNil())
 						Ω(response.Err).Should(BeNil())
 						Ω(response.TenantID).ShouldNot(BeNil())
-						Ω(response.TenantID).Should(Equal(tenantID))
+						Ω(response.TenantID).Should(Equal(expectedResponse.TenantID))
+						assertTenant(response.Tenant, expectedResponse.Tenant)
 					})
 				})
 			})
@@ -205,8 +211,7 @@ var _ = Describe("Business Service Tests", func() {
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					Ω(response.Tenant).ShouldNot(BeNil())
-					Ω(response.Tenant.Name).Should(Equal(tenant.Name))
+					assertTenant(response.Tenant, tenant)
 				})
 			})
 		})
@@ -271,15 +276,20 @@ var _ = Describe("Business Service Tests", func() {
 			})
 
 			When("And tenant repository UpdateTenant return no error", func() {
-				It("should return no error", func() {
+				It("should return expected details", func() {
+					expectedResponse := repository.UpdateTenantResponse{
+						Tenant: models.Tenant{
+							Name: cuid.New(),
+						}}
 					mockRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).
-						Return(&repository.UpdateTenantResponse{}, nil)
+						Return(&expectedResponse, nil)
 
 					response, err := sut.UpdateTenant(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
+					assertTenant(response.Tenant, expectedResponse.Tenant)
 				})
 			})
 		})
@@ -437,15 +447,23 @@ var _ = Describe("Business Service Tests", func() {
 						})
 					}
 
+					expectedResponse := repository.SearchResponse{
+						HasPreviousPage: (rand.Intn(10) % 2) == 0,
+						HasNextPage:     (rand.Intn(10) % 2) == 0,
+						Tenants:         tenants,
+					}
+
 					mockRepositoryService.
 						EXPECT().
 						Search(gomock.Any(), gomock.Any()).
-						Return(&repository.SearchResponse{Tenants: tenants}, nil)
+						Return(&expectedResponse, nil)
 
 					response, err := sut.Search(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					Ω(response.Tenants).Should(Equal(tenants))
+					Ω(response.HasPreviousPage).Should(Equal(expectedResponse.HasPreviousPage))
+					Ω(response.HasNextPage).Should(Equal(expectedResponse.HasNextPage))
+					Ω(response.Tenants).Should(Equal(expectedResponse.Tenants))
 				})
 			})
 		})
@@ -490,4 +508,9 @@ func assertTenantNotFoundError(expectedTenantID string, err error, nestedErr err
 
 	Ω(tenantNotFoundErr.TenantID).Should(Equal(expectedTenantID))
 	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
+}
+
+func assertTenant(tenant, expectedTenant models.Tenant) {
+	Ω(tenant).ShouldNot(BeNil())
+	Ω(tenant.Name).Should(Equal(expectedTenant.Name))
 }
