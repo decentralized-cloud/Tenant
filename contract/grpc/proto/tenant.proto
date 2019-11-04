@@ -46,6 +46,9 @@ message CreateTenantResponse {
 
   // The unique tenant identifier
   string tenantID = 3;
+
+  // The created tenant object
+  Tenant tenant = 4;
 }
 
 /** Request to read an existing tenant
@@ -89,6 +92,9 @@ message UpdateTenantResponse {
 
   // Contains error message if the operation was unsuccessful
   string errorMessage = 2;
+
+  // The updated tenant object
+  Tenant tenant = 3;
 }
 
 /**
@@ -186,8 +192,15 @@ message SearchResponse {
   // Contains error message if the operation was unsuccessful
   string errorMessage = 2;
 
+  // Indicates whether more edges exist prior to the set defined by the clients arguments
+  bool hasPreviousPage = 3;
+
+  // Indicates whether more edges exist following the set defined by the clients arguments
+  bool hasNextPage = 4;
+
   // The list contains the tenants that matched the search criteria
-  repeated TenantWithCursor tenants = 3;
+  repeated TenantWithCursor tenants = 5;
+
 }
 
 /**

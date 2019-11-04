@@ -55,6 +55,7 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 				response, err := sut.CreateTenant(ctx, &createRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.TenantID).ShouldNot(BeNil())
+				assertTenant(response.Tenant, createRequest.Tenant)
 			})
 		})
 	})
@@ -73,8 +74,7 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 			It("should return the tenant information", func() {
 				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
-				Ω(response.Tenant).ShouldNot(BeNil())
-				Ω(response.Tenant.Name).Should(Equal(createRequest.Tenant.Name))
+				assertTenant(response.Tenant, createRequest.Tenant)
 			})
 		})
 
@@ -86,13 +86,13 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 						Name: cuid.New(),
 					}}
 
-				_, err := sut.UpdateTenant(ctx, &updateRequest)
+				updateResponse, err := sut.UpdateTenant(ctx, &updateRequest)
 				Ω(err).Should(BeNil())
+				assertTenant(updateResponse.Tenant, updateRequest.Tenant)
 
-				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
+				readResponse, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
 				Ω(err).Should(BeNil())
-				Ω(response.Tenant).ShouldNot(BeNil())
-				Ω(response.Tenant.Name).Should(Equal(updateRequest.Tenant.Name))
+				assertTenant(readResponse.Tenant, updateRequest.Tenant)
 			})
 		})
 
@@ -334,3 +334,8 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 		})
 	})
 })
+
+func assertTenant(tenant, expectedTenant models.Tenant) {
+	Ω(tenant).ShouldNot(BeNil())
+	Ω(tenant.Name).Should(Equal(expectedTenant.Name))
+}

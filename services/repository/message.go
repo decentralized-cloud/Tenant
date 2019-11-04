@@ -14,6 +14,7 @@ type CreateTenantRequest struct {
 // CreateTenantResponse contains the result of creating a new tenant
 type CreateTenantResponse struct {
 	TenantID string
+	Tenant   models.Tenant
 }
 
 // ReadTenantRequest contains the request to read an existing tenant
@@ -34,6 +35,7 @@ type UpdateTenantRequest struct {
 
 // UpdateTenantResponse contains the result of updating an existing tenant
 type UpdateTenantResponse struct {
+	Tenant models.Tenant
 }
 
 // DeleteTenantRequest contains the request to delete an existing tenant
@@ -54,5 +56,7 @@ type SearchRequest struct {
 
 // SearchResponse contains the list of the tenants that matched the result
 type SearchResponse struct {
-	Tenants []models.TenantWithCursor
+	HasPreviousPage bool
+	HasNextPage     bool
+	Tenants         []models.TenantWithCursor
 }
