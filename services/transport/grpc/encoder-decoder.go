@@ -173,15 +173,10 @@ func decodeSearchRequest(
 	request interface{}) (interface{}, error) {
 	castedRequest := request.(*tenantGRPCContract.SearchRequest)
 
-	return &business.SearchRequest{
-		Pagination: common.Pagination{
-			After:  castedRequest.Pagination.After,
-			First:  int(castedRequest.Pagination.First),
-			Before: castedRequest.Pagination.Before,
-			Last:   int(castedRequest.Pagination.Last),
-		},
-		TenantIDs: castedRequest.TenantIDs,
-		SortingOptions: funk.Map(
+	sortingOptions := []common.SortingOptionPair{}
+
+	if len(castedRequest.SortingOptions) > 0 {
+		sortingOptions = funk.Map(
 			castedRequest.SortingOptions,
 			func(sortingOption tenantGRPCContract.SortingOptionPair) common.SortingOptionPair {
 				direction := common.Ascending
@@ -194,7 +189,18 @@ func decodeSearchRequest(
 					Name:      sortingOption.Name,
 					Direction: direction,
 				}
-			}).([]common.SortingOptionPair),
+			}).([]common.SortingOptionPair)
+	}
+
+	return &business.SearchRequest{
+		Pagination: common.Pagination{
+			After:  castedRequest.Pagination.After,
+			First:  int(castedRequest.Pagination.First),
+			Before: castedRequest.Pagination.Before,
+			Last:   int(castedRequest.Pagination.Last),
+		},
+		TenantIDs:      castedRequest.TenantIDs,
+		SortingOptions: sortingOptions,
 	}, nil
 }
 
