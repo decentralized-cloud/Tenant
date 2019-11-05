@@ -1,4 +1,3 @@
-// Package repository implements different repository services required by the tenant service
 package memory_test
 
 import (
@@ -178,20 +177,24 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 	Context("tenants exist", func() {
 		var (
 			tenantIDs []string
-			names     []string
+			tenants   []models.Tenant
 		)
 
 		BeforeEach(func() {
 			rand.Seed(42)
-			names = []string{}
+			tenants = []models.Tenant{}
 			for idx := 0; idx < rand.Intn(20)+10; idx++ {
-				names = append(names, cuid.New())
+				tenants = append(
+					tenants,
+					models.Tenant{
+						Name: cuid.New(),
+					})
 			}
 
-			tenantIDs = funk.Map(names, func(name string) string {
+			tenantIDs = funk.Map(tenants, func(tenant models.Tenant) string {
 				response, _ := sut.CreateTenant(ctx, &repository.CreateTenantRequest{
 					Tenant: models.Tenant{
-						Name: name,
+						Name: tenant.Name,
 					},
 				})
 
@@ -214,12 +217,12 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 
 			It("should sort the result ascending when no sorting direction is provided", func() {
 				response, _ := sut.Search(ctx, &repository.SearchRequest{})
-				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
-					return tenantWithCursor.Tenant.Name
-				}).([]string)
+				convertedTenants := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) models.Tenant {
+					return tenantWithCursor.Tenant
+				}).([]models.Tenant)
 
-				for idx := range names[:len(names)-1] {
-					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				for idx := range convertedTenants[:len(convertedTenants)-1] {
+					Ω(convertedTenants[idx].Name < convertedTenants[idx+1].Name).Should(BeTrue())
 				}
 			})
 
@@ -230,12 +233,12 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 							Name:      "name",
 							Direction: common.Ascending,
 						}}})
-				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
-					return tenantWithCursor.Tenant.Name
-				}).([]string)
+				convertedTenants := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) models.Tenant {
+					return tenantWithCursor.Tenant
+				}).([]models.Tenant)
 
-				for idx := range names[:len(names)-1] {
-					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				for idx := range convertedTenants[:len(convertedTenants)-1] {
+					Ω(convertedTenants[idx].Name < convertedTenants[idx+1].Name).Should(BeTrue())
 				}
 			})
 
@@ -246,12 +249,12 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 							Name:      "name",
 							Direction: common.Descending,
 						}}})
-				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
-					return tenantWithCursor.Tenant.Name
-				}).([]string)
+				convertedTenants := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) models.Tenant {
+					return tenantWithCursor.Tenant
+				}).([]models.Tenant)
 
-				for idx := range names[:len(names)-1] {
-					Ω(names[idx] > names[idx+1]).Should(BeTrue())
+				for idx := range convertedTenants[:len(convertedTenants)-1] {
+					Ω(convertedTenants[idx].Name > convertedTenants[idx+1].Name).Should(BeTrue())
 				}
 			})
 		})
@@ -285,12 +288,12 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 				response, _ := sut.Search(ctx, &repository.SearchRequest{
 					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
 				})
-				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
-					return tenantWithCursor.Tenant.Name
-				}).([]string)
+				convertedTenants := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) models.Tenant {
+					return tenantWithCursor.Tenant
+				}).([]models.Tenant)
 
-				for idx := range names[:len(names)-1] {
-					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				for idx := range convertedTenants[:len(convertedTenants)-1] {
+					Ω(convertedTenants[idx].Name < convertedTenants[idx+1].Name).Should(BeTrue())
 				}
 			})
 
@@ -304,12 +307,12 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 					},
 					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
 				})
-				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
-					return tenantWithCursor.Tenant.Name
-				}).([]string)
+				convertedTenants := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) models.Tenant {
+					return tenantWithCursor.Tenant
+				}).([]models.Tenant)
 
-				for idx := range names[:len(names)-1] {
-					Ω(names[idx] < names[idx+1]).Should(BeTrue())
+				for idx := range convertedTenants[:len(convertedTenants)-1] {
+					Ω(convertedTenants[idx].Name < convertedTenants[idx+1].Name).Should(BeTrue())
 				}
 			})
 
@@ -323,12 +326,12 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 					},
 					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
 				})
-				names := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) string {
-					return tenantWithCursor.Tenant.Name
-				}).([]string)
+				convertedTenants := funk.Map(response.Tenants, func(tenantWithCursor models.TenantWithCursor) models.Tenant {
+					return tenantWithCursor.Tenant
+				}).([]models.Tenant)
 
-				for idx := range names[:len(names)-1] {
-					Ω(names[idx] > names[idx+1]).Should(BeTrue())
+				for idx := range convertedTenants[:len(convertedTenants)-1] {
+					Ω(convertedTenants[idx].Name > convertedTenants[idx+1].Name).Should(BeTrue())
 				}
 			})
 		})

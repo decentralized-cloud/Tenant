@@ -7,14 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	gokitendpoint "github.com/go-kit/kit/endpoint"
-	"github.com/lucsky/cuid"
-
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/business"
 	businessMock "github.com/decentralized-cloud/tenant/services/business/mock"
 	"github.com/decentralized-cloud/tenant/services/endpoint"
+	gokitendpoint "github.com/go-kit/kit/endpoint"
 	"github.com/golang/mock/gomock"
+	"github.com/lucsky/cuid"
 	"github.com/micro-business/go-core/common"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 

@@ -38,8 +38,8 @@ func encodeCreateTenantResponse(
 
 	if castedResponse.Err == nil {
 		return &tenantGRPCContract.CreateTenantResponse{
-			TenantID: castedResponse.TenantID,
 			Error:    tenantGRPCContract.Error_NO_ERROR,
+			TenantID: castedResponse.TenantID,
 			Tenant: &tenantGRPCContract.Tenant{
 				Name: castedResponse.Tenant.Name,
 			},
@@ -77,10 +77,10 @@ func encodeReadTenantResponse(
 
 	if castedResponse.Err == nil {
 		return &tenantGRPCContract.ReadTenantResponse{
+			Error: tenantGRPCContract.Error_NO_ERROR,
 			Tenant: &tenantGRPCContract.Tenant{
 				Name: castedResponse.Tenant.Name,
 			},
-			Error: tenantGRPCContract.Error_NO_ERROR,
 		}, nil
 	}
 
@@ -172,7 +172,6 @@ func decodeSearchRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
 	castedRequest := request.(*tenantGRPCContract.SearchRequest)
-
 	sortingOptions := []common.SortingOptionPair{}
 
 	if len(castedRequest.SortingOptions) > 0 {

@@ -84,7 +84,11 @@ var _ = Describe("Business Service Tests", func() {
 						Do(func(_ context.Context, mappedRequest *repository.CreateTenantRequest) {
 							Ω(mappedRequest.Tenant).Should(Equal(request.Tenant))
 						}).
-						Return(&repository.CreateTenantResponse{TenantID: cuid.New()}, nil)
+						Return(&repository.CreateTenantResponse{
+							TenantID: cuid.New(),
+							Tenant: models.Tenant{
+								Name: cuid.New(),
+							}}, nil)
 
 					response, err := sut.CreateTenant(ctx, &request)
 					Ω(err).Should(BeNil())

@@ -52,7 +52,9 @@ func (service *repositoryService) ReadTenant(
 		return nil, repository.NewTenantNotFoundError(request.TenantID)
 	}
 
-	return &repository.ReadTenantResponse{Tenant: tenant}, nil
+	return &repository.ReadTenantResponse{
+		Tenant: tenant,
+	}, nil
 }
 
 // UpdateTenant update an existing tenant
