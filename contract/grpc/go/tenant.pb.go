@@ -730,14 +730,14 @@ func (m *SearchRequest) GetTenantIDs() []string {
 }
 
 //
-// The pair of tenant and a cursor that defines the logical position of the tenant in the repository
+// The pair of tenant and a cursor that defines the position of the tenant in the repository
 // that can later referred to using pagination information.
 type TenantWithCursor struct {
 	// The tenant object
 	Tenant *Tenant `protobuf:"bytes,1,opt,name=tenant,proto3" json:"tenant,omitempty"`
 	// The unique tenant identifier
 	TenantID string `protobuf:"bytes,2,opt,name=tenantID,proto3" json:"tenantID,omitempty"`
-	// The cursor defines the logical position of the tenant in the repository that can be later
+	// The cursor defines the position of the tenant in the repository that can be later
 	// referred to using pagination information
 	Cursor               string   `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`

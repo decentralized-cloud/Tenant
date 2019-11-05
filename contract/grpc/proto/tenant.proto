@@ -167,7 +167,7 @@ message SearchRequest {
 }
 
 /*
- * The pair of tenant and a cursor that defines the logical position of the tenant in the repository
+ * The pair of tenant and a cursor that defines the position of the tenant in the repository
  * that can later referred to using pagination information.
  */
 message TenantWithCursor {
@@ -177,7 +177,7 @@ message TenantWithCursor {
   // The unique tenant identifier
   string tenantID = 2;
 
-  // The cursor defines the logical position of the tenant in the repository that can be later
+  // The cursor defines the position of the tenant in the repository that can be later
   // referred to using pagination information
   string cursor = 3;
 }
@@ -200,7 +200,6 @@ message SearchResponse {
 
   // The list contains the tenants that matched the search criteria
   repeated TenantWithCursor tenants = 5;
-
 }
 
 /**
