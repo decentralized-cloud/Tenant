@@ -1,4 +1,3 @@
-// Package repository implements different repository services required by the tenant service
 package mongodb_test
 
 import (

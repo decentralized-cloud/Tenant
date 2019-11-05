@@ -201,10 +201,10 @@ func (service *transportService) DeleteTenant(
 
 }
 
-// Search returns the list  of tenants matched the provided criteria
+// Search returns the list  of tenant that matched the provided criteria
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to delete an existing tenant
-// Returns the result of deleting an exiting tenant
+// request: Mandatory. The request contains the filter criteria to look for existing tenant
+// Returns the list of tenant that matched the provided criteria
 func (service *transportService) Search(
 	ctx context.Context,
 	request *tenantGRPCContract.SearchRequest) (*tenantGRPCContract.SearchResponse, error) {
@@ -214,5 +214,4 @@ func (service *transportService) Search(
 	}
 
 	return response.(*tenantGRPCContract.SearchResponse), nil
-
 }

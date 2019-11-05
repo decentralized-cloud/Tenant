@@ -13,8 +13,8 @@ type CreateTenantRequest struct {
 
 // CreateTenantResponse contains the result of creating a new tenant
 type CreateTenantResponse struct {
-	TenantID string
 	Err      error
+	TenantID string
 	Tenant   models.Tenant
 }
 
@@ -25,8 +25,8 @@ type ReadTenantRequest struct {
 
 // ReadTenantResponse contains the result of reading an existing tenant
 type ReadTenantResponse struct {
-	Tenant models.Tenant
 	Err    error
+	Tenant models.Tenant
 }
 
 // UpdateTenantRequest contains the request to update an existing tenant
