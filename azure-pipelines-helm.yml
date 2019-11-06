@@ -19,7 +19,6 @@ steps:
 - task: Docker@2
   displayName: "Build and Push Helm Chart"
   inputs:
-    repository: $(DOCKER_REPOSITORY_NAME)
     command: 'build'
     Dockerfile: '$(system.defaultWorkingDirectory)/docker/Dockerfile.buildAndPushHelmChart'
     buildContext: '$(system.defaultWorkingDirectory)'
