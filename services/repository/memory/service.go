@@ -135,8 +135,8 @@ func (service *repositoryService) Search(
 		return response.Tenants[i].Tenant.Name > response.Tenants[j].Tenant.Name
 	})
 
-	for idx, tenant := range response.Tenants {
-		tenant.Cursor = strconv.Itoa(idx)
+	for idx := range response.Tenants {
+		response.Tenants[idx].Cursor = strconv.Itoa(idx)
 	}
 
 	return response, nil
