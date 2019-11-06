@@ -259,7 +259,7 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 			})
 		})
 
-		When("user search for tenants with tenant IDs provided", func() {
+		When("user search for tenants  with/without sorting options", func() {
 			var (
 				numberOfTenantIDs  int
 				shuffeledTenantIDs []string
@@ -268,20 +268,6 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 			BeforeEach(func() {
 				shuffeledTenantIDs = funk.ShuffleString(tenantIDs)
 				numberOfTenantIDs = rand.Intn(10)
-			})
-
-			It("should return filtered tenant list", func() {
-				response, err := sut.Search(ctx, &repository.SearchRequest{
-					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
-				})
-				Ω(err).Should(BeNil())
-				Ω(response.Tenants).Should(HaveLen(numberOfTenantIDs))
-
-				filteredTenants := funk.Filter(response.Tenants, func(tenantWithCursor models.TenantWithCursor) bool {
-					return !funk.Contains(tenantIDs, tenantWithCursor.TenantID)
-				}).([]models.TenantWithCursor)
-
-				Ω(filteredTenants).Should(HaveLen(0))
 			})
 
 			It("should sort the result ascending when no sorting direction is provided", func() {
@@ -333,6 +319,32 @@ var _ = Describe("In-Memory Repository Service Tests", func() {
 				for idx := range convertedTenants[:len(convertedTenants)-1] {
 					Ω(convertedTenants[idx].Name > convertedTenants[idx+1].Name).Should(BeTrue())
 				}
+			})
+		})
+
+		When("user search for tenants with tenant IDs provided", func() {
+			var (
+				numberOfTenantIDs  int
+				shuffeledTenantIDs []string
+			)
+
+			BeforeEach(func() {
+				shuffeledTenantIDs = funk.ShuffleString(tenantIDs)
+				numberOfTenantIDs = rand.Intn(10)
+			})
+
+			It("should return filtered tenant list", func() {
+				response, err := sut.Search(ctx, &repository.SearchRequest{
+					TenantIDs: shuffeledTenantIDs[:numberOfTenantIDs],
+				})
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).Should(HaveLen(numberOfTenantIDs))
+
+				filteredTenants := funk.Filter(response.Tenants, func(tenantWithCursor models.TenantWithCursor) bool {
+					return !funk.Contains(tenantIDs, tenantWithCursor.TenantID)
+				}).([]models.TenantWithCursor)
+
+				Ω(filteredTenants).Should(HaveLen(0))
 			})
 		})
 	})
