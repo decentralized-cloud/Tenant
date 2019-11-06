@@ -4,6 +4,7 @@ package memory
 import (
 	"context"
 	"sort"
+	"strconv"
 
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/repository"
@@ -109,7 +110,6 @@ func (service *repositoryService) Search(
 		return models.TenantWithCursor{
 			TenantID: tenantID,
 			Tenant:   tenant,
-			Cursor:   "Not implemented",
 		}
 	})
 
@@ -134,6 +134,10 @@ func (service *repositoryService) Search(
 
 		return response.Tenants[i].Tenant.Name > response.Tenants[j].Tenant.Name
 	})
+
+	for idx, tenant := range response.Tenants {
+		tenant.Cursor = strconv.Itoa(idx)
+	}
 
 	return response, nil
 }
