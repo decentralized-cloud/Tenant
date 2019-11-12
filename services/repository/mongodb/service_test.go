@@ -35,7 +35,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	BeforeEach(func() {
 		connectionString := os.Getenv("DATABASE_CONNECTION_STRING")
 		if strings.Trim(connectionString, " ") == "" {
-			connectionString = "mongodb://localhost:27017"
+			connectionString = "mongodb://mongodb:27017"
 		}
 
 		mockCtrl = gomock.NewController(GinkgoT())

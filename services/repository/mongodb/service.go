@@ -3,6 +3,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/configuration"
@@ -176,7 +177,6 @@ func (service *mongodbRepositoryService) DeleteTenant(
 func (service *mongodbRepositoryService) Search(
 	ctx context.Context,
 	request *repository.SearchRequest) (*repository.SearchResponse, error) {
-
 	response := &repository.SearchResponse{
 		HasPreviousPage: false,
 		HasNextPage:     false,
@@ -193,22 +193,32 @@ func (service *mongodbRepositoryService) Search(
 	collection := client.Database(service.databaseName).Collection(collectionName)
 
 	filter := bson.M{}
-	ids := make([]primitive.ObjectID, len(request.TenantIDs))
-	if len(request.TenantIDs) > 0 {
-		for i := range request.TenantIDs {
-			ObjectID, _ := primitive.ObjectIDFromHex(request.TenantIDs[i])
-			ids[i] = ObjectID
+	ids := []primitive.ObjectID{}
+	for _, tenantID := range request.TenantIDs {
+		objectID, err := primitive.ObjectIDFromHex(tenantID)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the tenantID: %s.", tenantID), err)
 		}
+
+		ids = append(ids, objectID)
+	}
+
+	if len(request.TenantIDs) > 0 {
 		filter = bson.M{"_id": bson.M{"$in": ids}}
 	}
 
 	findOptions := options.Find()
+
 	if request.Pagination.After != "" {
-		ObjectID, _ := primitive.ObjectIDFromHex(request.Pagination.After)
+		objectID, err := primitive.ObjectIDFromHex(request.Pagination.After)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the After: %s.", request.Pagination.After), err)
+		}
+
 		filter = bson.M{
 			"_id": bson.M{"$in": ids},
 			"$and": []interface{}{
-				bson.M{"_id": bson.M{"$gt": ObjectID}},
+				bson.M{"_id": bson.M{"$gt": objectID}},
 			},
 		}
 	}
@@ -218,12 +228,15 @@ func (service *mongodbRepositoryService) Search(
 	}
 
 	if request.Pagination.Before != "" {
-		ObjectID, _ := primitive.ObjectIDFromHex(request.Pagination.Before)
+		objectID, err := primitive.ObjectIDFromHex(request.Pagination.Before)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the Before: %s.", request.Pagination.Before), err)
+		}
 
 		filter = bson.M{
 			"_id": bson.M{"$in": ids},
 			"$and": []interface{}{
-				bson.M{"_id": bson.M{"$lt": ObjectID}},
+				bson.M{"_id": bson.M{"$lt": objectID}},
 			},
 		}
 	}
@@ -233,19 +246,17 @@ func (service *mongodbRepositoryService) Search(
 	}
 
 	if len(request.SortingOptions) > 0 {
-
 		var sortOptionPairs bson.D
-		var direction int
-		for i := range request.SortingOptions {
-			fieldName := request.SortingOptions[i].Name
 
-			switch request.SortingOptions[i].Direction {
-			case common.Ascending:
-				direction = 1
-			case common.Descending:
+		for _, sortingOption := range request.SortingOptions {
+			fieldName := sortingOption.Name
+
+			direction := 1
+			if sortingOption.Direction == common.Descending {
 				direction = -1
 			}
-			sortOptionPairs = append(sortOptionPairs, bson.E{fieldName, direction})
+
+			sortOptionPairs = append(sortOptionPairs, bson.E{Key: fieldName, Value: direction})
 		}
 
 		findOptions.SetSort(sortOptionPairs)
@@ -253,19 +264,19 @@ func (service *mongodbRepositoryService) Search(
 
 	cursor, err := collection.Find(ctx, filter, findOptions)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
+		return nil, repository.NewUnknownErrorWithError("Failed to call the Find function on the collection.", err)
 	}
 
 	var tenants []models.TenantWithCursor
 
 	for cursor.Next(ctx) {
-
 		var tenant models.Tenant
 		//Todo : below line need to be removed, if we pass 'ShowRecordID' in findOption, ObjectID will be available
 		var tenantBson bson.M
+
 		err := cursor.Decode(&tenant)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
+			return nil, repository.NewUnknownErrorWithError("Failed to decode the tenant", err)
 		}
 
 		err = cursor.Decode(&tenantBson)
