@@ -7,6 +7,7 @@ import (
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/configuration"
 	"github.com/decentralized-cloud/tenant/services/repository"
+	"github.com/micro-business/go-core/common"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -175,7 +176,116 @@ func (service *mongodbRepositoryService) DeleteTenant(
 func (service *mongodbRepositoryService) Search(
 	ctx context.Context,
 	request *repository.SearchRequest) (*repository.SearchResponse, error) {
-	response := &repository.SearchResponse{}
+
+	response := &repository.SearchResponse{
+		HasPreviousPage: false,
+		HasNextPage:     false,
+	}
+
+	clientOptions := options.Client().ApplyURI(service.connectionString)
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+	}
+
+	defer disconnect(ctx, client)
+
+	collection := client.Database(service.databaseName).Collection(collectionName)
+
+	filter := bson.M{}
+	ids := make([]primitive.ObjectID, len(request.TenantIDs))
+	if len(request.TenantIDs) > 0 {
+		for i := range request.TenantIDs {
+			ObjectID, _ := primitive.ObjectIDFromHex(request.TenantIDs[i])
+			ids[i] = ObjectID
+		}
+		filter = bson.M{"_id": bson.M{"$in": ids}}
+	}
+
+	findOptions := options.Find()
+	if request.Pagination.After != "" {
+		ObjectID, _ := primitive.ObjectIDFromHex(request.Pagination.After)
+		filter = bson.M{
+			"_id": bson.M{"$in": ids},
+			"$and": []interface{}{
+				bson.M{"_id": bson.M{"$gt": ObjectID}},
+			},
+		}
+	}
+
+	if request.Pagination.First > 0 {
+		findOptions.SetLimit(int64(request.Pagination.First))
+	}
+
+	if request.Pagination.Before != "" {
+		ObjectID, _ := primitive.ObjectIDFromHex(request.Pagination.Before)
+
+		filter = bson.M{
+			"_id": bson.M{"$in": ids},
+			"$and": []interface{}{
+				bson.M{"_id": bson.M{"$lt": ObjectID}},
+			},
+		}
+	}
+
+	if request.Pagination.Last > 0 {
+		findOptions.SetLimit(int64(request.Pagination.Last))
+	}
+
+	if len(request.SortingOptions) > 0 {
+
+		var sortOptionPairs bson.D
+		var direction int
+		for i := range request.SortingOptions {
+			fieldName := request.SortingOptions[i].Name
+
+			switch request.SortingOptions[i].Direction {
+			case common.Ascending:
+				direction = 1
+			case common.Descending:
+				direction = -1
+			}
+			sortOptionPairs = append(sortOptionPairs, bson.E{fieldName, direction})
+		}
+
+		findOptions.SetSort(sortOptionPairs)
+	}
+
+	cursor, err := collection.Find(ctx, filter, findOptions)
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
+	}
+
+	var tenants []models.TenantWithCursor
+
+	for cursor.Next(ctx) {
+
+		var tenant models.Tenant
+		//Todo : below line need to be removed, if we pass 'ShowRecordID' in findOption, ObjectID will be available
+		var tenantBson bson.M
+		err := cursor.Decode(&tenant)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
+		}
+
+		err = cursor.Decode(&tenantBson)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
+		}
+
+		tenantWithCursor := models.TenantWithCursor{
+			TenantID: tenantBson["_id"].(primitive.ObjectID).Hex(),
+			Tenant:   tenant,
+		}
+
+		tenants = append(tenants, tenantWithCursor)
+	}
+
+	response.Tenants = tenants
+
+	//TODO : find a way to populate below properties in response
+	//HasPreviousPage
+	//HasNextPage
 
 	return response, nil
 }

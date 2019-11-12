@@ -3,6 +3,7 @@ package mongodb_test
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -13,6 +14,7 @@ import (
 	"github.com/decentralized-cloud/tenant/services/repository/mongodb"
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
+	"github.com/micro-business/go-core/common"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -33,7 +35,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	BeforeEach(func() {
 		connectionString := os.Getenv("DATABASE_CONNECTION_STRING")
 		if strings.Trim(connectionString, " ") == "" {
-			connectionString = "mongodb://mongodb:27017"
+			connectionString = "mongodb://localhost:27017"
 		}
 
 		mockCtrl = gomock.NewController(GinkgoT())
@@ -206,6 +208,266 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 	})
+
+	Context("tenant already exists", func() {
+
+		var (
+			tenantIDs []string
+		)
+
+		BeforeEach(func() {
+
+			tenantIDs = []string{}
+			for i := 0; i < 10; i++ {
+
+				tenantName := fmt.Sprintf("%s%d", "Name", i)
+				createRequest.Tenant.Name = tenantName
+				response, _ := sut.CreateTenant(ctx, &createRequest)
+				tenantIDs = append(tenantIDs, response.TenantID)
+			}
+		})
+
+		When("user searches for tenants with selected tenant Ids ", func() {
+			It("should return all tenants which are matched the criteria ", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  0,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(10))
+				for i := 0; i < 10; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids and first 10 tenants ", func() {
+			It("should return first 10 tenants", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  10,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(10))
+				for i := 0; i < 10; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids and first 5 tenants ", func() {
+			It("should return first 5 tenants", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  5,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(5))
+				for i := 0; i < 5; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids with After parameter provided.", func() {
+			It("should return first 9 tenants after provided tenant id", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  tenantIDs[0],
+						First:  9,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(9))
+				for i := 1; i < 10; i++ {
+					Ω(response.Tenants[i-1].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i-1].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids with After parameter provided.", func() {
+			It("should return first 5 tenants after provided tenant id", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  tenantIDs[0],
+						First:  5,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(5))
+				for i := 1; i < 5; i++ {
+					Ω(response.Tenants[i-1].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i-1].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		//TODO : this test does not make sense
+		When("user searches for tenants with selected tenant Ids and last 10 tenants ", func() {
+			It("should return first 10 tenants", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  0,
+						Before: "",
+						Last:   10,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(10))
+				for i := 0; i < 10; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids with Before parameter provided.", func() {
+			It("should return first 9 tenants before provided tenant id", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  0,
+						Before: tenantIDs[9],
+						Last:   9,
+					},
+					SortingOptions: []common.SortingOptionPair{},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(9))
+				for i := 0; i < 9; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids and first 10 tenants with ascending order on name property ", func() {
+			It("should return first 10 tenants in adcending order on name field", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  10,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{
+						{Name: "name", Direction: common.Ascending},
+					},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(10))
+				for i := 0; i < 10; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+		When("user searches for tenants with selected tenant Ids and first 10 tenants with descending order on name property ", func() {
+			It("should return first 10 tenants in descending order on name field", func() {
+
+				searchRequest := repository.SearchRequest{
+					TenantIDs: tenantIDs,
+					Pagination: common.Pagination{
+						After:  "",
+						First:  10,
+						Before: "",
+						Last:   0,
+					},
+					SortingOptions: []common.SortingOptionPair{
+						{Name: "name", Direction: common.Descending},
+					},
+				}
+
+				response, err := sut.Search(ctx, &searchRequest)
+				Ω(err).Should(BeNil())
+				Ω(response.Tenants).ShouldNot(BeNil())
+				Ω(len(response.Tenants)).Should(Equal(10))
+				for i := 0; i < 10; i++ {
+					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[9-i]))
+					tenantName := fmt.Sprintf("%s%d", "Name", 9-i)
+					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+				}
+			})
+		})
+
+	})
+
 })
 
 func assertTenant(tenant, expectedTenant models.Tenant) {
