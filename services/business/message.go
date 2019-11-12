@@ -63,5 +63,6 @@ type SearchResponse struct {
 	Err             error
 	HasPreviousPage bool
 	HasNextPage     bool
+	TotalCount      int64
 	Tenants         []models.TenantWithCursor
 }

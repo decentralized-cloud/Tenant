@@ -10,7 +10,7 @@ require (
 	github.com/golang/protobuf v1.3.2
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/lucsky/cuid v1.0.2
-	github.com/micro-business/go-core v0.0.11
+	github.com/micro-business/go-core v0.0.13
 	github.com/onsi/ginkgo v1.10.2
 	github.com/onsi/gomega v1.7.0
 	github.com/prometheus/client_golang v1.2.1
@@ -24,6 +24,6 @@ require (
 	go.uber.org/multierr v1.4.0 // indirect
 	go.uber.org/zap v1.10.0
 	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4 // indirect
-	golang.org/x/tools v0.0.0-20191105231337-689d0f08e67a // indirect
+	golang.org/x/tools v0.0.0-20191112005509-a3f652f18032 // indirect
 	google.golang.org/grpc v1.24.0
 )

@@ -58,5 +58,6 @@ type SearchRequest struct {
 type SearchResponse struct {
 	HasPreviousPage bool
 	HasNextPage     bool
+	TotalCount      int64
 	Tenants         []models.TenantWithCursor
 }

@@ -121,13 +121,21 @@ message DeleteTenantResponse {
  * https://facebook.github.io/relay/graphql/connections.htm
  */
 message Pagination {
-  string after = 1;
+    bool hasFirst = 1;
 
-  int32 first = 2;
+    int32 first = 2;
 
-  string before = 3;
+    bool hasAfter = 3;
 
-  int32 last = 4;
+    string after = 4;
+
+    bool hasLast = 5;
+
+    int32 last = 6;
+
+    bool hasBefore = 7;
+    
+    string before = 8;
 }
 
 /**
@@ -198,8 +206,11 @@ message SearchResponse {
   // Indicates whether more edges exist following the set defined by the clients arguments
   bool hasNextPage = 4;
 
+  // Indicates the total count of the tenants that matched the provided filter criteria
+  int64 totalCount = 5;
+
   // The list contains the tenants that matched the search criteria
-  repeated TenantWithCursor tenants = 5;
+  repeated TenantWithCursor tenants = 6;
 }
 
 /**

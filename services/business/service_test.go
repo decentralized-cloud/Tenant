@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/decentralized-cloud/tenant/models"
 	"github.com/decentralized-cloud/tenant/services/business"
@@ -21,6 +22,8 @@ import (
 )
 
 func TestBusinessService(t *testing.T) {
+	rand.Seed(time.Now().UTC().UnixNano())
+
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Business Service Tests")
 }
@@ -377,7 +380,6 @@ var _ = Describe("Business Service Tests", func() {
 		)
 
 		BeforeEach(func() {
-			rand.Seed(42)
 			tenantIDs = []string{}
 			for idx := 0; idx < rand.Intn(20)+1; idx++ {
 				tenantIDs = append(tenantIDs, cuid.New())
@@ -385,10 +387,10 @@ var _ = Describe("Business Service Tests", func() {
 
 			request = business.SearchRequest{
 				Pagination: common.Pagination{
-					After:  cuid.New(),
-					First:  rand.Intn(1000),
-					Before: cuid.New(),
-					Last:   rand.Intn(1000),
+					After:  convertStringToPointer(cuid.New()),
+					First:  convertIntToPointer(rand.Intn(1000)),
+					Before: convertStringToPointer(cuid.New()),
+					Last:   convertIntToPointer(rand.Intn(1000)),
 				},
 				SortingOptions: []common.SortingOptionPair{
 					common.SortingOptionPair{
@@ -454,6 +456,7 @@ var _ = Describe("Business Service Tests", func() {
 					expectedResponse := repository.SearchResponse{
 						HasPreviousPage: (rand.Intn(10) % 2) == 0,
 						HasNextPage:     (rand.Intn(10) % 2) == 0,
+						TotalCount:      int64(rand.Intn(1000)),
 						Tenants:         tenants,
 					}
 
@@ -467,6 +470,7 @@ var _ = Describe("Business Service Tests", func() {
 					Ω(response.Err).Should(BeNil())
 					Ω(response.HasPreviousPage).Should(Equal(expectedResponse.HasPreviousPage))
 					Ω(response.HasNextPage).Should(Equal(expectedResponse.HasNextPage))
+					Ω(response.TotalCount).Should(Equal(expectedResponse.TotalCount))
 					Ω(response.Tenants).Should(Equal(expectedResponse.Tenants))
 				})
 			})
@@ -517,4 +521,12 @@ func assertTenantNotFoundError(expectedTenantID string, err error, nestedErr err
 func assertTenant(tenant, expectedTenant models.Tenant) {
 	Ω(tenant).ShouldNot(BeNil())
 	Ω(tenant.Name).Should(Equal(expectedTenant.Name))
+}
+
+func convertStringToPointer(str string) *string {
+	return &str
+}
+
+func convertIntToPointer(i int) *int {
+	return &i
 }
