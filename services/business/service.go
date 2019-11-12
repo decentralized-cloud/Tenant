@@ -136,6 +136,7 @@ func (service *businessService) Search(
 	return &SearchResponse{
 		HasPreviousPage: result.HasPreviousPage,
 		HasNextPage:     result.HasNextPage,
+		TotalCount:      result.TotalCount,
 		Tenants:         result.Tenants,
 	}, nil
 }

@@ -23,7 +23,7 @@ type mongodbRepositoryService struct {
 
 const collectionName string = "tenant"
 
-// NewMongodbRepositoryService creates new instance of the RepositoryService, setting up all dependencies and returns the instance
+// NewMongodbRepositoryService creates new instance of the mongodbRepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
 func NewMongodbRepositoryService(
 	configurationService configuration.ConfigurationContract) (repository.RepositoryContract, error) {
@@ -54,15 +54,13 @@ func NewMongodbRepositoryService(
 func (service *mongodbRepositoryService) CreateTenant(
 	ctx context.Context,
 	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
-	clientOptions := options.Client().ApplyURI(service.connectionString)
-	client, err := mongo.Connect(ctx, clientOptions)
+	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+		return nil, err
 	}
 
 	defer disconnect(ctx, client)
 
-	collection := client.Database(service.databaseName).Collection(collectionName)
 	insertResult, err := collection.InsertOne(ctx, request.Tenant)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Insert tenant failed.", err)
@@ -81,16 +79,13 @@ func (service *mongodbRepositoryService) CreateTenant(
 func (service *mongodbRepositoryService) ReadTenant(
 	ctx context.Context,
 	request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
-
-	clientOptions := options.Client().ApplyURI(service.connectionString)
-	client, err := mongo.Connect(ctx, clientOptions)
+	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+		return nil, err
 	}
 
 	defer disconnect(ctx, client)
 
-	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
 	var tenant models.Tenant
@@ -112,15 +107,13 @@ func (service *mongodbRepositoryService) ReadTenant(
 func (service *mongodbRepositoryService) UpdateTenant(
 	ctx context.Context,
 	request *repository.UpdateTenantRequest) (*repository.UpdateTenantResponse, error) {
-	clientOptions := options.Client().ApplyURI(service.connectionString)
-	client, err := mongo.Connect(ctx, clientOptions)
+	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+		return nil, err
 	}
 
 	defer disconnect(ctx, client)
 
-	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
 
@@ -147,15 +140,13 @@ func (service *mongodbRepositoryService) UpdateTenant(
 func (service *mongodbRepositoryService) DeleteTenant(
 	ctx context.Context,
 	request *repository.DeleteTenantRequest) (*repository.DeleteTenantResponse, error) {
-	clientOptions := options.Client().ApplyURI(service.connectionString)
-	client, err := mongo.Connect(ctx, clientOptions)
+	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+		return nil, err
 	}
 
 	defer disconnect(ctx, client)
 
-	collection := client.Database(service.databaseName).Collection(collectionName)
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
 	response, err := collection.DeleteOne(ctx, filter)
@@ -182,17 +173,6 @@ func (service *mongodbRepositoryService) Search(
 		HasNextPage:     false,
 	}
 
-	clientOptions := options.Client().ApplyURI(service.connectionString)
-	client, err := mongo.Connect(ctx, clientOptions)
-	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
-	}
-
-	defer disconnect(ctx, client)
-
-	collection := client.Database(service.databaseName).Collection(collectionName)
-
-	filter := bson.M{}
 	ids := []primitive.ObjectID{}
 	for _, tenantID := range request.TenantIDs {
 		objectID, err := primitive.ObjectIDFromHex(tenantID)
@@ -203,60 +183,85 @@ func (service *mongodbRepositoryService) Search(
 		ids = append(ids, objectID)
 	}
 
+	filter := bson.M{}
 	if len(request.TenantIDs) > 0 {
-		filter = bson.M{"_id": bson.M{"$in": ids}}
+		filter["_id"] = bson.M{"$in": ids}
+	}
+
+	client, collection, err := service.createClientAndCollection(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	defer disconnect(ctx, client)
+
+	response.TotalCount, err = collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Failed to retrieve the number of tenants that match the filter criteria", err)
+	}
+
+	if response.TotalCount == 0 {
+		// No tennat matched the filter criteria
+		return response, nil
+	}
+
+	if request.Pagination.After != nil {
+		after := *request.Pagination.After
+		objectID, err := primitive.ObjectIDFromHex(after)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the After: %s.", after), err)
+		}
+
+		if len(ids) > 0 {
+			filter["$and"] = []interface{}{
+				bson.M{"_id": bson.M{"$gt": objectID}},
+			}
+		} else {
+			filter["_id"] = bson.M{"$gt": objectID}
+		}
+	}
+
+	if request.Pagination.Before != nil {
+		before := *request.Pagination.Before
+		objectID, err := primitive.ObjectIDFromHex(before)
+		if err != nil {
+			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the Before: %s.", before), err)
+		}
+
+		if len(ids) > 0 {
+			filter["$and"] = []interface{}{
+				bson.M{"_id": bson.M{"$lt": objectID}},
+			}
+		} else {
+			filter["_id"] = bson.M{"$lt": objectID}
+		}
 	}
 
 	findOptions := options.Find()
 
-	if request.Pagination.After != "" {
-		objectID, err := primitive.ObjectIDFromHex(request.Pagination.After)
-		if err != nil {
-			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the After: %s.", request.Pagination.After), err)
-		}
-
-		filter = bson.M{
-			"_id": bson.M{"$in": ids},
-			"$and": []interface{}{
-				bson.M{"_id": bson.M{"$gt": objectID}},
-			},
-		}
+	if request.Pagination.First != nil {
+		findOptions.SetLimit(int64(*request.Pagination.First))
 	}
 
-	if request.Pagination.First > 0 {
-		findOptions.SetLimit(int64(request.Pagination.First))
-	}
-
-	if request.Pagination.Before != "" {
-		objectID, err := primitive.ObjectIDFromHex(request.Pagination.Before)
-		if err != nil {
-			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the Before: %s.", request.Pagination.Before), err)
-		}
-
-		filter = bson.M{
-			"_id": bson.M{"$in": ids},
-			"$and": []interface{}{
-				bson.M{"_id": bson.M{"$lt": objectID}},
-			},
-		}
-	}
-
-	if request.Pagination.Last > 0 {
-		findOptions.SetLimit(int64(request.Pagination.Last))
+	if request.Pagination.Last != nil {
+		findOptions.SetLimit(int64(*request.Pagination.Last))
 	}
 
 	if len(request.SortingOptions) > 0 {
 		var sortOptionPairs bson.D
 
 		for _, sortingOption := range request.SortingOptions {
-			fieldName := sortingOption.Name
-
 			direction := 1
 			if sortingOption.Direction == common.Descending {
 				direction = -1
 			}
 
-			sortOptionPairs = append(sortOptionPairs, bson.E{Key: fieldName, Value: direction})
+			sortOptionPairs = append(
+				sortOptionPairs,
+				bson.E{
+					Key:   sortingOption.Name,
+					Value: direction,
+				})
 		}
 
 		findOptions.SetSort(sortOptionPairs)
@@ -267,11 +272,10 @@ func (service *mongodbRepositoryService) Search(
 		return nil, repository.NewUnknownErrorWithError("Failed to call the Find function on the collection.", err)
 	}
 
-	var tenants []models.TenantWithCursor
-
+	tenants := []models.TenantWithCursor{}
 	for cursor.Next(ctx) {
 		var tenant models.Tenant
-		//Todo : below line need to be removed, if we pass 'ShowRecordID' in findOption, ObjectID will be available
+		//TODO : below line need to be removed, if we pass 'ShowRecordID' in findOption, ObjectID will be available
 		var tenantBson bson.M
 
 		err := cursor.Decode(&tenant)
@@ -284,21 +288,40 @@ func (service *mongodbRepositoryService) Search(
 			return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
 		}
 
+		tenantID := tenantBson["_id"].(primitive.ObjectID).Hex()
 		tenantWithCursor := models.TenantWithCursor{
-			TenantID: tenantBson["_id"].(primitive.ObjectID).Hex(),
+			TenantID: tenantID,
 			Tenant:   tenant,
+			Cursor:   tenantID,
 		}
 
 		tenants = append(tenants, tenantWithCursor)
 	}
 
 	response.Tenants = tenants
-
-	//TODO : find a way to populate below properties in response
-	//HasPreviousPage
-	//HasNextPage
+	if (request.Pagination.After != nil && request.Pagination.First != nil && int64(*request.Pagination.First) < response.TotalCount) ||
+		(request.Pagination.Before != nil && request.Pagination.Last != nil && int64(*request.Pagination.Last) < response.TotalCount) {
+		response.HasNextPage = true
+		response.HasPreviousPage = true
+	} else if request.Pagination.After == nil && request.Pagination.First != nil && int64(*request.Pagination.First) < response.TotalCount {
+		response.HasNextPage = true
+		response.HasPreviousPage = false
+	} else if request.Pagination.Before == nil && request.Pagination.Last != nil && int64(*request.Pagination.Last) < response.TotalCount {
+		response.HasNextPage = false
+		response.HasPreviousPage = true
+	}
 
 	return response, nil
+}
+
+func (service *mongodbRepositoryService) createClientAndCollection(ctx context.Context) (*mongo.Client, *mongo.Collection, error) {
+	clientOptions := options.Client().ApplyURI(service.connectionString)
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		return nil, nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+	}
+
+	return client, client.Database(service.databaseName).Collection(collectionName), nil
 }
 
 func disconnect(ctx context.Context, client *mongo.Client) {

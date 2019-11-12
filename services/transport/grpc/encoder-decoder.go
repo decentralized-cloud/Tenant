@@ -191,13 +191,26 @@ func decodeSearchRequest(
 			}).([]common.SortingOptionPair)
 	}
 
+	pagination := common.Pagination{}
+
+	if castedRequest.Pagination.HasAfter {
+		*pagination.After = castedRequest.Pagination.After
+	}
+
+	if castedRequest.Pagination.HasFirst {
+		*pagination.First = int(castedRequest.Pagination.First)
+	}
+
+	if castedRequest.Pagination.HasBefore {
+		*pagination.Before = castedRequest.Pagination.Before
+	}
+
+	if castedRequest.Pagination.HasLast {
+		*pagination.Last = int(castedRequest.Pagination.Last)
+	}
+
 	return &business.SearchRequest{
-		Pagination: common.Pagination{
-			After:  castedRequest.Pagination.After,
-			First:  int(castedRequest.Pagination.First),
-			Before: castedRequest.Pagination.Before,
-			Last:   int(castedRequest.Pagination.Last),
-		},
+		Pagination:     pagination,
 		TenantIDs:      castedRequest.TenantIDs,
 		SortingOptions: sortingOptions,
 	}, nil
@@ -216,6 +229,7 @@ func encodeSearchResponse(
 			Error:           tenantGRPCContract.Error_NO_ERROR,
 			HasPreviousPage: castedResponse.HasPreviousPage,
 			HasNextPage:     castedResponse.HasNextPage,
+			TotalCount:      castedResponse.TotalCount,
 			Tenants: funk.Map(castedResponse.Tenants, func(tenant models.TenantWithCursor) *tenantGRPCContract.TenantWithCursor {
 				return &tenantGRPCContract.TenantWithCursor{
 					TenantID: tenant.TenantID,

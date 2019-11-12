@@ -210,16 +210,14 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 	})
 
 	Context("tenant already exists", func() {
-
 		var (
 			tenantIDs []string
 		)
 
 		BeforeEach(func() {
-
 			tenantIDs = []string{}
-			for i := 0; i < 10; i++ {
 
+			for i := 0; i < 10; i++ {
 				tenantName := fmt.Sprintf("%s%d", "Name", i)
 				createRequest.Tenant.Name = tenantName
 				response, _ := sut.CreateTenant(ctx, &createRequest)
@@ -227,42 +225,14 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			}
 		})
 
-		When("user searches for tenants with selected tenant Ids ", func() {
-			It("should return all tenants which are matched the criteria ", func() {
-
-				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
-					Pagination: common.Pagination{
-						After:  "",
-						First:  0,
-						Before: "",
-						Last:   0,
-					},
-					SortingOptions: []common.SortingOptionPair{},
-				}
-
-				response, err := sut.Search(ctx, &searchRequest)
-				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(10))
-				for i := 0; i < 10; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
-				}
-			})
-		})
-
-		When("user searches for tenants with selected tenant Ids and first 10 tenants ", func() {
+		When("user searches for tenants with selected tenant Ids and first 10 tenants", func() {
 			It("should return first 10 tenants", func() {
-
+				first := 10
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  "",
-						First:  10,
-						Before: "",
-						Last:   0,
+						After: nil,
+						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{},
 				}
@@ -279,16 +249,14 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 5 tenants ", func() {
+		When("user searches for tenants with selected tenant Ids and first 5 tenants", func() {
 			It("should return first 5 tenants", func() {
-
+				first := 5
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  "",
-						First:  5,
-						Before: "",
-						Last:   0,
+						After: nil,
+						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{},
 				}
@@ -307,14 +275,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user searches for tenants with selected tenant Ids with After parameter provided.", func() {
 			It("should return first 9 tenants after provided tenant id", func() {
-
+				first := 9
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  tenantIDs[0],
-						First:  9,
-						Before: "",
-						Last:   0,
+						After: &tenantIDs[0],
+						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{},
 				}
@@ -333,14 +299,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user searches for tenants with selected tenant Ids with After parameter provided.", func() {
 			It("should return first 5 tenants after provided tenant id", func() {
-
+				first := 5
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  tenantIDs[0],
-						First:  5,
-						Before: "",
-						Last:   0,
+						After: &tenantIDs[0],
+						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{},
 				}
@@ -358,16 +322,14 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		})
 
 		//TODO : this test does not make sense
-		When("user searches for tenants with selected tenant Ids and last 10 tenants ", func() {
+		When("user searches for tenants with selected tenant Ids and last 10 tenants", func() {
 			It("should return first 10 tenants", func() {
-
+				last := 10
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  "",
-						First:  0,
-						Before: "",
-						Last:   10,
+						Before: nil,
+						Last:   &last,
 					},
 					SortingOptions: []common.SortingOptionPair{},
 				}
@@ -386,14 +348,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user searches for tenants with selected tenant Ids with Before parameter provided.", func() {
 			It("should return first 9 tenants before provided tenant id", func() {
-
+				last := 9
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  "",
-						First:  0,
-						Before: tenantIDs[9],
-						Last:   9,
+						Before: &tenantIDs[9],
+						Last:   &last,
 					},
 					SortingOptions: []common.SortingOptionPair{},
 				}
@@ -410,16 +370,14 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 10 tenants with ascending order on name property ", func() {
+		When("user searches for tenants with selected tenant Ids and first 10 tenants with ascending order on name property", func() {
 			It("should return first 10 tenants in adcending order on name field", func() {
-
+				first := 10
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  "",
-						First:  10,
-						Before: "",
-						Last:   0,
+						After: nil,
+						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{
 						{Name: "name", Direction: common.Ascending},
@@ -438,16 +396,14 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 10 tenants with descending order on name property ", func() {
+		When("user searches for tenants with selected tenant Ids and first 10 tenants with descending order on name property", func() {
 			It("should return first 10 tenants in descending order on name field", func() {
-
+				first := 10
 				searchRequest := repository.SearchRequest{
 					TenantIDs: tenantIDs,
 					Pagination: common.Pagination{
-						After:  "",
-						First:  10,
-						Before: "",
-						Last:   0,
+						After: nil,
+						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{
 						{Name: "name", Direction: common.Descending},
