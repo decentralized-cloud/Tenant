@@ -212,7 +212,7 @@ func (service *mongodbRepositoryService) Search(
 			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the After: %s.", after), err)
 		}
 
-		if len(ids) > 0 {
+		if len(filter) > 0 {
 			filter["$and"] = []interface{}{
 				bson.M{"_id": bson.M{"$gt": objectID}},
 			}
@@ -228,7 +228,7 @@ func (service *mongodbRepositoryService) Search(
 			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the Before: %s.", before), err)
 		}
 
-		if len(ids) > 0 {
+		if len(filter) > 0 {
 			filter["$and"] = []interface{}{
 				bson.M{"_id": bson.M{"$lt": objectID}},
 			}
