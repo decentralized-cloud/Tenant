@@ -576,7 +576,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 				response = business.SearchResponse{
 					HasPreviousPage: (rand.Intn(10) % 2) == 0,
 					HasNextPage:     (rand.Intn(10) % 2) == 0,
-					TotalCount:      int64(rand.Intn(1000)),
+					TotalCount:      rand.Int63n(1000),
 					Tenants:         tenants,
 				}
 			})
