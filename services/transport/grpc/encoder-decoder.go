@@ -194,19 +194,21 @@ func decodeSearchRequest(
 	pagination := common.Pagination{}
 
 	if castedRequest.Pagination.HasAfter {
-		*pagination.After = castedRequest.Pagination.After
+		pagination.After = &castedRequest.Pagination.After
 	}
 
 	if castedRequest.Pagination.HasFirst {
-		*pagination.First = int(castedRequest.Pagination.First)
+		first := int(castedRequest.Pagination.First)
+		pagination.First = &first
 	}
 
 	if castedRequest.Pagination.HasBefore {
-		*pagination.Before = castedRequest.Pagination.Before
+		pagination.Before = &castedRequest.Pagination.Before
 	}
 
 	if castedRequest.Pagination.HasLast {
-		*pagination.Last = int(castedRequest.Pagination.Last)
+		last := int(castedRequest.Pagination.Last)
+		pagination.Last = &last
 	}
 
 	return &business.SearchRequest{
