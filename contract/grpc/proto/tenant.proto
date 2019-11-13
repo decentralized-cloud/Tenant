@@ -134,7 +134,7 @@ message Pagination {
     int32 last = 6;
 
     bool hasBefore = 7;
-    
+
     string before = 8;
 }
 
