@@ -43,6 +43,7 @@ func encodeCreateTenantResponse(
 			Tenant: &tenantGRPCContract.Tenant{
 				Name: castedResponse.Tenant.Name,
 			},
+			Cursor: castedResponse.Cursor,
 		}, nil
 	}
 
@@ -121,6 +122,7 @@ func encodeUpdateTenantResponse(
 			Tenant: &tenantGRPCContract.Tenant{
 				Name: castedResponse.Tenant.Name,
 			},
+			Cursor: castedResponse.Cursor,
 		}, nil
 	}
 

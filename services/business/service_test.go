@@ -87,11 +87,7 @@ var _ = Describe("Business Service Tests", func() {
 						Do(func(_ context.Context, mappedRequest *repository.CreateTenantRequest) {
 							Ω(mappedRequest.Tenant).Should(Equal(request.Tenant))
 						}).
-						Return(&repository.CreateTenantResponse{
-							TenantID: cuid.New(),
-							Tenant: models.Tenant{
-								Name: cuid.New(),
-							}}, nil)
+						Return(&repository.CreateTenantResponse{}, nil)
 
 					response, err := sut.CreateTenant(ctx, &request)
 					Ω(err).Should(BeNil())
@@ -132,7 +128,9 @@ var _ = Describe("Business Service Tests", func() {
 							TenantID: cuid.New(),
 							Tenant: models.Tenant{
 								Name: cuid.New(),
-							}}
+							},
+							Cursor: cuid.New(),
+						}
 
 						mockRepositoryService.
 							EXPECT().
@@ -171,7 +169,7 @@ var _ = Describe("Business Service Tests", func() {
 						Do(func(_ context.Context, mappedRequest *repository.ReadTenantRequest) {
 							Ω(mappedRequest.TenantID).Should(Equal(request.TenantID))
 						}).
-						Return(&repository.ReadTenantResponse{Tenant: models.Tenant{Name: cuid.New()}}, nil)
+						Return(&repository.ReadTenantResponse{}, nil)
 
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
@@ -208,17 +206,20 @@ var _ = Describe("Business Service Tests", func() {
 			})
 
 			When("And tenant repository ReadTenant return no error", func() {
-				It("should return the tenantID", func() {
-					tenant := models.Tenant{Name: cuid.New()}
+				It("should return the tenant details", func() {
+					expectedResponse := repository.ReadTenantResponse{
+						Tenant: models.Tenant{Name: cuid.New()},
+					}
+
 					mockRepositoryService.
 						EXPECT().
 						ReadTenant(gomock.Any(), gomock.Any()).
-						Return(&repository.ReadTenantResponse{Tenant: tenant}, nil)
+						Return(&expectedResponse, nil)
 
 					response, err := sut.ReadTenant(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					assertTenant(response.Tenant, tenant)
+					assertTenant(response.Tenant, expectedResponse.Tenant)
 				})
 			})
 		})
@@ -287,7 +288,9 @@ var _ = Describe("Business Service Tests", func() {
 					expectedResponse := repository.UpdateTenantResponse{
 						Tenant: models.Tenant{
 							Name: cuid.New(),
-						}}
+						},
+						Cursor: cuid.New(),
+					}
 					mockRepositoryService.
 						EXPECT().
 						UpdateTenant(gomock.Any(), gomock.Any()).

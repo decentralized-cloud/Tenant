@@ -16,6 +16,7 @@ type CreateTenantResponse struct {
 	Err      error
 	TenantID string
 	Tenant   models.Tenant
+	Cursor   string
 }
 
 // ReadTenantRequest contains the request to read an existing tenant
@@ -39,6 +40,7 @@ type UpdateTenantRequest struct {
 type UpdateTenantResponse struct {
 	Err    error
 	Tenant models.Tenant
+	Cursor string
 }
 
 // DeleteTenantRequest contains the request to delete an existing tenant

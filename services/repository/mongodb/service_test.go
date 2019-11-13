@@ -88,6 +88,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 				response, err := sut.CreateTenant(ctx, &createRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.TenantID).ShouldNot(BeNil())
+				Ω(response.Cursor).Should(Equal(response.TenantID))
 				assertTenant(response.Tenant, createRequest.Tenant)
 			})
 		})
@@ -121,6 +122,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				updateResponse, err := sut.UpdateTenant(ctx, &updateRequest)
 				Ω(err).Should(BeNil())
+				Ω(updateResponse.Cursor).Should(Equal(tenantID))
 				assertTenant(updateResponse.Tenant, updateRequest.Tenant)
 
 				readResponse, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})

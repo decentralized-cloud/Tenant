@@ -46,6 +46,7 @@ func (service *businessService) CreateTenant(
 	return &CreateTenantResponse{
 		TenantID: response.TenantID,
 		Tenant:   response.Tenant,
+		Cursor:   response.Cursor,
 	}, nil
 }
 
@@ -91,6 +92,7 @@ func (service *businessService) UpdateTenant(
 
 	return &UpdateTenantResponse{
 		Tenant: response.Tenant,
+		Cursor: response.Cursor,
 	}, nil
 }
 
