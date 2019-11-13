@@ -49,6 +49,10 @@ message CreateTenantResponse {
 
   // The created tenant object
   Tenant tenant = 4;
+
+  // The cursor defines the position of the tenant in the repository that can be later
+  // referred to using pagination information
+  string cursor = 5;
 }
 
 /** Request to read an existing tenant
@@ -95,6 +99,10 @@ message UpdateTenantResponse {
 
   // The updated tenant object
   Tenant tenant = 3;
+
+  // The cursor defines the position of the tenant in the repository that can be later
+  // referred to using pagination information
+  string cursor = 4;
 }
 
 /**

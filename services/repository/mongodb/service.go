@@ -66,9 +66,12 @@ func (service *mongodbRepositoryService) CreateTenant(
 		return nil, repository.NewUnknownErrorWithError("Insert tenant failed.", err)
 	}
 
+	tenantID := insertResult.InsertedID.(primitive.ObjectID).Hex()
+
 	return &repository.CreateTenantResponse{
-		TenantID: insertResult.InsertedID.(primitive.ObjectID).Hex(),
+		TenantID: tenantID,
 		Tenant:   request.Tenant,
+		Cursor:   tenantID,
 	}, nil
 }
 
@@ -130,6 +133,7 @@ func (service *mongodbRepositoryService) UpdateTenant(
 
 	return &repository.UpdateTenantResponse{
 		Tenant: request.Tenant,
+		Cursor: request.TenantID,
 	}, nil
 }
 

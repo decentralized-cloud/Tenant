@@ -90,6 +90,10 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 
 				response = business.CreateTenantResponse{
 					TenantID: cuid.New(),
+					Tenant: models.Tenant{
+						Name: cuid.New(),
+					},
+					Cursor: cuid.New(),
 				}
 			})
 
@@ -317,7 +321,12 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 						Name: cuid.New(),
 					}}
 
-				response = business.UpdateTenantResponse{}
+				response = business.UpdateTenantResponse{
+					Tenant: models.Tenant{
+						Name: cuid.New(),
+					},
+					Cursor: cuid.New(),
+				}
 			})
 
 			Context("UpdateTenantEndpoint function is returned", func() {
