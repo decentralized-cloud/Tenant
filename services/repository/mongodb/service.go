@@ -55,16 +55,12 @@ func (service *mongodbRepositoryService) CreateTenant(
 	ctx context.Context,
 	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
 	client, collection, err := service.createClientAndCollection(ctx)
-	if err != nil {
-		return nil, err
-	}
 
+	checkError(err)
 	defer disconnect(ctx, client)
 
 	insertResult, err := collection.InsertOne(ctx, request.Tenant)
-	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Insert tenant failed.", err)
-	}
+	checkUnknownErrorWithError(err, "Insert tenant failed.")
 
 	tenantID := insertResult.InsertedID.(primitive.ObjectID).Hex()
 
@@ -83,10 +79,8 @@ func (service *mongodbRepositoryService) ReadTenant(
 	ctx context.Context,
 	request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
 	client, collection, err := service.createClientAndCollection(ctx)
-	if err != nil {
-		return nil, err
-	}
 
+	checkError(err)
 	defer disconnect(ctx, client)
 
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
@@ -94,9 +88,7 @@ func (service *mongodbRepositoryService) ReadTenant(
 	var tenant models.Tenant
 
 	err = collection.FindOne(ctx, filter).Decode(&tenant)
-	if err != nil {
-		return nil, repository.NewTenantNotFoundError(request.TenantID)
-	}
+	checkTenantNotFoundError(err, request.TenantID)
 
 	return &repository.ReadTenantResponse{
 		Tenant: tenant,
@@ -122,10 +114,7 @@ func (service *mongodbRepositoryService) UpdateTenant(
 
 	newTenant := bson.M{"$set": bson.M{"name": request.Tenant.Name}}
 	response, err := collection.UpdateOne(ctx, filter, newTenant)
-
-	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Update tenant failed.", err)
-	}
+	checkUnknownErrorWithError(err, "Update tenant failed.")
 
 	if response.MatchedCount == 0 {
 		return nil, repository.NewTenantNotFoundError(request.TenantID)
@@ -154,9 +143,7 @@ func (service *mongodbRepositoryService) DeleteTenant(
 	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
 	response, err := collection.DeleteOne(ctx, filter)
-	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Delete tenant failed.", err)
-	}
+	checkUnknownErrorWithError(err, "Delete tenant failed.")
 
 	if response.DeletedCount == 0 {
 		return nil, repository.NewTenantNotFoundError(request.TenantID)
@@ -330,4 +317,25 @@ func (service *mongodbRepositoryService) createClientAndCollection(ctx context.C
 
 func disconnect(ctx context.Context, client *mongo.Client) {
 	_ = client.Disconnect(ctx)
+}
+
+func checkError(inputErr error) (response *interface{}, outptErr error) {
+	if inputErr != nil {
+		return nil, inputErr
+	}
+	return
+}
+
+func checkUnknownErrorWithError(inputErr error, message string) (response *interface{}, outptErr error) {
+	if inputErr != nil {
+		return nil, repository.NewUnknownErrorWithError(message, inputErr)
+	}
+	return
+}
+
+func checkTenantNotFoundError(inputErr error, tenantID string) (response *interface{}, outptErr error) {
+	if inputErr != nil {
+		return nil, repository.NewTenantNotFoundError(tenantID)
+	}
+	return
 }
