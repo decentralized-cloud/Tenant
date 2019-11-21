@@ -14,7 +14,6 @@ LDFLAGS += -X $(PREFIX).version=$(VERSION) -X $(PREFIX).commit=$(COMMIT) -X $(PR
 REPORTS_DIR ?= reports
 CI_SERVICE ?=
 COVERALLS_TOKEN ?=
-PROTOBUF_BUILDER_CONTAINER_VERSION = v0.0.2
 
 # Go variables
 export CGO_ENABLED ?= 0
