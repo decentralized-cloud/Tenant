@@ -3,7 +3,7 @@ package models
 
 // Tenant defines the tenant object
 type Tenant struct {
-	Name string
+	Name string `bson:"name" json:"name"`
 }
 
 // TenantWithCursor implements the pair of the tenant with a cursor that determines the
