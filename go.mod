@@ -10,7 +10,8 @@ require (
 	github.com/golang/protobuf v1.3.2
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/lucsky/cuid v1.0.2
-	github.com/micro-business/go-core v0.0.13
+	github.com/micro-business/go-core v0.0.15
+	github.com/micro-business/gokit-core v0.0.1
 	github.com/onsi/ginkgo v1.10.3
 	github.com/onsi/gomega v1.7.1
 	github.com/prometheus/client_golang v1.2.1
@@ -22,6 +23,5 @@ require (
 	github.com/xdg/stringprep v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.1.3
 	go.uber.org/zap v1.13.0
-	golang.org/x/tools v0.0.0-20191206204035-259af5ff87bd // indirect
 	google.golang.org/grpc v1.25.1
 )
