@@ -115,7 +115,6 @@ func (service *transportService) Stop() error {
 	return nil
 }
 
-// newServer creates a new GRPC server that can serve tenant GRPC requests and process them
 func (service *transportService) setupHandlers() {
 	var createTenantEndpoint gokitEndpoint.Endpoint
 	{
