@@ -122,8 +122,8 @@ func (service *transportService) setupHandlers() {
 		createTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("CreateTenant")(createTenantEndpoint)
 		service.createTenantHandler = gokitgrpc.NewServer(
 			createTenantEndpoint,
-			decodeSearchRequest,
-			encodeSearchResponse,
+			decodeCreateTenantRequest,
+			encodeCreateTenantResponse,
 		)
 	}
 
@@ -133,8 +133,8 @@ func (service *transportService) setupHandlers() {
 		readTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("ReadTenant")(readTenantEndpoint)
 		service.readTenantHandler = gokitgrpc.NewServer(
 			readTenantEndpoint,
-			decodeSearchRequest,
-			encodeSearchResponse,
+			decodeReadTenantRequest,
+			encodeReadTenantResponse,
 		)
 	}
 
@@ -144,8 +144,8 @@ func (service *transportService) setupHandlers() {
 		updateTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("UpdateTenant")(updateTenantEndpoint)
 		service.updateTenantHandler = gokitgrpc.NewServer(
 			updateTenantEndpoint,
-			decodeSearchRequest,
-			encodeSearchResponse,
+			decodeUpdateTenantRequest,
+			encodeUpdateTenantResponse,
 		)
 	}
 
@@ -155,8 +155,8 @@ func (service *transportService) setupHandlers() {
 		deleteTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("DeleteTenant")(deleteTenantEndpoint)
 		service.deleteTenantHandler = gokitgrpc.NewServer(
 			deleteTenantEndpoint,
-			decodeSearchRequest,
-			encodeSearchResponse,
+			decodeDeleteTenantRequest,
+			encodeDeleteTenantResponse,
 		)
 	}
 
