@@ -7,6 +7,7 @@ replicaCount: 1
 image:
   repository: decentralizedcloud/tenant
   pullPolicy: IfNotPresent
+  version: latest
 
 imagePullSecrets: []
 nameOverride: ""
