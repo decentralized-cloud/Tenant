@@ -1,4 +1,4 @@
-FROM decentralizedcloud/protobuf-builder:0.1.0
+FROM microbusiness/protobuf-builder:0.1.2
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
 ADD . /src
