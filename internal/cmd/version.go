@@ -12,7 +12,7 @@ func newVersionCommand() *cobra.Command {
 		Short: "Get Tenant CLI version",
 		Run: func(cmd *cobra.Command, args []string) {
 			util.PrintInfo("Tenant CLI\n")
-			util.PrintInfo("Copyright (C) 2019, Micro Business Ltd.\n")
+			util.PrintInfo("Copyright (C) 2020, Micro Business Ltd.\n")
 			util.PrintYAML(util.GetVersion())
 		},
 	}
