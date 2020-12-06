@@ -1,4 +1,4 @@
-FROM microbusiness/protobuf-builder:0.1.2
+FROM microbusiness/protobuf-builder:0.4.0
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
 ADD . /src
