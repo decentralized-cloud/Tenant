@@ -11,13 +11,13 @@ type ConfigurationContract interface {
 	// Returns the gRPC port number or error if something goes wrong
 	GetGrpcPort() (int, error)
 
-	// GetHttpsHost retrieves the HTTPS host name
-	// Returns the HTTPS host name or error if something goes wrong
-	GetHttpsHost() (string, error)
+	// GetHttpHost retrieves the HTTP host name
+	// Returns the HTTP host name or error if something goes wrong
+	GetHttpHost() (string, error)
 
-	// GetHttpsPort retrieves the HTTPS port number
-	// Returns the HTTPS port number or error if something goes wrong
-	GetHttpsPort() (int, error)
+	// GetHttpPort retrieves the HTTP port number
+	// Returns the HTTP port number or error if something goes wrong
+	GetHttpPort() (int, error)
 
 	// GetDatabaseConnectionString retrieves the database connection string
 	// Returns the database connection string or error if something goes wrong
