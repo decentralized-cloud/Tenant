@@ -18,7 +18,7 @@ require (
 	github.com/thoas/go-funk v0.7.0
 	go.mongodb.org/mongo-driver v1.4.4
 	go.uber.org/zap v1.16.0
-	golang.org/x/tools v0.0.0-20210112183307-1e6ecd4bf1b0 // indirect
+	golang.org/x/tools v0.1.0 // indirect
 	google.golang.org/grpc v1.34.1
 	google.golang.org/protobuf v1.25.0
 )
