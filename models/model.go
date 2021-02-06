@@ -1,15 +1,15 @@
-// Package models defines the different object models used in Tenant
+// Package models defines the different object models used in Project
 package models
 
-// Tenant defines the tenant object
-type Tenant struct {
+// Project defines the project object
+type Project struct {
 	Name string `bson:"name" json:"name"`
 }
 
-// TenantWithCursor implements the pair of the tenant with a cursor that determines the
+// ProjectWithCursor implements the pair of the project with a cursor that determines the
 // location of the tennat in the repository.
-type TenantWithCursor struct {
-	TenantID string
-	Tenant   Tenant
-	Cursor   string
+type ProjectWithCursor struct {
+	ProjectID string
+	Project   Project
+	Cursor    string
 }

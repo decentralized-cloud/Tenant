@@ -18,7 +18,7 @@ pool:
 
 variables:
   DOCKER_CONTAINER_REGISTRY: "Decentralized Cloud Docker Hub"
-  DOCKER_REPOSITORY_NAME: "decentralizedcloud/tenant"
+  DOCKER_REPOSITORY_NAME: "decentralizedcloud/project"
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/master') }}:
     version: latest
   ${{ if not(eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:

@@ -1,11 +1,11 @@
-// Package cmd implements different commands that can be executed against tenant service
+// Package cmd implements different commands that can be executed against project service
 package cmd
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/decentralized-cloud/tenant/pkg/util"
+	"github.com/decentralized-cloud/project/pkg/util"
 	gocoreUtil "github.com/micro-business/go-core/pkg/util"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,7 @@ import (
 func newStartCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "start",
-		Short: "Start the Tenant service",
+		Short: "Start the Project service",
 		Run: func(cmd *cobra.Command, args []string) {
 			gocoreUtil.PrintInfo(fmt.Sprintf("Copyright (C) %d, Micro Business Ltd.\n", time.Now().Year()))
 			gocoreUtil.PrintYAML(gocoreUtil.GetVersion())

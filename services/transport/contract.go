@@ -1,4 +1,4 @@
-// Package transport implements different transport services required by the tenant service
+// Package transport implements different transport services required by the project service
 package transport
 
 // TransportContract declares the methods to be implemented by the transport service

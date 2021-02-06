@@ -1,10 +1,10 @@
-// Package endpoint implements different endpoint services required by the tenant service
+// Package endpoint implements different endpoint services required by the project service
 package endpoint
 
 import (
 	"context"
 
-	"github.com/decentralized-cloud/tenant/services/business"
+	"github.com/decentralized-cloud/project/services/business"
 	"github.com/go-kit/kit/endpoint"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 )
@@ -14,7 +14,7 @@ type endpointCreatorService struct {
 }
 
 // NewEndpointCreatorService creates new instance of the EndpointCreatorService, setting up all dependencies and returns the instance
-// businessService: Mandatory. Reference to the instance of the Tenant  service
+// businessService: Mandatory. Reference to the instance of the Project  service
 // Returns the new service or error if something goes wrong
 func NewEndpointCreatorService(
 	businessService business.BusinessContract) (EndpointCreatorContract, error) {
@@ -27,116 +27,116 @@ func NewEndpointCreatorService(
 	}, nil
 }
 
-// CreateTenantEndpoint creates Create Tenant endpoint
-// Returns the Create Tenant endpoint
-func (service *endpointCreatorService) CreateTenantEndpoint() endpoint.Endpoint {
+// CreateProjectEndpoint creates Create Project endpoint
+// Returns the Create Project endpoint
+func (service *endpointCreatorService) CreateProjectEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		if ctx == nil {
-			return &business.CreateTenantResponse{
+			return &business.CreateProjectResponse{
 				Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
 			}, nil
 		}
 
 		if request == nil {
-			return &business.CreateTenantResponse{
+			return &business.CreateProjectResponse{
 				Err: commonErrors.NewArgumentNilError("request", "request is required"),
 			}, nil
 		}
 
-		castedRequest := request.(*business.CreateTenantRequest)
+		castedRequest := request.(*business.CreateProjectRequest)
 		if err := castedRequest.Validate(); err != nil {
-			return &business.CreateTenantResponse{
+			return &business.CreateProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
 			}, nil
 		}
 
-		return service.businessService.CreateTenant(ctx, castedRequest)
+		return service.businessService.CreateProject(ctx, castedRequest)
 	}
 }
 
-// ReadTenantEndpoint creates Read Tenant endpoint
-// Returns the Read Tenant endpoint
-func (service *endpointCreatorService) ReadTenantEndpoint() endpoint.Endpoint {
+// ReadProjectEndpoint creates Read Project endpoint
+// Returns the Read Project endpoint
+func (service *endpointCreatorService) ReadProjectEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		if ctx == nil {
-			return &business.ReadTenantResponse{
+			return &business.ReadProjectResponse{
 				Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
 			}, nil
 		}
 
 		if request == nil {
-			return &business.ReadTenantResponse{
+			return &business.ReadProjectResponse{
 				Err: commonErrors.NewArgumentNilError("request", "request is required"),
 			}, nil
 		}
 
-		castedRequest := request.(*business.ReadTenantRequest)
+		castedRequest := request.(*business.ReadProjectRequest)
 		if err := castedRequest.Validate(); err != nil {
-			return &business.ReadTenantResponse{
+			return &business.ReadProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
 			}, nil
 		}
 
-		return service.businessService.ReadTenant(ctx, castedRequest)
+		return service.businessService.ReadProject(ctx, castedRequest)
 	}
 }
 
-// UpdateTenantEndpoint creates Update Tenant endpoint
-// Returns the Update Tenant endpoint
-func (service *endpointCreatorService) UpdateTenantEndpoint() endpoint.Endpoint {
+// UpdateProjectEndpoint creates Update Project endpoint
+// Returns the Update Project endpoint
+func (service *endpointCreatorService) UpdateProjectEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		if ctx == nil {
-			return &business.UpdateTenantResponse{
+			return &business.UpdateProjectResponse{
 				Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
 			}, nil
 		}
 
 		if request == nil {
-			return &business.UpdateTenantResponse{
+			return &business.UpdateProjectResponse{
 				Err: commonErrors.NewArgumentNilError("request", "request is required"),
 			}, nil
 		}
 
-		castedRequest := request.(*business.UpdateTenantRequest)
+		castedRequest := request.(*business.UpdateProjectRequest)
 		if err := castedRequest.Validate(); err != nil {
-			return &business.UpdateTenantResponse{
+			return &business.UpdateProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
 			}, nil
 		}
 
-		return service.businessService.UpdateTenant(ctx, castedRequest)
+		return service.businessService.UpdateProject(ctx, castedRequest)
 	}
 }
 
-// DeleteTenantEndpoint creates Delete Tenant endpoint
-// Returns the Delete Tenant endpoint
-func (service *endpointCreatorService) DeleteTenantEndpoint() endpoint.Endpoint {
+// DeleteProjectEndpoint creates Delete Project endpoint
+// Returns the Delete Project endpoint
+func (service *endpointCreatorService) DeleteProjectEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		if ctx == nil {
-			return &business.DeleteTenantResponse{
+			return &business.DeleteProjectResponse{
 				Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
 			}, nil
 		}
 
 		if request == nil {
-			return &business.DeleteTenantResponse{
+			return &business.DeleteProjectResponse{
 				Err: commonErrors.NewArgumentNilError("request", "request is required"),
 			}, nil
 		}
 
-		castedRequest := request.(*business.DeleteTenantRequest)
+		castedRequest := request.(*business.DeleteProjectRequest)
 		if err := castedRequest.Validate(); err != nil {
-			return &business.DeleteTenantResponse{
+			return &business.DeleteProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
 			}, nil
 		}
 
-		return service.businessService.DeleteTenant(ctx, castedRequest)
+		return service.businessService.DeleteProject(ctx, castedRequest)
 	}
 }
 
-// SearchEndpoint creates Search Tenant endpoint
-// Returns the Search Tenant endpoint
+// SearchEndpoint creates Search Project endpoint
+// Returns the Search Project endpoint
 func (service *endpointCreatorService) SearchEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		if ctx == nil {

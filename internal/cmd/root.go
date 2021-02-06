@@ -1,4 +1,4 @@
-// Package cmd implements different commands that can be executed against tenant service
+// Package cmd implements different commands that can be executed against project service
 package cmd
 
 import (
@@ -10,7 +10,7 @@ import (
 // NewRootCommand returns root CLI application command interface
 func NewRootCommand() *cobra.Command {
 	var cmd = &cobra.Command{
-		Use: "tenant",
+		Use: "project",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			printHeader()
 		},
@@ -26,5 +26,5 @@ func NewRootCommand() *cobra.Command {
 }
 
 func printHeader() {
-	util.PrintInfo("Tenant Serice")
+	util.PrintInfo("Project Serice")
 }

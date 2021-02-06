@@ -1,6 +1,6 @@
 apiVersion: v2
-name: tenant
-description: Tenant Service
+name: project
+description: Project Service
 
 # A chart can be either an 'application' or a 'library' chart.
 #

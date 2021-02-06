@@ -3,9 +3,9 @@ OS = $(shell uname -s | tr '[:upper:]' '[:lower:]')
 CURRENT_DIRECTORY = $(shell pwd)
 
 # Build variables
-BINARY_NAME = tenant
+BINARY_NAME = project
 BUILD_DIR ?= bin
-PACKAGE_DIR = cmd/tenant
+PACKAGE_DIR = cmd/project
 VERSION ?= dev
 COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null)
 BUILD_DATE ?= $(shell date +%FT%T%z)
@@ -46,7 +46,7 @@ build: ## Build the binary
 	@go build -v $(GOARGS) $(PACKAGE_DIR)/main.go
 
 .PHONY: install
-install: ## Install the tenant binary to /usr/local/bin
+install: ## Install the project binary to /usr/local/bin
 	@sudo cp $(BUILD_DIR)/$(BINARY_NAME) /usr/local/bin
 
 .PHONY: format

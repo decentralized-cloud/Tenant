@@ -10,6 +10,6 @@ RUN make build
 
 FROM alpine:3
 WORKDIR /
-COPY --from=0 /src/bin/tenant .
-CMD ["/tenant", "start"]
+COPY --from=0 /src/bin/project .
+CMD ["/project", "start"]
 

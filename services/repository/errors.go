@@ -1,4 +1,4 @@
-// Package repository implements different repository services required by the tenant service
+// Package repository implements different repository services required by the project service
 package repository
 
 import "fmt"
@@ -46,86 +46,86 @@ func NewUnknownErrorWithError(message string, err error) error {
 	}
 }
 
-// TenantAlreadyExistsError indicates that the tenant with the given information already exists
-type TenantAlreadyExistsError struct {
+// ProjectAlreadyExistsError indicates that the project with the given information already exists
+type ProjectAlreadyExistsError struct {
 	Err error
 }
 
-// Error returns message for the TenantAlreadyExistsError error type
+// Error returns message for the ProjectAlreadyExistsError error type
 // Returns the error nessage
-func (e TenantAlreadyExistsError) Error() string {
+func (e ProjectAlreadyExistsError) Error() string {
 	if e.Err == nil {
-		return "Tenant already exists."
+		return "Project already exists."
 	}
 
-	return fmt.Sprintf("Tenant already exists. Error: %s", e.Err.Error())
+	return fmt.Sprintf("Project already exists. Error: %s", e.Err.Error())
 }
 
-// Unwrap returns the err if provided through NewTenantAlreadyExistsErrorWithError function, otherwise returns nil
-func (e TenantAlreadyExistsError) Unwrap() error {
+// Unwrap returns the err if provided through NewProjectAlreadyExistsErrorWithError function, otherwise returns nil
+func (e ProjectAlreadyExistsError) Unwrap() error {
 	return e.Err
 }
 
-// IsTenantAlreadyExistsError indicates whether the error is of type TenantAlreadyExistsError
-func IsTenantAlreadyExistsError(err error) bool {
-	_, ok := err.(TenantAlreadyExistsError)
+// IsProjectAlreadyExistsError indicates whether the error is of type ProjectAlreadyExistsError
+func IsProjectAlreadyExistsError(err error) bool {
+	_, ok := err.(ProjectAlreadyExistsError)
 
 	return ok
 }
 
-// NewTenantAlreadyExistsError creates a new TenantAlreadyExistsError error
-func NewTenantAlreadyExistsError() error {
-	return TenantAlreadyExistsError{}
+// NewProjectAlreadyExistsError creates a new ProjectAlreadyExistsError error
+func NewProjectAlreadyExistsError() error {
+	return ProjectAlreadyExistsError{}
 }
 
-// NewTenantAlreadyExistsErrorWithError creates a new TenantAlreadyExistsError error
-func NewTenantAlreadyExistsErrorWithError(err error) error {
-	return TenantAlreadyExistsError{
+// NewProjectAlreadyExistsErrorWithError creates a new ProjectAlreadyExistsError error
+func NewProjectAlreadyExistsErrorWithError(err error) error {
+	return ProjectAlreadyExistsError{
 		Err: err,
 	}
 }
 
-// TenantNotFoundError indicates that the tenant with the given tenantID does not exist
-type TenantNotFoundError struct {
-	TenantID string
-	Err      error
+// ProjectNotFoundError indicates that the project with the given projectID does not exist
+type ProjectNotFoundError struct {
+	ProjectID string
+	Err       error
 }
 
-// Error returns message for the TenantNotFoundError error type
+// Error returns message for the ProjectNotFoundError error type
 // Returns the error nessage
-func (e TenantNotFoundError) Error() string {
+func (e ProjectNotFoundError) Error() string {
 	if e.Err == nil {
-		return fmt.Sprintf("Tenant not found. TenantID: %s.", e.TenantID)
+		return fmt.Sprintf("Project not found. ProjectID: %s.", e.ProjectID)
 	}
 
-	return fmt.Sprintf("Tenant not found. TenantID: %s. Error: %s", e.TenantID, e.Err.Error())
+	return fmt.Sprintf("Project not found. ProjectID: %s. Error: %s", e.ProjectID, e.Err.Error())
 }
 
-// Unwrap returns the err if provided through NewTenantNotFoundErrorWithError function, otherwise returns nil
-func (e TenantNotFoundError) Unwrap() error {
+// Unwrap returns the err if provided through NewProjectNotFoundErrorWithError function, otherwise returns nil
+func (e ProjectNotFoundError) Unwrap() error {
 	return e.Err
 }
 
-// IsTenantNotFoundError indicates whether the error is of type TenantNotFoundError
-func IsTenantNotFoundError(err error) bool {
-	_, ok := err.(TenantNotFoundError)
+// IsProjectNotFoundError indicates whether the error is of type ProjectNotFoundError
+func IsProjectNotFoundError(err error) bool {
+	_, ok := err.(ProjectNotFoundError)
 
 	return ok
 }
 
-// NewTenantNotFoundError creates a new TenantNotFoundError error
-// tenantID: Mandatory. The tenantID that did not match any existing tenant
-func NewTenantNotFoundError(tenantID string) error {
-	return TenantNotFoundError{
-		TenantID: tenantID,
+// NewProjectNotFoundError creates a new ProjectNotFoundError error
+// projectID: Mandatory. The projectID that did not match any existing project
+func NewProjectNotFoundError(projectID string) error {
+	return ProjectNotFoundError{
+		ProjectID: projectID,
 	}
 }
 
-// NewTenantNotFoundErrorWithError creates a new TenantNotFoundError error
-// tenantID: Mandatory. The tenantID that did not match any existing tenant
-func NewTenantNotFoundErrorWithError(tenantID string, err error) error {
-	return TenantNotFoundError{
-		TenantID: tenantID,
-		Err:      err,
+// NewProjectNotFoundErrorWithError creates a new ProjectNotFoundError error
+// projectID: Mandatory. The projectID that did not match any existing project
+func NewProjectNotFoundErrorWithError(projectID string, err error) error {
+	return ProjectNotFoundError{
+		ProjectID: projectID,
+		Err:       err,
 	}
 }

@@ -6,7 +6,7 @@ package mock_repository
 
 import (
 	context "context"
-	repository "github.com/decentralized-cloud/tenant/services/repository"
+	repository "github.com/decentralized-cloud/project/services/repository"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
@@ -34,64 +34,64 @@ func (m *MockRepositoryContract) EXPECT() *MockRepositoryContractMockRecorder {
 	return m.recorder
 }
 
-// CreateTenant mocks base method
-func (m *MockRepositoryContract) CreateTenant(ctx context.Context, request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
+// CreateProject mocks base method
+func (m *MockRepositoryContract) CreateProject(ctx context.Context, request *repository.CreateProjectRequest) (*repository.CreateProjectResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTenant", ctx, request)
-	ret0, _ := ret[0].(*repository.CreateTenantResponse)
+	ret := m.ctrl.Call(m, "CreateProject", ctx, request)
+	ret0, _ := ret[0].(*repository.CreateProjectResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateTenant indicates an expected call of CreateTenant
-func (mr *MockRepositoryContractMockRecorder) CreateTenant(ctx, request interface{}) *gomock.Call {
+// CreateProject indicates an expected call of CreateProject
+func (mr *MockRepositoryContractMockRecorder) CreateProject(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTenant", reflect.TypeOf((*MockRepositoryContract)(nil).CreateTenant), ctx, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProject", reflect.TypeOf((*MockRepositoryContract)(nil).CreateProject), ctx, request)
 }
 
-// ReadTenant mocks base method
-func (m *MockRepositoryContract) ReadTenant(ctx context.Context, request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
+// ReadProject mocks base method
+func (m *MockRepositoryContract) ReadProject(ctx context.Context, request *repository.ReadProjectRequest) (*repository.ReadProjectResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReadTenant", ctx, request)
-	ret0, _ := ret[0].(*repository.ReadTenantResponse)
+	ret := m.ctrl.Call(m, "ReadProject", ctx, request)
+	ret0, _ := ret[0].(*repository.ReadProjectResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// ReadTenant indicates an expected call of ReadTenant
-func (mr *MockRepositoryContractMockRecorder) ReadTenant(ctx, request interface{}) *gomock.Call {
+// ReadProject indicates an expected call of ReadProject
+func (mr *MockRepositoryContractMockRecorder) ReadProject(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadTenant", reflect.TypeOf((*MockRepositoryContract)(nil).ReadTenant), ctx, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadProject", reflect.TypeOf((*MockRepositoryContract)(nil).ReadProject), ctx, request)
 }
 
-// UpdateTenant mocks base method
-func (m *MockRepositoryContract) UpdateTenant(ctx context.Context, request *repository.UpdateTenantRequest) (*repository.UpdateTenantResponse, error) {
+// UpdateProject mocks base method
+func (m *MockRepositoryContract) UpdateProject(ctx context.Context, request *repository.UpdateProjectRequest) (*repository.UpdateProjectResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTenant", ctx, request)
-	ret0, _ := ret[0].(*repository.UpdateTenantResponse)
+	ret := m.ctrl.Call(m, "UpdateProject", ctx, request)
+	ret0, _ := ret[0].(*repository.UpdateProjectResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// UpdateTenant indicates an expected call of UpdateTenant
-func (mr *MockRepositoryContractMockRecorder) UpdateTenant(ctx, request interface{}) *gomock.Call {
+// UpdateProject indicates an expected call of UpdateProject
+func (mr *MockRepositoryContractMockRecorder) UpdateProject(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTenant", reflect.TypeOf((*MockRepositoryContract)(nil).UpdateTenant), ctx, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProject", reflect.TypeOf((*MockRepositoryContract)(nil).UpdateProject), ctx, request)
 }
 
-// DeleteTenant mocks base method
-func (m *MockRepositoryContract) DeleteTenant(ctx context.Context, request *repository.DeleteTenantRequest) (*repository.DeleteTenantResponse, error) {
+// DeleteProject mocks base method
+func (m *MockRepositoryContract) DeleteProject(ctx context.Context, request *repository.DeleteProjectRequest) (*repository.DeleteProjectResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteTenant", ctx, request)
-	ret0, _ := ret[0].(*repository.DeleteTenantResponse)
+	ret := m.ctrl.Call(m, "DeleteProject", ctx, request)
+	ret0, _ := ret[0].(*repository.DeleteProjectResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// DeleteTenant indicates an expected call of DeleteTenant
-func (mr *MockRepositoryContractMockRecorder) DeleteTenant(ctx, request interface{}) *gomock.Call {
+// DeleteProject indicates an expected call of DeleteProject
+func (mr *MockRepositoryContractMockRecorder) DeleteProject(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTenant", reflect.TypeOf((*MockRepositoryContract)(nil).DeleteTenant), ctx, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProject", reflect.TypeOf((*MockRepositoryContract)(nil).DeleteProject), ctx, request)
 }
 
 // Search mocks base method

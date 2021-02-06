@@ -1,4 +1,4 @@
-// Package configuration implements configuration service required by the tenant service
+// Package configuration implements configuration service required by the project service
 package configuration
 
 // ConfigurationContract declares the service that provides configuration required by different Tenat modules

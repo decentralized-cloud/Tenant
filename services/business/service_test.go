@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/decentralized-cloud/tenant/models"
-	"github.com/decentralized-cloud/tenant/services/business"
-	repository "github.com/decentralized-cloud/tenant/services/repository"
-	repsoitoryMock "github.com/decentralized-cloud/tenant/services/repository/mock"
+	"github.com/decentralized-cloud/project/models"
+	"github.com/decentralized-cloud/project/services/business"
+	repository "github.com/decentralized-cloud/project/services/repository"
+	repsoitoryMock "github.com/decentralized-cloud/project/services/repository/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
 	"github.com/micro-business/go-core/common"
@@ -49,7 +49,7 @@ var _ = Describe("Business Service Tests", func() {
 	})
 
 	Context("user tries to instantiate BusinessService", func() {
-		When("tenant repository service is not provided and NewBusinessService is called", func() {
+		When("project repository service is not provided and NewBusinessService is called", func() {
 			It("should return ArgumentNilError", func() {
 				service, err := business.NewBusinessService(nil)
 				Ω(service).Should(BeNil())
@@ -66,67 +66,67 @@ var _ = Describe("Business Service Tests", func() {
 		})
 	})
 
-	Describe("CreateTenant", func() {
+	Describe("CreateProject", func() {
 		var (
-			request business.CreateTenantRequest
+			request business.CreateProjectRequest
 		)
 
 		BeforeEach(func() {
-			request = business.CreateTenantRequest{
-				Tenant: models.Tenant{
+			request = business.CreateProjectRequest{
+				Project: models.Project{
 					Name: cuid.New(),
 				}}
 		})
 
-		Context("tenant service is instantiated", func() {
-			When("CreateTenant is called", func() {
-				It("should call tenant repository CreateTenant method", func() {
+		Context("project service is instantiated", func() {
+			When("CreateProject is called", func() {
+				It("should call project repository CreateProject method", func() {
 					mockRepositoryService.
 						EXPECT().
-						CreateTenant(ctx, gomock.Any()).
-						Do(func(_ context.Context, mappedRequest *repository.CreateTenantRequest) {
-							Ω(mappedRequest.Tenant).Should(Equal(request.Tenant))
+						CreateProject(ctx, gomock.Any()).
+						Do(func(_ context.Context, mappedRequest *repository.CreateProjectRequest) {
+							Ω(mappedRequest.Project).Should(Equal(request.Project))
 						}).
-						Return(&repository.CreateTenantResponse{}, nil)
+						Return(&repository.CreateProjectResponse{}, nil)
 
-					response, err := sut.CreateTenant(ctx, &request)
+					response, err := sut.CreateProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 				})
 
-				When("And tenant repository CreateTenant return TenantAlreadyExistError", func() {
-					It("should return TenantAlreadyExistsError", func() {
-						expectedError := repository.NewTenantAlreadyExistsError()
+				When("And project repository CreateProject return ProjectAlreadyExistError", func() {
+					It("should return ProjectAlreadyExistsError", func() {
+						expectedError := repository.NewProjectAlreadyExistsError()
 						mockRepositoryService.
 							EXPECT().
-							CreateTenant(gomock.Any(), gomock.Any()).
+							CreateProject(gomock.Any(), gomock.Any()).
 							Return(nil, expectedError)
 
-						response, err := sut.CreateTenant(ctx, &request)
+						response, err := sut.CreateProject(ctx, &request)
 						Ω(err).Should(BeNil())
-						assertTenantAlreadyExistsError(response.Err, expectedError)
+						assertProjectAlreadyExistsError(response.Err, expectedError)
 					})
 				})
 
-				When("And tenant repository CreateTenant return any other error", func() {
+				When("And project repository CreateProject return any other error", func() {
 					It("should return UnknownError", func() {
 						expectedError := errors.New(cuid.New())
 						mockRepositoryService.
 							EXPECT().
-							CreateTenant(gomock.Any(), gomock.Any()).
+							CreateProject(gomock.Any(), gomock.Any()).
 							Return(nil, expectedError)
 
-						response, err := sut.CreateTenant(ctx, &request)
+						response, err := sut.CreateProject(ctx, &request)
 						Ω(err).Should(BeNil())
 						assertUnknowError(expectedError.Error(), response.Err, expectedError)
 					})
 				})
 
-				When("And tenant repository CreateTenant return no error", func() {
+				When("And project repository CreateProject return no error", func() {
 					It("should return expected details", func() {
-						expectedResponse := repository.CreateTenantResponse{
-							TenantID: cuid.New(),
-							Tenant: models.Tenant{
+						expectedResponse := repository.CreateProjectResponse{
+							ProjectID: cuid.New(),
+							Project: models.Project{
 								Name: cuid.New(),
 							},
 							Cursor: cuid.New(),
@@ -134,241 +134,241 @@ var _ = Describe("Business Service Tests", func() {
 
 						mockRepositoryService.
 							EXPECT().
-							CreateTenant(gomock.Any(), gomock.Any()).
+							CreateProject(gomock.Any(), gomock.Any()).
 							Return(&expectedResponse, nil)
 
-						response, err := sut.CreateTenant(ctx, &request)
+						response, err := sut.CreateProject(ctx, &request)
 						Ω(err).Should(BeNil())
 						Ω(response.Err).Should(BeNil())
-						Ω(response.TenantID).ShouldNot(BeNil())
-						Ω(response.TenantID).Should(Equal(expectedResponse.TenantID))
-						assertTenant(response.Tenant, expectedResponse.Tenant)
+						Ω(response.ProjectID).ShouldNot(BeNil())
+						Ω(response.ProjectID).Should(Equal(expectedResponse.ProjectID))
+						assertProject(response.Project, expectedResponse.Project)
 					})
 				})
 			})
 		})
 	})
 
-	Describe("ReadTenant", func() {
+	Describe("ReadProject", func() {
 		var (
-			request business.ReadTenantRequest
+			request business.ReadProjectRequest
 		)
 
 		BeforeEach(func() {
-			request = business.ReadTenantRequest{
-				TenantID: cuid.New(),
+			request = business.ReadProjectRequest{
+				ProjectID: cuid.New(),
 			}
 		})
 
-		Context("tenant service is instantiated", func() {
-			When("ReadTenant is called", func() {
-				It("should call tenant repository ReadTenant method", func() {
+		Context("project service is instantiated", func() {
+			When("ReadProject is called", func() {
+				It("should call project repository ReadProject method", func() {
 					mockRepositoryService.
 						EXPECT().
-						ReadTenant(ctx, gomock.Any()).
-						Do(func(_ context.Context, mappedRequest *repository.ReadTenantRequest) {
-							Ω(mappedRequest.TenantID).Should(Equal(request.TenantID))
+						ReadProject(ctx, gomock.Any()).
+						Do(func(_ context.Context, mappedRequest *repository.ReadProjectRequest) {
+							Ω(mappedRequest.ProjectID).Should(Equal(request.ProjectID))
 						}).
-						Return(&repository.ReadTenantResponse{}, nil)
+						Return(&repository.ReadProjectResponse{}, nil)
 
-					response, err := sut.ReadTenant(ctx, &request)
+					response, err := sut.ReadProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 				})
 			})
 
-			When("And tenant repository ReadTenant cannot find provided tenant", func() {
-				It("should return TenantNotFoundError", func() {
-					expectedError := repository.NewTenantNotFoundError(request.TenantID)
+			When("And project repository ReadProject cannot find provided project", func() {
+				It("should return ProjectNotFoundError", func() {
+					expectedError := repository.NewProjectNotFoundError(request.ProjectID)
 					mockRepositoryService.
 						EXPECT().
-						ReadTenant(gomock.Any(), gomock.Any()).
+						ReadProject(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.ReadTenant(ctx, &request)
+					response, err := sut.ReadProject(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
+					assertProjectNotFoundError(request.ProjectID, response.Err, expectedError)
 				})
 			})
 
-			When("And tenant repository ReadTenant return any other error", func() {
+			When("And project repository ReadProject return any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
-						ReadTenant(gomock.Any(), gomock.Any()).
+						ReadProject(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.ReadTenant(ctx, &request)
+					response, err := sut.ReadProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					assertUnknowError(expectedError.Error(), response.Err, expectedError)
 				})
 			})
 
-			When("And tenant repository ReadTenant return no error", func() {
-				It("should return the tenant details", func() {
-					expectedResponse := repository.ReadTenantResponse{
-						Tenant: models.Tenant{Name: cuid.New()},
+			When("And project repository ReadProject return no error", func() {
+				It("should return the project details", func() {
+					expectedResponse := repository.ReadProjectResponse{
+						Project: models.Project{Name: cuid.New()},
 					}
 
 					mockRepositoryService.
 						EXPECT().
-						ReadTenant(gomock.Any(), gomock.Any()).
+						ReadProject(gomock.Any(), gomock.Any()).
 						Return(&expectedResponse, nil)
 
-					response, err := sut.ReadTenant(ctx, &request)
+					response, err := sut.ReadProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					assertTenant(response.Tenant, expectedResponse.Tenant)
+					assertProject(response.Project, expectedResponse.Project)
 				})
 			})
 		})
 	})
 
-	Describe("UpdateTenant", func() {
+	Describe("UpdateProject", func() {
 		var (
-			request business.UpdateTenantRequest
+			request business.UpdateProjectRequest
 		)
 
 		BeforeEach(func() {
-			request = business.UpdateTenantRequest{
-				TenantID: cuid.New(),
-				Tenant:   models.Tenant{Name: cuid.New()},
+			request = business.UpdateProjectRequest{
+				ProjectID: cuid.New(),
+				Project:   models.Project{Name: cuid.New()},
 			}
 		})
 
-		Context("tenant service is instantiated", func() {
-			When("UpdateTenant is called", func() {
-				It("should call tenant repository UpdateTenant method", func() {
+		Context("project service is instantiated", func() {
+			When("UpdateProject is called", func() {
+				It("should call project repository UpdateProject method", func() {
 					mockRepositoryService.
 						EXPECT().
-						UpdateTenant(ctx, gomock.Any()).
-						Do(func(_ context.Context, mappedRequest *repository.UpdateTenantRequest) {
-							Ω(mappedRequest.TenantID).Should(Equal(request.TenantID))
-							Ω(mappedRequest.Tenant.Name).Should(Equal(request.Tenant.Name))
+						UpdateProject(ctx, gomock.Any()).
+						Do(func(_ context.Context, mappedRequest *repository.UpdateProjectRequest) {
+							Ω(mappedRequest.ProjectID).Should(Equal(request.ProjectID))
+							Ω(mappedRequest.Project.Name).Should(Equal(request.Project.Name))
 						}).
-						Return(&repository.UpdateTenantResponse{}, nil)
+						Return(&repository.UpdateProjectResponse{}, nil)
 
-					response, err := sut.UpdateTenant(ctx, &request)
+					response, err := sut.UpdateProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 				})
 			})
 
-			When("And tenant repository UpdateTenant cannot find provided tenant", func() {
-				It("should return TenantNotFoundError", func() {
-					expectedError := repository.NewTenantNotFoundError(request.TenantID)
+			When("And project repository UpdateProject cannot find provided project", func() {
+				It("should return ProjectNotFoundError", func() {
+					expectedError := repository.NewProjectNotFoundError(request.ProjectID)
 					mockRepositoryService.
 						EXPECT().
-						UpdateTenant(gomock.Any(), gomock.Any()).
+						UpdateProject(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.UpdateTenant(ctx, &request)
+					response, err := sut.UpdateProject(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
+					assertProjectNotFoundError(request.ProjectID, response.Err, expectedError)
 				})
 			})
 
-			When("And tenant repository UpdateTenant return any other error", func() {
+			When("And project repository UpdateProject return any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
-						UpdateTenant(gomock.Any(), gomock.Any()).
+						UpdateProject(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.UpdateTenant(ctx, &request)
+					response, err := sut.UpdateProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					assertUnknowError(expectedError.Error(), response.Err, expectedError)
 				})
 			})
 
-			When("And tenant repository UpdateTenant return no error", func() {
+			When("And project repository UpdateProject return no error", func() {
 				It("should return expected details", func() {
-					expectedResponse := repository.UpdateTenantResponse{
-						Tenant: models.Tenant{
+					expectedResponse := repository.UpdateProjectResponse{
+						Project: models.Project{
 							Name: cuid.New(),
 						},
 						Cursor: cuid.New(),
 					}
 					mockRepositoryService.
 						EXPECT().
-						UpdateTenant(gomock.Any(), gomock.Any()).
+						UpdateProject(gomock.Any(), gomock.Any()).
 						Return(&expectedResponse, nil)
 
-					response, err := sut.UpdateTenant(ctx, &request)
+					response, err := sut.UpdateProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					assertTenant(response.Tenant, expectedResponse.Tenant)
+					assertProject(response.Project, expectedResponse.Project)
 				})
 			})
 		})
 	})
 
-	Describe("DeleteTenant is called", func() {
+	Describe("DeleteProject is called", func() {
 		var (
-			request business.DeleteTenantRequest
+			request business.DeleteProjectRequest
 		)
 
 		BeforeEach(func() {
-			request = business.DeleteTenantRequest{
-				TenantID: cuid.New(),
+			request = business.DeleteProjectRequest{
+				ProjectID: cuid.New(),
 			}
 		})
 
-		Context("tenant service is instantiated", func() {
-			When("DeleteTenant is called", func() {
-				It("should call tenant repository DeleteTenant method", func() {
+		Context("project service is instantiated", func() {
+			When("DeleteProject is called", func() {
+				It("should call project repository DeleteProject method", func() {
 					mockRepositoryService.
 						EXPECT().
-						DeleteTenant(ctx, gomock.Any()).
-						Do(func(_ context.Context, mappedRequest *repository.DeleteTenantRequest) {
-							Ω(mappedRequest.TenantID).Should(Equal(request.TenantID))
+						DeleteProject(ctx, gomock.Any()).
+						Do(func(_ context.Context, mappedRequest *repository.DeleteProjectRequest) {
+							Ω(mappedRequest.ProjectID).Should(Equal(request.ProjectID))
 						}).
-						Return(&repository.DeleteTenantResponse{}, nil)
+						Return(&repository.DeleteProjectResponse{}, nil)
 
-					response, err := sut.DeleteTenant(ctx, &request)
+					response, err := sut.DeleteProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 				})
 			})
 
-			When("tenant repository DeleteTenant cannot find provided tenant", func() {
-				It("should return TenantNotFoundError", func() {
-					expectedError := repository.NewTenantNotFoundError(request.TenantID)
+			When("project repository DeleteProject cannot find provided project", func() {
+				It("should return ProjectNotFoundError", func() {
+					expectedError := repository.NewProjectNotFoundError(request.ProjectID)
 					mockRepositoryService.
 						EXPECT().
-						DeleteTenant(gomock.Any(), gomock.Any()).
+						DeleteProject(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.DeleteTenant(ctx, &request)
+					response, err := sut.DeleteProject(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertTenantNotFoundError(request.TenantID, response.Err, expectedError)
+					assertProjectNotFoundError(request.ProjectID, response.Err, expectedError)
 				})
 			})
 
-			When("tenant repository DeleteTenant is faced with any other error", func() {
+			When("project repository DeleteProject is faced with any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
-						DeleteTenant(gomock.Any(), gomock.Any()).
+						DeleteProject(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.DeleteTenant(ctx, &request)
+					response, err := sut.DeleteProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					assertUnknowError(expectedError.Error(), response.Err, expectedError)
 				})
 			})
 
-			When("tenant repository DeleteTenant completes successfully", func() {
+			When("project repository DeleteProject completes successfully", func() {
 				It("should return no error", func() {
 					mockRepositoryService.
 						EXPECT().
-						DeleteTenant(gomock.Any(), gomock.Any()).
-						Return(&repository.DeleteTenantResponse{}, nil)
+						DeleteProject(gomock.Any(), gomock.Any()).
+						Return(&repository.DeleteProjectResponse{}, nil)
 
-					response, err := sut.DeleteTenant(ctx, &request)
+					response, err := sut.DeleteProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 				})
@@ -378,14 +378,14 @@ var _ = Describe("Business Service Tests", func() {
 
 	Describe("Search is called", func() {
 		var (
-			request   business.SearchRequest
-			tenantIDs []string
+			request    business.SearchRequest
+			projectIDs []string
 		)
 
 		BeforeEach(func() {
-			tenantIDs = []string{}
+			projectIDs = []string{}
 			for idx := 0; idx < rand.Intn(20)+1; idx++ {
-				tenantIDs = append(tenantIDs, cuid.New())
+				projectIDs = append(projectIDs, cuid.New())
 			}
 
 			request = business.SearchRequest{
@@ -405,20 +405,20 @@ var _ = Describe("Business Service Tests", func() {
 						Direction: common.Descending,
 					},
 				},
-				TenantIDs: tenantIDs,
+				ProjectIDs: projectIDs,
 			}
 		})
 
-		Context("tenant service is instantiated", func() {
+		Context("project service is instantiated", func() {
 			When("Search is called", func() {
-				It("should call tenant repository Search method", func() {
+				It("should call project repository Search method", func() {
 					mockRepositoryService.
 						EXPECT().
 						Search(ctx, gomock.Any()).
 						Do(func(_ context.Context, mappedRequest *repository.SearchRequest) {
 							Ω(mappedRequest.Pagination).Should(Equal(request.Pagination))
 							Ω(mappedRequest.SortingOptions).Should(Equal(request.SortingOptions))
-							Ω(mappedRequest.TenantIDs).Should(Equal(request.TenantIDs))
+							Ω(mappedRequest.ProjectIDs).Should(Equal(request.ProjectIDs))
 						}).
 						Return(&repository.SearchResponse{}, nil)
 
@@ -428,7 +428,7 @@ var _ = Describe("Business Service Tests", func() {
 				})
 			})
 
-			When("tenant repository Search is faced with any other error", func() {
+			When("project repository Search is faced with any other error", func() {
 				It("should return UnknownError", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
@@ -442,14 +442,14 @@ var _ = Describe("Business Service Tests", func() {
 				})
 			})
 
-			When("tenant repository Search completes successfully", func() {
-				It("should return the list of matched tenantIDs", func() {
-					tenants := []models.TenantWithCursor{}
+			When("project repository Search completes successfully", func() {
+				It("should return the list of matched projectIDs", func() {
+					projects := []models.ProjectWithCursor{}
 
 					for idx := 0; idx < rand.Intn(20)+1; idx++ {
-						tenants = append(tenants, models.TenantWithCursor{
-							TenantID: cuid.New(),
-							Tenant: models.Tenant{
+						projects = append(projects, models.ProjectWithCursor{
+							ProjectID: cuid.New(),
+							Project: models.Project{
 								Name: cuid.New(),
 							},
 							Cursor: cuid.New(),
@@ -460,7 +460,7 @@ var _ = Describe("Business Service Tests", func() {
 						HasPreviousPage: (rand.Intn(10) % 2) == 0,
 						HasNextPage:     (rand.Intn(10) % 2) == 0,
 						TotalCount:      rand.Int63n(1000),
-						Tenants:         tenants,
+						Projects:        projects,
 					}
 
 					mockRepositoryService.
@@ -474,7 +474,7 @@ var _ = Describe("Business Service Tests", func() {
 					Ω(response.HasPreviousPage).Should(Equal(expectedResponse.HasPreviousPage))
 					Ω(response.HasNextPage).Should(Equal(expectedResponse.HasNextPage))
 					Ω(response.TotalCount).Should(Equal(expectedResponse.TotalCount))
-					Ω(response.Tenants).Should(Equal(expectedResponse.Tenants))
+					Ω(response.Projects).Should(Equal(expectedResponse.Projects))
 				})
 			})
 		})
@@ -506,24 +506,24 @@ func assertUnknowError(expectedMessage string, err error, nestedErr error) {
 	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
-func assertTenantAlreadyExistsError(err error, nestedErr error) {
-	Ω(business.IsTenantAlreadyExistsError(err)).Should(BeTrue())
+func assertProjectAlreadyExistsError(err error, nestedErr error) {
+	Ω(business.IsProjectAlreadyExistsError(err)).Should(BeTrue())
 	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
-func assertTenantNotFoundError(expectedTenantID string, err error, nestedErr error) {
-	Ω(business.IsTenantNotFoundError(err)).Should(BeTrue())
+func assertProjectNotFoundError(expectedProjectID string, err error, nestedErr error) {
+	Ω(business.IsProjectNotFoundError(err)).Should(BeTrue())
 
-	var tenantNotFoundErr business.TenantNotFoundError
-	_ = errors.As(err, &tenantNotFoundErr)
+	var projectNotFoundErr business.ProjectNotFoundError
+	_ = errors.As(err, &projectNotFoundErr)
 
-	Ω(tenantNotFoundErr.TenantID).Should(Equal(expectedTenantID))
+	Ω(projectNotFoundErr.ProjectID).Should(Equal(expectedProjectID))
 	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
 }
 
-func assertTenant(tenant, expectedTenant models.Tenant) {
-	Ω(tenant).ShouldNot(BeNil())
-	Ω(tenant.Name).Should(Equal(expectedTenant.Name))
+func assertProject(project, expectedProject models.Project) {
+	Ω(project).ShouldNot(BeNil())
+	Ω(project.Name).Should(Equal(expectedProject.Name))
 }
 
 func convertStringToPointer(str string) *string {

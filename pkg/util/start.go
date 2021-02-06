@@ -1,4 +1,4 @@
-// Package util implements different utilities required by the tenant service
+// Package util implements different utilities required by the project service
 package util
 
 import (
@@ -6,12 +6,12 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/decentralized-cloud/tenant/services/business"
-	"github.com/decentralized-cloud/tenant/services/configuration"
-	"github.com/decentralized-cloud/tenant/services/endpoint"
-	"github.com/decentralized-cloud/tenant/services/repository/mongodb"
-	"github.com/decentralized-cloud/tenant/services/transport/grpc"
-	"github.com/decentralized-cloud/tenant/services/transport/https"
+	"github.com/decentralized-cloud/project/services/business"
+	"github.com/decentralized-cloud/project/services/configuration"
+	"github.com/decentralized-cloud/project/services/endpoint"
+	"github.com/decentralized-cloud/project/services/repository/mongodb"
+	"github.com/decentralized-cloud/project/services/transport/grpc"
+	"github.com/decentralized-cloud/project/services/transport/https"
 	"github.com/micro-business/gokit-core/middleware"
 	"go.uber.org/zap"
 )
@@ -20,7 +20,7 @@ var configurationService configuration.ConfigurationContract
 var endpointCreatorService endpoint.EndpointCreatorContract
 var middlewareProviderService middleware.MiddlewareProviderContract
 
-// StartService setups all dependecies required to start the tenant service and
+// StartService setups all dependecies required to start the project service and
 // start the service
 func StartService() {
 	logger, err := zap.NewProduction()

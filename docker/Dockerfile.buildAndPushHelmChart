@@ -15,11 +15,11 @@ RUN sed -i 's/latest/'"$VERSION"'/g' helm-charts/Chart.yaml
 RUN helm package helm-charts
 
 RUN git clone https://$GITHUB_ACCESS_CREDENTIAL@github.com/decentralized-cloud/helm.git
-RUN export CHART_VERSION=$(awk '/version: /{print $NF}' helm-charts/Chart.yaml);mv -f tenant-$CHART_VERSION.tgz helm;
+RUN export CHART_VERSION=$(awk '/version: /{print $NF}' helm-charts/Chart.yaml);mv -f project-$CHART_VERSION.tgz helm;
 
 WORKDIR /src/helm
 RUN helm repo index . --url https://decentralized-cloud.github.io/helm/
 RUN git add .
-RUN git commit -am "CI: Tenant - $VERSION"
+RUN git commit -am "CI: Project - $VERSION"
 RUN git push
 
