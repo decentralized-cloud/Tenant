@@ -1,4 +1,4 @@
-// Package configuration implements configuration service required by the tenant service
+// Package configuration implements configuration service required by the project service
 package configuration
 
 import (
@@ -75,10 +75,10 @@ func (service *envConfigurationService) GetDatabaseConnectionString() (string, e
 // GetDatabaseName retrieves the database name
 // Returns the database name or error if something goes wrong
 func (service *envConfigurationService) GetDatabaseName() (string, error) {
-	databaseName := os.Getenv("TENANT_DATABASE_NAME")
+	databaseName := os.Getenv("PROJECT_DATABASE_NAME")
 
 	if strings.Trim(databaseName, " ") == "" {
-		return "", NewUnknownError("TENANT_DATABASE_NAME is required")
+		return "", NewUnknownError("PROJECT_DATABASE_NAME is required")
 	}
 
 	return databaseName, nil

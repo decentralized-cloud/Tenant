@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tenant.fullname" . }}
+  name: {{ include "project.fullname" . }}
   labels:
-    {{- include "tenant.labels" . | nindent 4 }}
+    {{- include "project.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tenant.selectorLabels" . | nindent 6 }}
+      {{- include "project.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tenant.selectorLabels" . | nindent 8 }}
+        {{- include "project.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "tenant.serviceAccountName" . }}
+      serviceAccountName: {{ include "project.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -40,7 +40,7 @@ spec:
               value: "{{ .Values.pod.httpport }}"
             - name: DATABASE_CONNECTION_STRING
               value: "{{ .Values.pod.database.connection_string }}"
-            - name: TENANT_DATABASE_NAME
+            - name: PROJECT_DATABASE_NAME
               value: "{{ .Values.pod.database.name }}"
           ports:
             - name: grpc

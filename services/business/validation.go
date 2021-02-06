@@ -1,45 +1,45 @@
-// Package business implements different business services required by the tenant service
+// Package business implements different business services required by the project service
 package business
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
-// Validate validates the CreateTenantRequest model and return error if the validation failes
+// Validate validates the CreateProjectRequest model and return error if the validation failes
 // Returns error if validation failes
-func (val CreateTenantRequest) Validate() error {
+func (val CreateProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
-		// Validate Tenant using its own validation rules
-		validation.Field(&val.Tenant),
+		// Validate Project using its own validation rules
+		validation.Field(&val.Project),
 	)
 }
 
-// Validate validates the ReadTenantRequest model and return error if the validation failes
+// Validate validates the ReadProjectRequest model and return error if the validation failes
 // Returns error if validation failes
-func (val ReadTenantRequest) Validate() error {
+func (val ReadProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
-		// TenantID cannot be empty
-		validation.Field(&val.TenantID, validation.Required),
+		// ProjectID cannot be empty
+		validation.Field(&val.ProjectID, validation.Required),
 	)
 }
 
-// Validate validates the UpdateTenantRequest model and return error if the validation failes
+// Validate validates the UpdateProjectRequest model and return error if the validation failes
 // Returns error if validation failes
-func (val UpdateTenantRequest) Validate() error {
+func (val UpdateProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
-		// TenantID cannot be empty
-		validation.Field(&val.TenantID, validation.Required),
-		// Validate Tenant using its own validation rules
-		validation.Field(&val.Tenant),
+		// ProjectID cannot be empty
+		validation.Field(&val.ProjectID, validation.Required),
+		// Validate Project using its own validation rules
+		validation.Field(&val.Project),
 	)
 }
 
-// Validate validates the DeleteTenantRequest model and return error if the validation failes
+// Validate validates the DeleteProjectRequest model and return error if the validation failes
 // Returns error if validation failes
-func (val DeleteTenantRequest) Validate() error {
+func (val DeleteProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
-		// TenantID cannot be empty
-		validation.Field(&val.TenantID, validation.Required),
+		// ProjectID cannot be empty
+		validation.Field(&val.ProjectID, validation.Required),
 	)
 }
 

@@ -5,9 +5,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/decentralized-cloud/tenant/models"
-	"github.com/decentralized-cloud/tenant/services/configuration"
-	"github.com/decentralized-cloud/tenant/services/repository"
+	"github.com/decentralized-cloud/project/models"
+	"github.com/decentralized-cloud/project/services/configuration"
+	"github.com/decentralized-cloud/project/services/repository"
 	"github.com/micro-business/go-core/common"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -21,7 +21,7 @@ type mongodbRepositoryService struct {
 	databaseName     string
 }
 
-const collectionName string = "tenant"
+const collectionName string = "project"
 
 // NewMongodbRepositoryService creates new instance of the mongodbRepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
@@ -47,13 +47,13 @@ func NewMongodbRepositoryService(
 	}, nil
 }
 
-// CreateTenant creates a new tenant.
+// CreateProject creates a new project.
 // context: Optional The reference to the context
-// request: Mandatory. The request to create a new tenant
-// Returns either the result of creating new tenant or error if something goes wrong.
-func (service *mongodbRepositoryService) CreateTenant(
+// request: Mandatory. The request to create a new project
+// Returns either the result of creating new project or error if something goes wrong.
+func (service *mongodbRepositoryService) CreateProject(
 	ctx context.Context,
-	request *repository.CreateTenantRequest) (*repository.CreateTenantResponse, error) {
+	request *repository.CreateProjectRequest) (*repository.CreateProjectResponse, error) {
 	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
 		return nil, err
@@ -61,27 +61,27 @@ func (service *mongodbRepositoryService) CreateTenant(
 
 	defer disconnect(ctx, client)
 
-	insertResult, err := collection.InsertOne(ctx, request.Tenant)
+	insertResult, err := collection.InsertOne(ctx, request.Project)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Insert tenant failed.", err)
+		return nil, repository.NewUnknownErrorWithError("Insert project failed.", err)
 	}
 
-	tenantID := insertResult.InsertedID.(primitive.ObjectID).Hex()
+	projectID := insertResult.InsertedID.(primitive.ObjectID).Hex()
 
-	return &repository.CreateTenantResponse{
-		TenantID: tenantID,
-		Tenant:   request.Tenant,
-		Cursor:   tenantID,
+	return &repository.CreateProjectResponse{
+		ProjectID: projectID,
+		Project:   request.Project,
+		Cursor:    projectID,
 	}, nil
 }
 
-// ReadTenant read an existing tenant
+// ReadProject read an existing project
 // context: Optional The reference to the context
-// request: Mandatory. The request to read an existing tenant
-// Returns either the result of reading an exiting tenant or error if something goes wrong.
-func (service *mongodbRepositoryService) ReadTenant(
+// request: Mandatory. The request to read an existing project
+// Returns either the result of reading an exiting project or error if something goes wrong.
+func (service *mongodbRepositoryService) ReadProject(
 	ctx context.Context,
-	request *repository.ReadTenantRequest) (*repository.ReadTenantResponse, error) {
+	request *repository.ReadProjectRequest) (*repository.ReadProjectResponse, error) {
 	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
 		return nil, err
@@ -89,27 +89,27 @@ func (service *mongodbRepositoryService) ReadTenant(
 
 	defer disconnect(ctx, client)
 
-	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
+	ObjectID, _ := primitive.ObjectIDFromHex(request.ProjectID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
-	var tenant models.Tenant
+	var project models.Project
 
-	err = collection.FindOne(ctx, filter).Decode(&tenant)
+	err = collection.FindOne(ctx, filter).Decode(&project)
 	if err != nil {
-		return nil, repository.NewTenantNotFoundError(request.TenantID)
+		return nil, repository.NewProjectNotFoundError(request.ProjectID)
 	}
 
-	return &repository.ReadTenantResponse{
-		Tenant: tenant,
+	return &repository.ReadProjectResponse{
+		Project: project,
 	}, nil
 }
 
-// UpdateTenant update an existing tenant
+// UpdateProject update an existing project
 // context: Optional The reference to the context
-// request: Mandatory. The request to update an existing tenant
-// Returns either the result of updateing an exiting tenant or error if something goes wrong.
-func (service *mongodbRepositoryService) UpdateTenant(
+// request: Mandatory. The request to update an existing project
+// Returns either the result of updateing an exiting project or error if something goes wrong.
+func (service *mongodbRepositoryService) UpdateProject(
 	ctx context.Context,
-	request *repository.UpdateTenantRequest) (*repository.UpdateTenantResponse, error) {
+	request *repository.UpdateProjectRequest) (*repository.UpdateProjectResponse, error) {
 	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
 		return nil, err
@@ -117,33 +117,33 @@ func (service *mongodbRepositoryService) UpdateTenant(
 
 	defer disconnect(ctx, client)
 
-	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
+	ObjectID, _ := primitive.ObjectIDFromHex(request.ProjectID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
 
-	newTenant := bson.M{"$set": bson.M{"name": request.Tenant.Name}}
-	response, err := collection.UpdateOne(ctx, filter, newTenant)
+	newProject := bson.M{"$set": bson.M{"name": request.Project.Name}}
+	response, err := collection.UpdateOne(ctx, filter, newProject)
 
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Update tenant failed.", err)
+		return nil, repository.NewUnknownErrorWithError("Update project failed.", err)
 	}
 
 	if response.MatchedCount == 0 {
-		return nil, repository.NewTenantNotFoundError(request.TenantID)
+		return nil, repository.NewProjectNotFoundError(request.ProjectID)
 	}
 
-	return &repository.UpdateTenantResponse{
-		Tenant: request.Tenant,
-		Cursor: request.TenantID,
+	return &repository.UpdateProjectResponse{
+		Project: request.Project,
+		Cursor:  request.ProjectID,
 	}, nil
 }
 
-// DeleteTenant delete an existing tenant
+// DeleteProject delete an existing project
 // context: Optional The reference to the context
-// request: Mandatory. The request to delete an existing tenant
-// Returns either the result of deleting an exiting tenant or error if something goes wrong.
-func (service *mongodbRepositoryService) DeleteTenant(
+// request: Mandatory. The request to delete an existing project
+// Returns either the result of deleting an exiting project or error if something goes wrong.
+func (service *mongodbRepositoryService) DeleteProject(
 	ctx context.Context,
-	request *repository.DeleteTenantRequest) (*repository.DeleteTenantResponse, error) {
+	request *repository.DeleteProjectRequest) (*repository.DeleteProjectResponse, error) {
 	client, collection, err := service.createClientAndCollection(ctx)
 	if err != nil {
 		return nil, err
@@ -151,24 +151,24 @@ func (service *mongodbRepositoryService) DeleteTenant(
 
 	defer disconnect(ctx, client)
 
-	ObjectID, _ := primitive.ObjectIDFromHex(request.TenantID)
+	ObjectID, _ := primitive.ObjectIDFromHex(request.ProjectID)
 	filter := bson.D{{Key: "_id", Value: ObjectID}}
 	response, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Delete tenant failed.", err)
+		return nil, repository.NewUnknownErrorWithError("Delete project failed.", err)
 	}
 
 	if response.DeletedCount == 0 {
-		return nil, repository.NewTenantNotFoundError(request.TenantID)
+		return nil, repository.NewProjectNotFoundError(request.ProjectID)
 	}
 
-	return &repository.DeleteTenantResponse{}, nil
+	return &repository.DeleteProjectResponse{}, nil
 }
 
-// Search returns the list of tenants that matched the criteria
+// Search returns the list of projects that matched the criteria
 // ctx: Mandatory The reference to the context
 // request: Mandatory. The request contains the search criteria
-// Returns the list of tenants that matched the criteria
+// Returns the list of projects that matched the criteria
 func (service *mongodbRepositoryService) Search(
 	ctx context.Context,
 	request *repository.SearchRequest) (*repository.SearchResponse, error) {
@@ -178,17 +178,17 @@ func (service *mongodbRepositoryService) Search(
 	}
 
 	ids := []primitive.ObjectID{}
-	for _, tenantID := range request.TenantIDs {
-		objectID, err := primitive.ObjectIDFromHex(tenantID)
+	for _, projectID := range request.ProjectIDs {
+		objectID, err := primitive.ObjectIDFromHex(projectID)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the tenantID: %s.", tenantID), err)
+			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the projectID: %s.", projectID), err)
 		}
 
 		ids = append(ids, objectID)
 	}
 
 	filter := bson.M{}
-	if len(request.TenantIDs) > 0 {
+	if len(request.ProjectIDs) > 0 {
 		filter["_id"] = bson.M{"$in": ids}
 	}
 
@@ -201,7 +201,7 @@ func (service *mongodbRepositoryService) Search(
 
 	response.TotalCount, err = collection.CountDocuments(ctx, filter)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Failed to retrieve the number of tenants that match the filter criteria", err)
+		return nil, repository.NewUnknownErrorWithError("Failed to retrieve the number of projects that match the filter criteria", err)
 	}
 
 	if response.TotalCount == 0 {
@@ -276,33 +276,33 @@ func (service *mongodbRepositoryService) Search(
 		return nil, repository.NewUnknownErrorWithError("Failed to call the Find function on the collection.", err)
 	}
 
-	tenants := []models.TenantWithCursor{}
+	projects := []models.ProjectWithCursor{}
 	for cursor.Next(ctx) {
-		var tenant models.Tenant
+		var project models.Project
 		//TODO : below line need to be removed, if we pass 'ShowRecordID' in findOption, ObjectID will be available
-		var tenantBson bson.M
+		var projectBson bson.M
 
-		err := cursor.Decode(&tenant)
+		err := cursor.Decode(&project)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError("Failed to decode the tenant", err)
+			return nil, repository.NewUnknownErrorWithError("Failed to decode the project", err)
 		}
 
-		err = cursor.Decode(&tenantBson)
+		err = cursor.Decode(&projectBson)
 		if err != nil {
 			return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
 		}
 
-		tenantID := tenantBson["_id"].(primitive.ObjectID).Hex()
-		tenantWithCursor := models.TenantWithCursor{
-			TenantID: tenantID,
-			Tenant:   tenant,
-			Cursor:   tenantID,
+		projectID := projectBson["_id"].(primitive.ObjectID).Hex()
+		projectWithCursor := models.ProjectWithCursor{
+			ProjectID: projectID,
+			Project:   project,
+			Cursor:    projectID,
 		}
 
-		tenants = append(tenants, tenantWithCursor)
+		projects = append(projects, projectWithCursor)
 	}
 
-	response.Tenants = tenants
+	response.Projects = projects
 	if (request.Pagination.After != nil && request.Pagination.First != nil && int64(*request.Pagination.First) < response.TotalCount) ||
 		(request.Pagination.Before != nil && request.Pagination.Last != nil && int64(*request.Pagination.Last) < response.TotalCount) {
 		response.HasNextPage = true

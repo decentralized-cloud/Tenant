@@ -1,4 +1,4 @@
-// Package grpc implements functions to expose tenant service endpoint using GRPC protocol.
+// Package grpc implements functions to expose project service endpoint using GRPC protocol.
 package grpc
 
 import (
@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"net"
 
-	tenantGRPCContract "github.com/decentralized-cloud/tenant/contract/grpc/go"
-	"github.com/decentralized-cloud/tenant/services/configuration"
-	"github.com/decentralized-cloud/tenant/services/endpoint"
-	"github.com/decentralized-cloud/tenant/services/transport"
+	projectGRPCContract "github.com/decentralized-cloud/project/contract/grpc/go"
+	"github.com/decentralized-cloud/project/services/configuration"
+	"github.com/decentralized-cloud/project/services/endpoint"
+	"github.com/decentralized-cloud/project/services/transport"
 	gokitEndpoint "github.com/go-kit/kit/endpoint"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
@@ -23,10 +23,10 @@ type transportService struct {
 	configurationService      configuration.ConfigurationContract
 	endpointCreatorService    endpoint.EndpointCreatorContract
 	middlewareProviderService middleware.MiddlewareProviderContract
-	createTenantHandler       gokitgrpc.Handler
-	readTenantHandler         gokitgrpc.Handler
-	updateTenantHandler       gokitgrpc.Handler
-	deleteTenantHandler       gokitgrpc.Handler
+	createProjectHandler      gokitgrpc.Handler
+	readProjectHandler        gokitgrpc.Handler
+	updateProjectHandler      gokitgrpc.Handler
+	deleteProjectHandler      gokitgrpc.Handler
 	searchHandler             gokitgrpc.Handler
 }
 
@@ -95,7 +95,7 @@ func (service *transportService) Start() error {
 	}
 
 	gRPCServer := grpc.NewServer()
-	tenantGRPCContract.RegisterTenantServiceServer(gRPCServer, service)
+	projectGRPCContract.RegisterProjectServiceServer(gRPCServer, service)
 	service.logger.Info("gRPC service started", zap.String("address", address))
 
 	Live = true
@@ -116,47 +116,47 @@ func (service *transportService) Stop() error {
 }
 
 func (service *transportService) setupHandlers() {
-	var createTenantEndpoint gokitEndpoint.Endpoint
+	var createProjectEndpoint gokitEndpoint.Endpoint
 	{
-		createTenantEndpoint = service.endpointCreatorService.CreateTenantEndpoint()
-		createTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("CreateTenant")(createTenantEndpoint)
-		service.createTenantHandler = gokitgrpc.NewServer(
-			createTenantEndpoint,
-			decodeCreateTenantRequest,
-			encodeCreateTenantResponse,
+		createProjectEndpoint = service.endpointCreatorService.CreateProjectEndpoint()
+		createProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("CreateProject")(createProjectEndpoint)
+		service.createProjectHandler = gokitgrpc.NewServer(
+			createProjectEndpoint,
+			decodeCreateProjectRequest,
+			encodeCreateProjectResponse,
 		)
 	}
 
-	var readTenantEndpoint gokitEndpoint.Endpoint
+	var readProjectEndpoint gokitEndpoint.Endpoint
 	{
-		readTenantEndpoint = service.endpointCreatorService.ReadTenantEndpoint()
-		readTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("ReadTenant")(readTenantEndpoint)
-		service.readTenantHandler = gokitgrpc.NewServer(
-			readTenantEndpoint,
-			decodeReadTenantRequest,
-			encodeReadTenantResponse,
+		readProjectEndpoint = service.endpointCreatorService.ReadProjectEndpoint()
+		readProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("ReadProject")(readProjectEndpoint)
+		service.readProjectHandler = gokitgrpc.NewServer(
+			readProjectEndpoint,
+			decodeReadProjectRequest,
+			encodeReadProjectResponse,
 		)
 	}
 
-	var updateTenantEndpoint gokitEndpoint.Endpoint
+	var updateProjectEndpoint gokitEndpoint.Endpoint
 	{
-		updateTenantEndpoint = service.endpointCreatorService.UpdateTenantEndpoint()
-		updateTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("UpdateTenant")(updateTenantEndpoint)
-		service.updateTenantHandler = gokitgrpc.NewServer(
-			updateTenantEndpoint,
-			decodeUpdateTenantRequest,
-			encodeUpdateTenantResponse,
+		updateProjectEndpoint = service.endpointCreatorService.UpdateProjectEndpoint()
+		updateProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("UpdateProject")(updateProjectEndpoint)
+		service.updateProjectHandler = gokitgrpc.NewServer(
+			updateProjectEndpoint,
+			decodeUpdateProjectRequest,
+			encodeUpdateProjectResponse,
 		)
 	}
 
-	var deleteTenantEndpoint gokitEndpoint.Endpoint
+	var deleteProjectEndpoint gokitEndpoint.Endpoint
 	{
-		deleteTenantEndpoint = service.endpointCreatorService.DeleteTenantEndpoint()
-		deleteTenantEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("DeleteTenant")(deleteTenantEndpoint)
-		service.deleteTenantHandler = gokitgrpc.NewServer(
-			deleteTenantEndpoint,
-			decodeDeleteTenantRequest,
-			encodeDeleteTenantResponse,
+		deleteProjectEndpoint = service.endpointCreatorService.DeleteProjectEndpoint()
+		deleteProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("DeleteProject")(deleteProjectEndpoint)
+		service.deleteProjectHandler = gokitgrpc.NewServer(
+			deleteProjectEndpoint,
+			decodeDeleteProjectRequest,
+			encodeDeleteProjectResponse,
 		)
 	}
 
@@ -172,80 +172,80 @@ func (service *transportService) setupHandlers() {
 	}
 }
 
-// CreateTenant creates a new tenant
+// CreateProject creates a new project
 // context: Mandatory. The reference to the context
-// request: mandatory. The request to create a new tenant
-// Returns the result of creating new tenant
-func (service *transportService) CreateTenant(
+// request: mandatory. The request to create a new project
+// Returns the result of creating new project
+func (service *transportService) CreateProject(
 	ctx context.Context,
-	request *tenantGRPCContract.CreateTenantRequest) (*tenantGRPCContract.CreateTenantResponse, error) {
-	_, response, err := service.createTenantHandler.ServeGRPC(ctx, request)
+	request *projectGRPCContract.CreateProjectRequest) (*projectGRPCContract.CreateProjectResponse, error) {
+	_, response, err := service.createProjectHandler.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.(*tenantGRPCContract.CreateTenantResponse), nil
+	return response.(*projectGRPCContract.CreateProjectResponse), nil
 }
 
-// ReadTenant read an existing tenant
+// ReadProject read an existing project
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to read an existing tenant
-// Returns the result of reading an exiting tenant
-func (service *transportService) ReadTenant(
+// request: Mandatory. The request to read an existing project
+// Returns the result of reading an exiting project
+func (service *transportService) ReadProject(
 	ctx context.Context,
-	request *tenantGRPCContract.ReadTenantRequest) (*tenantGRPCContract.ReadTenantResponse, error) {
-	_, response, err := service.readTenantHandler.ServeGRPC(ctx, request)
+	request *projectGRPCContract.ReadProjectRequest) (*projectGRPCContract.ReadProjectResponse, error) {
+	_, response, err := service.readProjectHandler.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.(*tenantGRPCContract.ReadTenantResponse), nil
+	return response.(*projectGRPCContract.ReadProjectResponse), nil
 
 }
 
-// UpdateTenant update an existing tenant
+// UpdateProject update an existing project
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to update an existing tenant
-// Returns the result of updateing an exiting tenant
-func (service *transportService) UpdateTenant(
+// request: Mandatory. The request to update an existing project
+// Returns the result of updateing an exiting project
+func (service *transportService) UpdateProject(
 	ctx context.Context,
-	request *tenantGRPCContract.UpdateTenantRequest) (*tenantGRPCContract.UpdateTenantResponse, error) {
-	_, response, err := service.updateTenantHandler.ServeGRPC(ctx, request)
+	request *projectGRPCContract.UpdateProjectRequest) (*projectGRPCContract.UpdateProjectResponse, error) {
+	_, response, err := service.updateProjectHandler.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.(*tenantGRPCContract.UpdateTenantResponse), nil
+	return response.(*projectGRPCContract.UpdateProjectResponse), nil
 
 }
 
-// DeleteTenant delete an existing tenant
+// DeleteProject delete an existing project
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request to delete an existing tenant
-// Returns the result of deleting an exiting tenant
-func (service *transportService) DeleteTenant(
+// request: Mandatory. The request to delete an existing project
+// Returns the result of deleting an exiting project
+func (service *transportService) DeleteProject(
 	ctx context.Context,
-	request *tenantGRPCContract.DeleteTenantRequest) (*tenantGRPCContract.DeleteTenantResponse, error) {
-	_, response, err := service.deleteTenantHandler.ServeGRPC(ctx, request)
+	request *projectGRPCContract.DeleteProjectRequest) (*projectGRPCContract.DeleteProjectResponse, error) {
+	_, response, err := service.deleteProjectHandler.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.(*tenantGRPCContract.DeleteTenantResponse), nil
+	return response.(*projectGRPCContract.DeleteProjectResponse), nil
 
 }
 
-// Search returns the list  of tenant that matched the provided criteria
+// Search returns the list  of project that matched the provided criteria
 // context: Mandatory. The reference to the context
-// request: Mandatory. The request contains the filter criteria to look for existing tenant
-// Returns the list of tenant that matched the provided criteria
+// request: Mandatory. The request contains the filter criteria to look for existing project
+// Returns the list of project that matched the provided criteria
 func (service *transportService) Search(
 	ctx context.Context,
-	request *tenantGRPCContract.SearchRequest) (*tenantGRPCContract.SearchResponse, error) {
+	request *projectGRPCContract.SearchRequest) (*projectGRPCContract.SearchResponse, error) {
 	_, response, err := service.searchHandler.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.(*tenantGRPCContract.SearchResponse), nil
+	return response.(*projectGRPCContract.SearchResponse), nil
 }

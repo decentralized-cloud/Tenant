@@ -1,166 +1,166 @@
-// Package grpc implements functions to expose tenant service endpoint using GRPC protocol.
+// Package grpc implements functions to expose project service endpoint using GRPC protocol.
 package grpc
 
 import (
 	"context"
 
-	tenantGRPCContract "github.com/decentralized-cloud/tenant/contract/grpc/go"
-	"github.com/decentralized-cloud/tenant/models"
-	"github.com/decentralized-cloud/tenant/services/business"
+	projectGRPCContract "github.com/decentralized-cloud/project/contract/grpc/go"
+	"github.com/decentralized-cloud/project/models"
+	"github.com/decentralized-cloud/project/services/business"
 	"github.com/micro-business/go-core/common"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"github.com/thoas/go-funk"
 )
 
-// decodeCreateTenantRequest decodes CreateTenant request message from GRPC object to business object
+// decodeCreateProjectRequest decodes CreateProject request message from GRPC object to business object
 // context: Mandatory The reference to the context
 // request: Mandatory. The reference to the GRPC request
 // Returns either the decoded request or error if something goes wrong
-func decodeCreateTenantRequest(
+func decodeCreateProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
-	castedRequest := request.(*tenantGRPCContract.CreateTenantRequest)
+	castedRequest := request.(*projectGRPCContract.CreateProjectRequest)
 
-	return &business.CreateTenantRequest{
-		Tenant: models.Tenant{
-			Name: castedRequest.Tenant.Name,
+	return &business.CreateProjectRequest{
+		Project: models.Project{
+			Name: castedRequest.Project.Name,
 		}}, nil
 }
 
-// encodeCreateTenantResponse encodes CreateTenant response from business object to GRPC object
+// encodeCreateProjectResponse encodes CreateProject response from business object to GRPC object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the business response
 // Returns either the decoded response or error if something goes wrong
-func encodeCreateTenantResponse(
+func encodeCreateProjectResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	castedResponse := response.(*business.CreateTenantResponse)
+	castedResponse := response.(*business.CreateProjectResponse)
 
 	if castedResponse.Err == nil {
-		return &tenantGRPCContract.CreateTenantResponse{
-			Error:    tenantGRPCContract.Error_NO_ERROR,
-			TenantID: castedResponse.TenantID,
-			Tenant: &tenantGRPCContract.Tenant{
-				Name: castedResponse.Tenant.Name,
+		return &projectGRPCContract.CreateProjectResponse{
+			Error:     projectGRPCContract.Error_NO_ERROR,
+			ProjectID: castedResponse.ProjectID,
+			Project: &projectGRPCContract.Project{
+				Name: castedResponse.Project.Name,
 			},
 			Cursor: castedResponse.Cursor,
 		}, nil
 	}
 
-	return &tenantGRPCContract.CreateTenantResponse{
+	return &projectGRPCContract.CreateProjectResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
 
-// decodeReadTenantRequest decodes ReadTenant request message from GRPC object to business object
+// decodeReadProjectRequest decodes ReadProject request message from GRPC object to business object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the GRPC request
 // Returns either the decoded request or error if something goes wrong
-func decodeReadTenantRequest(
+func decodeReadProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
-	castedRequest := request.(*tenantGRPCContract.ReadTenantRequest)
+	castedRequest := request.(*projectGRPCContract.ReadProjectRequest)
 
-	return &business.ReadTenantRequest{
-		TenantID: castedRequest.TenantID,
+	return &business.ReadProjectRequest{
+		ProjectID: castedRequest.ProjectID,
 	}, nil
 }
 
-// encodeReadTenantResponse encodes ReadTenant response from business object to GRPC object
+// encodeReadProjectResponse encodes ReadProject response from business object to GRPC object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the business response
 // Returns either the decoded response or error if something goes wrong
-func encodeReadTenantResponse(
+func encodeReadProjectResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	castedResponse := response.(*business.ReadTenantResponse)
+	castedResponse := response.(*business.ReadProjectResponse)
 
 	if castedResponse.Err == nil {
-		return &tenantGRPCContract.ReadTenantResponse{
-			Error: tenantGRPCContract.Error_NO_ERROR,
-			Tenant: &tenantGRPCContract.Tenant{
-				Name: castedResponse.Tenant.Name,
+		return &projectGRPCContract.ReadProjectResponse{
+			Error: projectGRPCContract.Error_NO_ERROR,
+			Project: &projectGRPCContract.Project{
+				Name: castedResponse.Project.Name,
 			},
 		}, nil
 	}
 
-	return &tenantGRPCContract.ReadTenantResponse{
+	return &projectGRPCContract.ReadProjectResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
 
-// decodeUpdateTenantRequest decodes UpdateTenant request message from GRPC object to business object
+// decodeUpdateProjectRequest decodes UpdateProject request message from GRPC object to business object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the GRPC request
 // Returns either the decoded request or error if something goes wrong
-func decodeUpdateTenantRequest(
+func decodeUpdateProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
-	castedRequest := request.(*tenantGRPCContract.UpdateTenantRequest)
+	castedRequest := request.(*projectGRPCContract.UpdateProjectRequest)
 
-	return &business.UpdateTenantRequest{
-		TenantID: castedRequest.TenantID,
-		Tenant: models.Tenant{
-			Name: castedRequest.Tenant.Name,
+	return &business.UpdateProjectRequest{
+		ProjectID: castedRequest.ProjectID,
+		Project: models.Project{
+			Name: castedRequest.Project.Name,
 		}}, nil
 }
 
-// encodeUpdateTenantResponse encodes UpdateTenant response from business object to GRPC object
+// encodeUpdateProjectResponse encodes UpdateProject response from business object to GRPC object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the business response
 // Returns either the decoded response or error if something goes wrong
-func encodeUpdateTenantResponse(
+func encodeUpdateProjectResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	castedResponse := response.(*business.UpdateTenantResponse)
+	castedResponse := response.(*business.UpdateProjectResponse)
 
 	if castedResponse.Err == nil {
-		return &tenantGRPCContract.UpdateTenantResponse{
-			Error: tenantGRPCContract.Error_NO_ERROR,
-			Tenant: &tenantGRPCContract.Tenant{
-				Name: castedResponse.Tenant.Name,
+		return &projectGRPCContract.UpdateProjectResponse{
+			Error: projectGRPCContract.Error_NO_ERROR,
+			Project: &projectGRPCContract.Project{
+				Name: castedResponse.Project.Name,
 			},
 			Cursor: castedResponse.Cursor,
 		}, nil
 	}
 
-	return &tenantGRPCContract.UpdateTenantResponse{
+	return &projectGRPCContract.UpdateProjectResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
 
-// decodeDeleteTenantRequest decodes DeleteTenant request message from GRPC object to business object
+// decodeDeleteProjectRequest decodes DeleteProject request message from GRPC object to business object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the GRPC request
 // Returns either the decoded request or error if something goes wrong
-func decodeDeleteTenantRequest(
+func decodeDeleteProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
-	castedRequest := request.(*tenantGRPCContract.DeleteTenantRequest)
+	castedRequest := request.(*projectGRPCContract.DeleteProjectRequest)
 
-	return &business.DeleteTenantRequest{
-		TenantID: castedRequest.TenantID,
+	return &business.DeleteProjectRequest{
+		ProjectID: castedRequest.ProjectID,
 	}, nil
 }
 
-// encodeDeleteTenantResponse encodes DeleteTenant response from business object to GRPC object
+// encodeDeleteProjectResponse encodes DeleteProject response from business object to GRPC object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the business response
 // Returns either the decoded response or error if something goes wrong
-func encodeDeleteTenantResponse(
+func encodeDeleteProjectResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	castedResponse := response.(*business.DeleteTenantResponse)
+	castedResponse := response.(*business.DeleteProjectResponse)
 	if castedResponse.Err == nil {
-		return &tenantGRPCContract.DeleteTenantResponse{
-			Error: tenantGRPCContract.Error_NO_ERROR,
+		return &projectGRPCContract.DeleteProjectResponse{
+			Error: projectGRPCContract.Error_NO_ERROR,
 		}, nil
 	}
 
-	return &tenantGRPCContract.DeleteTenantResponse{
+	return &projectGRPCContract.DeleteProjectResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
@@ -173,16 +173,16 @@ func encodeDeleteTenantResponse(
 func decodeSearchRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
-	castedRequest := request.(*tenantGRPCContract.SearchRequest)
+	castedRequest := request.(*projectGRPCContract.SearchRequest)
 	sortingOptions := []common.SortingOptionPair{}
 
 	if len(castedRequest.SortingOptions) > 0 {
 		sortingOptions = funk.Map(
 			castedRequest.SortingOptions,
-			func(sortingOption *tenantGRPCContract.SortingOptionPair) common.SortingOptionPair {
+			func(sortingOption *projectGRPCContract.SortingOptionPair) common.SortingOptionPair {
 				direction := common.Ascending
 
-				if sortingOption.Direction == tenantGRPCContract.SortingDirection_DESCENDING {
+				if sortingOption.Direction == projectGRPCContract.SortingDirection_DESCENDING {
 					direction = common.Descending
 				}
 
@@ -215,7 +215,7 @@ func decodeSearchRequest(
 
 	return &business.SearchRequest{
 		Pagination:     pagination,
-		TenantIDs:      castedRequest.TenantIDs,
+		ProjectIDs:     castedRequest.ProjectIDs,
 		SortingOptions: sortingOptions,
 	}, nil
 }
@@ -229,44 +229,44 @@ func encodeSearchResponse(
 	response interface{}) (interface{}, error) {
 	castedResponse := response.(*business.SearchResponse)
 	if castedResponse.Err == nil {
-		return &tenantGRPCContract.SearchResponse{
-			Error:           tenantGRPCContract.Error_NO_ERROR,
+		return &projectGRPCContract.SearchResponse{
+			Error:           projectGRPCContract.Error_NO_ERROR,
 			HasPreviousPage: castedResponse.HasPreviousPage,
 			HasNextPage:     castedResponse.HasNextPage,
 			TotalCount:      castedResponse.TotalCount,
-			Tenants: funk.Map(castedResponse.Tenants, func(tenant models.TenantWithCursor) *tenantGRPCContract.TenantWithCursor {
-				return &tenantGRPCContract.TenantWithCursor{
-					TenantID: tenant.TenantID,
-					Tenant: &tenantGRPCContract.Tenant{
-						Name: tenant.Tenant.Name,
+			Projects: funk.Map(castedResponse.Projects, func(project models.ProjectWithCursor) *projectGRPCContract.ProjectWithCursor {
+				return &projectGRPCContract.ProjectWithCursor{
+					ProjectID: project.ProjectID,
+					Project: &projectGRPCContract.Project{
+						Name: project.Project.Name,
 					},
-					Cursor: tenant.Cursor,
+					Cursor: project.Cursor,
 				}
-			}).([]*tenantGRPCContract.TenantWithCursor),
+			}).([]*projectGRPCContract.ProjectWithCursor),
 		}, nil
 	}
 
-	return &tenantGRPCContract.SearchResponse{
+	return &projectGRPCContract.SearchResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
 }
 
-func mapError(err error) tenantGRPCContract.Error {
+func mapError(err error) projectGRPCContract.Error {
 	if business.IsUnknownError(err) {
-		return tenantGRPCContract.Error_UNKNOWN
+		return projectGRPCContract.Error_UNKNOWN
 	}
 
-	if business.IsTenantAlreadyExistsError(err) {
-		return tenantGRPCContract.Error_TENANT_ALREADY_EXISTS
+	if business.IsProjectAlreadyExistsError(err) {
+		return projectGRPCContract.Error_PROJECT_ALREADY_EXISTS
 	}
 
-	if business.IsTenantNotFoundError(err) {
-		return tenantGRPCContract.Error_TENANT_NOT_FOUND
+	if business.IsProjectNotFoundError(err) {
+		return projectGRPCContract.Error_PROJECT_NOT_FOUND
 	}
 
 	if commonErrors.IsArgumentNilError(err) || commonErrors.IsArgumentError(err) {
-		return tenantGRPCContract.Error_BAD_REQUEST
+		return projectGRPCContract.Error_BAD_REQUEST
 	}
 
 	panic("Error type undefined.")

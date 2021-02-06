@@ -1,10 +1,10 @@
-// Package business implements different business services required by the tenant service
+// Package business implements different business services required by the project service
 package business
 
 import (
 	"context"
 
-	"github.com/decentralized-cloud/tenant/services/repository"
+	"github.com/decentralized-cloud/project/services/repository"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 )
 
@@ -13,7 +13,7 @@ type businessService struct {
 }
 
 // NewBusinessService creates new instance of the BusinessService, setting up all dependencies and returns the instance
-// repositoryService: Mandatory. Reference to the repository service that can persist the tenant related data
+// repositoryService: Mandatory. Reference to the repository service that can persist the project related data
 // Returns the new service or error if something goes wrong
 func NewBusinessService(
 	repositoryService repository.RepositoryContract) (BusinessContract, error) {
@@ -26,107 +26,107 @@ func NewBusinessService(
 	}, nil
 }
 
-// CreateTenant creates a new tenant.
+// CreateProject creates a new project.
 // ctx: Mandatory The reference to the context
-// request: Mandatory. The request to create a new tenant
-// Returns either the result of creating new tenant or error if something goes wrong.
-func (service *businessService) CreateTenant(
+// request: Mandatory. The request to create a new project
+// Returns either the result of creating new project or error if something goes wrong.
+func (service *businessService) CreateProject(
 	ctx context.Context,
-	request *CreateTenantRequest) (*CreateTenantResponse, error) {
-	response, err := service.repositoryService.CreateTenant(ctx, &repository.CreateTenantRequest{
-		Tenant: request.Tenant,
+	request *CreateProjectRequest) (*CreateProjectResponse, error) {
+	response, err := service.repositoryService.CreateProject(ctx, &repository.CreateProjectRequest{
+		Project: request.Project,
 	})
 
 	if err != nil {
-		return &CreateTenantResponse{
+		return &CreateProjectResponse{
 			Err: mapRepositoryError(err, ""),
 		}, nil
 	}
 
-	return &CreateTenantResponse{
-		TenantID: response.TenantID,
-		Tenant:   response.Tenant,
-		Cursor:   response.Cursor,
+	return &CreateProjectResponse{
+		ProjectID: response.ProjectID,
+		Project:   response.Project,
+		Cursor:    response.Cursor,
 	}, nil
 }
 
-// ReadTenant read an existing tenant
+// ReadProject read an existing project
 // ctx: Mandatory The reference to the context
-// request: Mandatory. The request to read an existing tenant
-// Returns either the result of reading an existing tenant or error if something goes wrong.
-func (service *businessService) ReadTenant(
+// request: Mandatory. The request to read an existing project
+// Returns either the result of reading an existing project or error if something goes wrong.
+func (service *businessService) ReadProject(
 	ctx context.Context,
-	request *ReadTenantRequest) (*ReadTenantResponse, error) {
-	response, err := service.repositoryService.ReadTenant(ctx, &repository.ReadTenantRequest{
-		TenantID: request.TenantID,
+	request *ReadProjectRequest) (*ReadProjectResponse, error) {
+	response, err := service.repositoryService.ReadProject(ctx, &repository.ReadProjectRequest{
+		ProjectID: request.ProjectID,
 	})
 
 	if err != nil {
-		return &ReadTenantResponse{
-			Err: mapRepositoryError(err, request.TenantID),
+		return &ReadProjectResponse{
+			Err: mapRepositoryError(err, request.ProjectID),
 		}, nil
 	}
 
-	return &ReadTenantResponse{
-		Tenant: response.Tenant,
+	return &ReadProjectResponse{
+		Project: response.Project,
 	}, nil
 }
 
-// UpdateTenant update an existing tenant
+// UpdateProject update an existing project
 // ctx: Mandatory The reference to the context
-// request: Mandatory. The request to update an existing tenant
-// Returns either the result of updateing an existing tenant or error if something goes wrong.
-func (service *businessService) UpdateTenant(
+// request: Mandatory. The request to update an existing project
+// Returns either the result of updateing an existing project or error if something goes wrong.
+func (service *businessService) UpdateProject(
 	ctx context.Context,
-	request *UpdateTenantRequest) (*UpdateTenantResponse, error) {
-	response, err := service.repositoryService.UpdateTenant(ctx, &repository.UpdateTenantRequest{
-		TenantID: request.TenantID,
-		Tenant:   request.Tenant,
+	request *UpdateProjectRequest) (*UpdateProjectResponse, error) {
+	response, err := service.repositoryService.UpdateProject(ctx, &repository.UpdateProjectRequest{
+		ProjectID: request.ProjectID,
+		Project:   request.Project,
 	})
 
 	if err != nil {
-		return &UpdateTenantResponse{
-			Err: mapRepositoryError(err, request.TenantID),
+		return &UpdateProjectResponse{
+			Err: mapRepositoryError(err, request.ProjectID),
 		}, nil
 	}
 
-	return &UpdateTenantResponse{
-		Tenant: response.Tenant,
-		Cursor: response.Cursor,
+	return &UpdateProjectResponse{
+		Project: response.Project,
+		Cursor:  response.Cursor,
 	}, nil
 }
 
-// DeleteTenant delete an existing tenant
+// DeleteProject delete an existing project
 // ctx: Mandatory The reference to the context
-// request: Mandatory. The request to delete an existing tenant
-// Returns either the result of deleting an existing tenant or error if something goes wrong.
-func (service *businessService) DeleteTenant(
+// request: Mandatory. The request to delete an existing project
+// Returns either the result of deleting an existing project or error if something goes wrong.
+func (service *businessService) DeleteProject(
 	ctx context.Context,
-	request *DeleteTenantRequest) (*DeleteTenantResponse, error) {
-	_, err := service.repositoryService.DeleteTenant(ctx, &repository.DeleteTenantRequest{
-		TenantID: request.TenantID,
+	request *DeleteProjectRequest) (*DeleteProjectResponse, error) {
+	_, err := service.repositoryService.DeleteProject(ctx, &repository.DeleteProjectRequest{
+		ProjectID: request.ProjectID,
 	})
 
 	if err != nil {
-		return &DeleteTenantResponse{
-			Err: mapRepositoryError(err, request.TenantID),
+		return &DeleteProjectResponse{
+			Err: mapRepositoryError(err, request.ProjectID),
 		}, nil
 	}
 
-	return &DeleteTenantResponse{}, nil
+	return &DeleteProjectResponse{}, nil
 }
 
-// Search returns the list of tenants that matched the criteria
+// Search returns the list of projects that matched the criteria
 // ctx: Mandatory The reference to the context
 // request: Mandatory. The request contains the search criteria
-// Returns the list of tenants that matched the criteria
+// Returns the list of projects that matched the criteria
 func (service *businessService) Search(
 	ctx context.Context,
 	request *SearchRequest) (*SearchResponse, error) {
 	result, err := service.repositoryService.Search(ctx, &repository.SearchRequest{
 		Pagination:     request.Pagination,
 		SortingOptions: request.SortingOptions,
-		TenantIDs:      request.TenantIDs,
+		ProjectIDs:     request.ProjectIDs,
 	})
 
 	if err != nil {
@@ -139,17 +139,17 @@ func (service *businessService) Search(
 		HasPreviousPage: result.HasPreviousPage,
 		HasNextPage:     result.HasNextPage,
 		TotalCount:      result.TotalCount,
-		Tenants:         result.Tenants,
+		Projects:        result.Projects,
 	}, nil
 }
 
-func mapRepositoryError(err error, tenantID string) error {
-	if repository.IsTenantAlreadyExistsError(err) {
-		return NewTenantAlreadyExistsErrorWithError(err)
+func mapRepositoryError(err error, projectID string) error {
+	if repository.IsProjectAlreadyExistsError(err) {
+		return NewProjectAlreadyExistsErrorWithError(err)
 	}
 
-	if repository.IsTenantNotFoundError(err) {
-		return NewTenantNotFoundErrorWithError(tenantID, err)
+	if repository.IsProjectNotFoundError(err) {
+		return NewProjectNotFoundErrorWithError(projectID, err)
 	}
 
 	return NewUnknownErrorWithError("", err)

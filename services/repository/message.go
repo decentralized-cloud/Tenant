@@ -1,65 +1,65 @@
-// Package repository implements different repository services required by the tenant service
+// Package repository implements different repository services required by the project service
 package repository
 
 import (
-	"github.com/decentralized-cloud/tenant/models"
+	"github.com/decentralized-cloud/project/models"
 	"github.com/micro-business/go-core/common"
 )
 
-// CreateTenantRequest contains the request to create a new tenant
-type CreateTenantRequest struct {
-	Tenant models.Tenant
+// CreateProjectRequest contains the request to create a new project
+type CreateProjectRequest struct {
+	Project models.Project
 }
 
-// CreateTenantResponse contains the result of creating a new tenant
-type CreateTenantResponse struct {
-	TenantID string
-	Tenant   models.Tenant
-	Cursor   string
+// CreateProjectResponse contains the result of creating a new project
+type CreateProjectResponse struct {
+	ProjectID string
+	Project   models.Project
+	Cursor    string
 }
 
-// ReadTenantRequest contains the request to read an existing tenant
-type ReadTenantRequest struct {
-	TenantID string
+// ReadProjectRequest contains the request to read an existing project
+type ReadProjectRequest struct {
+	ProjectID string
 }
 
-// ReadTenantResponse contains the result of reading an existing tenant
-type ReadTenantResponse struct {
-	Tenant models.Tenant
+// ReadProjectResponse contains the result of reading an existing project
+type ReadProjectResponse struct {
+	Project models.Project
 }
 
-// UpdateTenantRequest contains the request to update an existing tenant
-type UpdateTenantRequest struct {
-	TenantID string
-	Tenant   models.Tenant
+// UpdateProjectRequest contains the request to update an existing project
+type UpdateProjectRequest struct {
+	ProjectID string
+	Project   models.Project
 }
 
-// UpdateTenantResponse contains the result of updating an existing tenant
-type UpdateTenantResponse struct {
-	Tenant models.Tenant
-	Cursor string
+// UpdateProjectResponse contains the result of updating an existing project
+type UpdateProjectResponse struct {
+	Project models.Project
+	Cursor  string
 }
 
-// DeleteTenantRequest contains the request to delete an existing tenant
-type DeleteTenantRequest struct {
-	TenantID string
+// DeleteProjectRequest contains the request to delete an existing project
+type DeleteProjectRequest struct {
+	ProjectID string
 }
 
-// DeleteTenantResponse contains the result of deleting an existing tenant
-type DeleteTenantResponse struct {
+// DeleteProjectResponse contains the result of deleting an existing project
+type DeleteProjectResponse struct {
 }
 
-// SearchRequest contains the filter criteria to look for existing tenants
+// SearchRequest contains the filter criteria to look for existing projects
 type SearchRequest struct {
 	Pagination     common.Pagination
 	SortingOptions []common.SortingOptionPair
-	TenantIDs      []string
+	ProjectIDs     []string
 }
 
-// SearchResponse contains the list of the tenants that matched the result
+// SearchResponse contains the list of the projects that matched the result
 type SearchResponse struct {
 	HasPreviousPage bool
 	HasNextPage     bool
 	TotalCount      int64
-	Tenants         []models.TenantWithCursor
+	Projects        []models.ProjectWithCursor
 }

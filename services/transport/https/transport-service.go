@@ -1,13 +1,13 @@
-// Package https implements functions to expose tenant service endpoint using HTTPS protocol.
+// Package https implements functions to expose project service endpoint using HTTPS protocol.
 package https
 
 import (
 	"fmt"
 	"net/http"
 
-	"github.com/decentralized-cloud/tenant/services/configuration"
-	"github.com/decentralized-cloud/tenant/services/transport"
-	"github.com/decentralized-cloud/tenant/services/transport/grpc"
+	"github.com/decentralized-cloud/project/services/configuration"
+	"github.com/decentralized-cloud/project/services/transport"
+	"github.com/decentralized-cloud/project/services/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/savsgio/atreugo/v9"

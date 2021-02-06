@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/decentralized-cloud/tenant/models"
-	configurationMock "github.com/decentralized-cloud/tenant/services/configuration/mock"
-	"github.com/decentralized-cloud/tenant/services/repository"
-	"github.com/decentralized-cloud/tenant/services/repository/mongodb"
+	"github.com/decentralized-cloud/project/models"
+	configurationMock "github.com/decentralized-cloud/project/services/configuration/mock"
+	"github.com/decentralized-cloud/project/services/repository"
+	"github.com/decentralized-cloud/project/services/repository/mongodb"
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
 	"github.com/micro-business/go-core/common"
@@ -29,7 +29,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		mockCtrl      *gomock.Controller
 		sut           repository.RepositoryContract
 		ctx           context.Context
-		createRequest repository.CreateTenantRequest
+		createRequest repository.CreateProjectRequest
 	)
 
 	BeforeEach(func() {
@@ -48,12 +48,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		mockConfigurationService.
 			EXPECT().
 			GetDatabaseName().
-			Return("tenant", nil)
+			Return("project", nil)
 
 		sut, _ = mongodb.NewMongodbRepositoryService(mockConfigurationService)
 		ctx = context.Background()
-		createRequest = repository.CreateTenantRequest{
-			Tenant: models.Tenant{
+		createRequest = repository.CreateProjectRequest{
+			Project: models.Project{
 				Name: cuid.New(),
 			}}
 	})
@@ -82,156 +82,156 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		})
 	})
 
-	Context("user going to create a new tenant", func() {
-		When("create tenant is called", func() {
-			It("should create the new tenant", func() {
-				response, err := sut.CreateTenant(ctx, &createRequest)
+	Context("user going to create a new project", func() {
+		When("create project is called", func() {
+			It("should create the new project", func() {
+				response, err := sut.CreateProject(ctx, &createRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.TenantID).ShouldNot(BeNil())
-				Ω(response.Cursor).Should(Equal(response.TenantID))
-				assertTenant(response.Tenant, createRequest.Tenant)
+				Ω(response.ProjectID).ShouldNot(BeNil())
+				Ω(response.Cursor).Should(Equal(response.ProjectID))
+				assertProject(response.Project, createRequest.Project)
 			})
 		})
 	})
 
-	Context("tenant already exists", func() {
+	Context("project already exists", func() {
 		var (
-			tenantID string
+			projectID string
 		)
 
 		BeforeEach(func() {
-			response, _ := sut.CreateTenant(ctx, &createRequest)
-			tenantID = response.TenantID
+			response, _ := sut.CreateProject(ctx, &createRequest)
+			projectID = response.ProjectID
 		})
 
-		When("user reads a tenant by Id", func() {
-			It("should return a tenant", func() {
-				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
+		When("user reads a project by Id", func() {
+			It("should return a project", func() {
+				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
 				Ω(err).Should(BeNil())
-				assertTenant(response.Tenant, createRequest.Tenant)
+				assertProject(response.Project, createRequest.Project)
 			})
 		})
 
-		When("user updates the existing tenant", func() {
-			It("should update the tenant information", func() {
-				updateRequest := repository.UpdateTenantRequest{
-					TenantID: tenantID,
-					Tenant: models.Tenant{
+		When("user updates the existing project", func() {
+			It("should update the project information", func() {
+				updateRequest := repository.UpdateProjectRequest{
+					ProjectID: projectID,
+					Project: models.Project{
 						Name: cuid.New(),
 					}}
 
-				updateResponse, err := sut.UpdateTenant(ctx, &updateRequest)
+				updateResponse, err := sut.UpdateProject(ctx, &updateRequest)
 				Ω(err).Should(BeNil())
-				Ω(updateResponse.Cursor).Should(Equal(tenantID))
-				assertTenant(updateResponse.Tenant, updateRequest.Tenant)
+				Ω(updateResponse.Cursor).Should(Equal(projectID))
+				assertProject(updateResponse.Project, updateRequest.Project)
 
-				readResponse, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
+				readResponse, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
 				Ω(err).Should(BeNil())
-				assertTenant(readResponse.Tenant, updateRequest.Tenant)
+				assertProject(readResponse.Project, updateRequest.Project)
 			})
 		})
 
-		When("user deletes the tenant", func() {
-			It("should delete the tenant", func() {
-				_, err := sut.DeleteTenant(ctx, &repository.DeleteTenantRequest{TenantID: tenantID})
+		When("user deletes the project", func() {
+			It("should delete the project", func() {
+				_, err := sut.DeleteProject(ctx, &repository.DeleteProjectRequest{ProjectID: projectID})
 				Ω(err).Should(BeNil())
 
-				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
+				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsTenantNotFoundError(err)).Should(BeTrue())
+				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.TenantNotFoundError
+				var notFoundErr repository.ProjectNotFoundError
 				_ = errors.As(err, &notFoundErr)
 
-				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
+				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 	})
 
-	Context("tenant does not exist", func() {
+	Context("project does not exist", func() {
 		var (
-			tenantID string
+			projectID string
 		)
 
 		BeforeEach(func() {
-			tenantID = cuid.New()
+			projectID = cuid.New()
 		})
 
-		When("user reads the tenant", func() {
+		When("user reads the project", func() {
 			It("should return NotFoundError", func() {
-				response, err := sut.ReadTenant(ctx, &repository.ReadTenantRequest{TenantID: tenantID})
+				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsTenantNotFoundError(err)).Should(BeTrue())
+				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.TenantNotFoundError
+				var notFoundErr repository.ProjectNotFoundError
 				_ = errors.As(err, &notFoundErr)
 
-				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
+				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 
-		When("user tries to update the tenant", func() {
+		When("user tries to update the project", func() {
 			It("should return NotFoundError", func() {
-				updateRequest := repository.UpdateTenantRequest{
-					TenantID: tenantID,
-					Tenant: models.Tenant{
+				updateRequest := repository.UpdateProjectRequest{
+					ProjectID: projectID,
+					Project: models.Project{
 						Name: cuid.New(),
 					}}
 
-				response, err := sut.UpdateTenant(ctx, &updateRequest)
+				response, err := sut.UpdateProject(ctx, &updateRequest)
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsTenantNotFoundError(err)).Should(BeTrue())
+				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.TenantNotFoundError
+				var notFoundErr repository.ProjectNotFoundError
 				_ = errors.As(err, &notFoundErr)
 
-				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
+				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 
-		When("user tries to delete the tenant", func() {
+		When("user tries to delete the project", func() {
 			It("should return NotFoundError", func() {
-				response, err := sut.DeleteTenant(ctx, &repository.DeleteTenantRequest{TenantID: tenantID})
+				response, err := sut.DeleteProject(ctx, &repository.DeleteProjectRequest{ProjectID: projectID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsTenantNotFoundError(err)).Should(BeTrue())
+				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.TenantNotFoundError
+				var notFoundErr repository.ProjectNotFoundError
 				_ = errors.As(err, &notFoundErr)
 
-				Ω(notFoundErr.TenantID).Should(Equal(tenantID))
+				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 	})
 
-	Context("tenant already exists", func() {
+	Context("project already exists", func() {
 		var (
-			tenantIDs []string
+			projectIDs []string
 		)
 
 		BeforeEach(func() {
-			tenantIDs = []string{}
+			projectIDs = []string{}
 
 			for i := 0; i < 10; i++ {
-				tenantName := fmt.Sprintf("%s%d", "Name", i)
-				createRequest.Tenant.Name = tenantName
-				response, _ := sut.CreateTenant(ctx, &createRequest)
-				tenantIDs = append(tenantIDs, response.TenantID)
+				projectName := fmt.Sprintf("%s%d", "Name", i)
+				createRequest.Project.Name = projectName
+				response, _ := sut.CreateProject(ctx, &createRequest)
+				projectIDs = append(projectIDs, response.ProjectID)
 			}
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 10 tenants", func() {
-			It("should return first 10 tenants", func() {
+		When("user searches for projects with selected project Ids and first 10 projects", func() {
+			It("should return first 10 projects", func() {
 				first := 10
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
 						First: &first,
@@ -241,21 +241,21 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(10))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(10))
 				for i := 0; i < 10; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 5 tenants", func() {
-			It("should return first 5 tenants", func() {
+		When("user searches for projects with selected project Ids and first 5 projects", func() {
+			It("should return first 5 projects", func() {
 				first := 5
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
 						First: &first,
@@ -265,23 +265,23 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(5))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(5))
 				for i := 0; i < 5; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids with After parameter provided.", func() {
-			It("should return first 9 tenants after provided tenant id", func() {
+		When("user searches for projects with selected project Ids with After parameter provided.", func() {
+			It("should return first 9 projects after provided project id", func() {
 				first := 9
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
-						After: &tenantIDs[0],
+						After: &projectIDs[0],
 						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{},
@@ -289,23 +289,23 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(9))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(9))
 				for i := 1; i < 10; i++ {
-					Ω(response.Tenants[i-1].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i-1].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i-1].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i-1].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids with After parameter provided.", func() {
-			It("should return first 5 tenants after provided tenant id", func() {
+		When("user searches for projects with selected project Ids with After parameter provided.", func() {
+			It("should return first 5 projects after provided project id", func() {
 				first := 5
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
-						After: &tenantIDs[0],
+						After: &projectIDs[0],
 						First: &first,
 					},
 					SortingOptions: []common.SortingOptionPair{},
@@ -313,22 +313,22 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(5))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(5))
 				for i := 1; i < 5; i++ {
-					Ω(response.Tenants[i-1].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i-1].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i-1].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i-1].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
 		//TODO : this test does not make sense
-		When("user searches for tenants with selected tenant Ids and last 10 tenants", func() {
-			It("should return first 10 tenants", func() {
+		When("user searches for projects with selected project Ids and last 10 projects", func() {
+			It("should return first 10 projects", func() {
 				last := 10
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						Before: nil,
 						Last:   &last,
@@ -338,23 +338,23 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(10))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(10))
 				for i := 0; i < 10; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids with Before parameter provided.", func() {
-			It("should return first 9 tenants before provided tenant id", func() {
+		When("user searches for projects with selected project Ids with Before parameter provided.", func() {
+			It("should return first 9 projects before provided project id", func() {
 				last := 9
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
-						Before: &tenantIDs[9],
+						Before: &projectIDs[9],
 						Last:   &last,
 					},
 					SortingOptions: []common.SortingOptionPair{},
@@ -362,21 +362,21 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(9))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(9))
 				for i := 0; i < 9; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 10 tenants with ascending order on name property", func() {
-			It("should return first 10 tenants in adcending order on name field", func() {
+		When("user searches for projects with selected project Ids and first 10 projects with ascending order on name property", func() {
+			It("should return first 10 projects in adcending order on name field", func() {
 				first := 10
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
 						First: &first,
@@ -388,21 +388,21 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(10))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(10))
 				for i := 0; i < 10; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i].ProjectID).Should(Equal(projectIDs[i]))
+					projectName := fmt.Sprintf("%s%d", "Name", i)
+					Ω(response.Projects[i].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
 
-		When("user searches for tenants with selected tenant Ids and first 10 tenants with descending order on name property", func() {
-			It("should return first 10 tenants in descending order on name field", func() {
+		When("user searches for projects with selected project Ids and first 10 projects with descending order on name property", func() {
+			It("should return first 10 projects in descending order on name field", func() {
 				first := 10
 				searchRequest := repository.SearchRequest{
-					TenantIDs: tenantIDs,
+					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
 						First: &first,
@@ -414,12 +414,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 				response, err := sut.Search(ctx, &searchRequest)
 				Ω(err).Should(BeNil())
-				Ω(response.Tenants).ShouldNot(BeNil())
-				Ω(len(response.Tenants)).Should(Equal(10))
+				Ω(response.Projects).ShouldNot(BeNil())
+				Ω(len(response.Projects)).Should(Equal(10))
 				for i := 0; i < 10; i++ {
-					Ω(response.Tenants[i].TenantID).Should(Equal(tenantIDs[9-i]))
-					tenantName := fmt.Sprintf("%s%d", "Name", 9-i)
-					Ω(response.Tenants[i].Tenant.Name).Should(Equal(tenantName))
+					Ω(response.Projects[i].ProjectID).Should(Equal(projectIDs[9-i]))
+					projectName := fmt.Sprintf("%s%d", "Name", 9-i)
+					Ω(response.Projects[i].Project.Name).Should(Equal(projectName))
 				}
 			})
 		})
@@ -428,7 +428,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 })
 
-func assertTenant(tenant, expectedTenant models.Tenant) {
-	Ω(tenant).ShouldNot(BeNil())
-	Ω(tenant.Name).Should(Equal(expectedTenant.Name))
+func assertProject(project, expectedProject models.Project) {
+	Ω(project).ShouldNot(BeNil())
+	Ω(project.Name).Should(Equal(expectedProject.Name))
 }

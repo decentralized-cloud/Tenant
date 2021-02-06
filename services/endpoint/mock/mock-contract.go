@@ -33,60 +33,60 @@ func (m *MockEndpointCreatorContract) EXPECT() *MockEndpointCreatorContractMockR
 	return m.recorder
 }
 
-// CreateTenantEndpoint mocks base method
-func (m *MockEndpointCreatorContract) CreateTenantEndpoint() endpoint.Endpoint {
+// CreateProjectEndpoint mocks base method
+func (m *MockEndpointCreatorContract) CreateProjectEndpoint() endpoint.Endpoint {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTenantEndpoint")
+	ret := m.ctrl.Call(m, "CreateProjectEndpoint")
 	ret0, _ := ret[0].(endpoint.Endpoint)
 	return ret0
 }
 
-// CreateTenantEndpoint indicates an expected call of CreateTenantEndpoint
-func (mr *MockEndpointCreatorContractMockRecorder) CreateTenantEndpoint() *gomock.Call {
+// CreateProjectEndpoint indicates an expected call of CreateProjectEndpoint
+func (mr *MockEndpointCreatorContractMockRecorder) CreateProjectEndpoint() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTenantEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).CreateTenantEndpoint))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProjectEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).CreateProjectEndpoint))
 }
 
-// ReadTenantEndpoint mocks base method
-func (m *MockEndpointCreatorContract) ReadTenantEndpoint() endpoint.Endpoint {
+// ReadProjectEndpoint mocks base method
+func (m *MockEndpointCreatorContract) ReadProjectEndpoint() endpoint.Endpoint {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReadTenantEndpoint")
+	ret := m.ctrl.Call(m, "ReadProjectEndpoint")
 	ret0, _ := ret[0].(endpoint.Endpoint)
 	return ret0
 }
 
-// ReadTenantEndpoint indicates an expected call of ReadTenantEndpoint
-func (mr *MockEndpointCreatorContractMockRecorder) ReadTenantEndpoint() *gomock.Call {
+// ReadProjectEndpoint indicates an expected call of ReadProjectEndpoint
+func (mr *MockEndpointCreatorContractMockRecorder) ReadProjectEndpoint() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadTenantEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).ReadTenantEndpoint))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadProjectEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).ReadProjectEndpoint))
 }
 
-// UpdateTenantEndpoint mocks base method
-func (m *MockEndpointCreatorContract) UpdateTenantEndpoint() endpoint.Endpoint {
+// UpdateProjectEndpoint mocks base method
+func (m *MockEndpointCreatorContract) UpdateProjectEndpoint() endpoint.Endpoint {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTenantEndpoint")
+	ret := m.ctrl.Call(m, "UpdateProjectEndpoint")
 	ret0, _ := ret[0].(endpoint.Endpoint)
 	return ret0
 }
 
-// UpdateTenantEndpoint indicates an expected call of UpdateTenantEndpoint
-func (mr *MockEndpointCreatorContractMockRecorder) UpdateTenantEndpoint() *gomock.Call {
+// UpdateProjectEndpoint indicates an expected call of UpdateProjectEndpoint
+func (mr *MockEndpointCreatorContractMockRecorder) UpdateProjectEndpoint() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTenantEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).UpdateTenantEndpoint))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProjectEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).UpdateProjectEndpoint))
 }
 
-// DeleteTenantEndpoint mocks base method
-func (m *MockEndpointCreatorContract) DeleteTenantEndpoint() endpoint.Endpoint {
+// DeleteProjectEndpoint mocks base method
+func (m *MockEndpointCreatorContract) DeleteProjectEndpoint() endpoint.Endpoint {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteTenantEndpoint")
+	ret := m.ctrl.Call(m, "DeleteProjectEndpoint")
 	ret0, _ := ret[0].(endpoint.Endpoint)
 	return ret0
 }
 
-// DeleteTenantEndpoint indicates an expected call of DeleteTenantEndpoint
-func (mr *MockEndpointCreatorContractMockRecorder) DeleteTenantEndpoint() *gomock.Call {
+// DeleteProjectEndpoint indicates an expected call of DeleteProjectEndpoint
+func (mr *MockEndpointCreatorContractMockRecorder) DeleteProjectEndpoint() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTenantEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).DeleteTenantEndpoint))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProjectEndpoint", reflect.TypeOf((*MockEndpointCreatorContract)(nil).DeleteProjectEndpoint))
 }
 
 // SearchEndpoint mocks base method

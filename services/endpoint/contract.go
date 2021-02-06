@@ -1,28 +1,28 @@
-// Package endpoint implements different endpoint services required by the tenant service
+// Package endpoint implements different endpoint services required by the project service
 package endpoint
 
 import "github.com/go-kit/kit/endpoint"
 
-// EndpointCreatorContract declares the contract that creates endpoints to create new tenant,
-// read, update and delete existing tenants.
+// EndpointCreatorContract declares the contract that creates endpoints to create new project,
+// read, update and delete existing projects.
 type EndpointCreatorContract interface {
-	// CreateTenantEndpoint creates Create Tenant endpoint
-	// Returns the Create Tenant endpoint
-	CreateTenantEndpoint() endpoint.Endpoint
+	// CreateProjectEndpoint creates Create Project endpoint
+	// Returns the Create Project endpoint
+	CreateProjectEndpoint() endpoint.Endpoint
 
-	// ReadTenantEndpoint creates Read Tenant endpoint
-	// Returns the Read Tenant endpoint
-	ReadTenantEndpoint() endpoint.Endpoint
+	// ReadProjectEndpoint creates Read Project endpoint
+	// Returns the Read Project endpoint
+	ReadProjectEndpoint() endpoint.Endpoint
 
-	// UpdateTenantEndpoint creates Update Tenant endpoint
-	// Returns the Update Tenant endpoint
-	UpdateTenantEndpoint() endpoint.Endpoint
+	// UpdateProjectEndpoint creates Update Project endpoint
+	// Returns the Update Project endpoint
+	UpdateProjectEndpoint() endpoint.Endpoint
 
-	// DeleteTenantEndpoint creates Delete Tenant endpoint
-	// Returns the Delete Tenant endpoint
-	DeleteTenantEndpoint() endpoint.Endpoint
+	// DeleteProjectEndpoint creates Delete Project endpoint
+	// Returns the Delete Project endpoint
+	DeleteProjectEndpoint() endpoint.Endpoint
 
-	// SearchEndpoint creates Search Tenant endpoint
-	// Returns the Search Tenant endpoint
+	// SearchEndpoint creates Search Project endpoint
+	// Returns the Search Project endpoint
 	SearchEndpoint() endpoint.Endpoint
 }
