@@ -10,7 +10,7 @@ import (
 	"github.com/decentralized-cloud/project/services/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/savsgio/atreugo/v9"
+	"github.com/savsgio/atreugo/v11"
 	"go.uber.org/zap"
 )
 
@@ -43,7 +43,7 @@ func NewTransportService(
 // Start starts the GraphQL transport service
 // Returns error if something goes wrong
 func (service *transportService) Start() error {
-	config := &atreugo.Config{GracefulShutdown: true}
+	config := atreugo.Config{GracefulShutdown: true}
 	var err error
 
 	host, err := service.configurationService.GetHttpHost()
