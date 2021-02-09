@@ -85,7 +85,7 @@ steps:
     inputs:
       targetType: "inline"
       script: |
-        helm package --destination "$(system.defaultWorkingDirectory)/chart-output" --app-version $(GitVersion.SemVer) "$(system.defaultWorkingDirectory)/helm-charts"
+        helm package --destination "$(system.defaultWorkingDirectory)/chart-output" --app-version ${{variables.version}} "$(system.defaultWorkingDirectory)/helm-charts"
 
   - task: PublishPipelineArtifact@1
     displayName: "Publish helm artifact"
