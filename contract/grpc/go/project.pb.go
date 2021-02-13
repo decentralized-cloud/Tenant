@@ -1515,15 +1515,15 @@ type ProjectServiceClient interface {
 	CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error)
 	// ReadProject read an exsiting project
 	// request: The request to read an esiting project
-	// Returns the result of reading an exiting project
+	// Returns the result of reading an existing project
 	ReadProject(ctx context.Context, in *ReadProjectRequest, opts ...grpc.CallOption) (*ReadProjectResponse, error)
 	// UpdateProject update an exsiting project
 	// request: The request to update an esiting project
-	// Returns the result of updateing an exiting project
+	// Returns the result of updateing an existing project
 	UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error)
 	// DeleteProject delete an exsiting project
 	// request: The request to delete an esiting project
-	// Returns the result of deleting an exiting project
+	// Returns the result of deleting an existing project
 	DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error)
 	// Search returns the list of projects that matched the criteria
 	// request: The request contains the search criteria
@@ -1592,15 +1592,15 @@ type ProjectServiceServer interface {
 	CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error)
 	// ReadProject read an exsiting project
 	// request: The request to read an esiting project
-	// Returns the result of reading an exiting project
+	// Returns the result of reading an existing project
 	ReadProject(context.Context, *ReadProjectRequest) (*ReadProjectResponse, error)
 	// UpdateProject update an exsiting project
 	// request: The request to update an esiting project
-	// Returns the result of updateing an exiting project
+	// Returns the result of updateing an existing project
 	UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error)
 	// DeleteProject delete an exsiting project
 	// request: The request to delete an esiting project
-	// Returns the result of deleting an exiting project
+	// Returns the result of deleting an existing project
 	DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error)
 	// Search returns the list of projects that matched the criteria
 	// request: The request contains the search criteria

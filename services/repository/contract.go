@@ -17,7 +17,7 @@ type RepositoryContract interface {
 	// ReadProject read an existing project
 	// ctx: Mandatory The reference to the context
 	// request: Mandatory. The request to read an esiting project
-	// Returns either the result of reading an exiting project or error if something goes wrong.
+	// Returns either the result of reading an existing project or error if something goes wrong.
 	ReadProject(
 		ctx context.Context,
 		request *ReadProjectRequest) (*ReadProjectResponse, error)
@@ -25,7 +25,7 @@ type RepositoryContract interface {
 	// UpdateProject update an existing project
 	// ctx: Mandatory The reference to the context
 	// request: Mandatory. The request to update an esiting project
-	// Returns either the result of updateing an exiting project or error if something goes wrong.
+	// Returns either the result of updateing an existing project or error if something goes wrong.
 	UpdateProject(
 		ctx context.Context,
 		request *UpdateProjectRequest) (*UpdateProjectResponse, error)
@@ -33,7 +33,7 @@ type RepositoryContract interface {
 	// DeleteProject delete an existing project
 	// ctx: Mandatory The reference to the context
 	// request: Mandatory. The request to delete an esiting project
-	// Returns either the result of deleting an exiting project or error if something goes wrong.
+	// Returns either the result of deleting an existing project or error if something goes wrong.
 	DeleteProject(
 		ctx context.Context,
 		request *DeleteProjectRequest) (*DeleteProjectResponse, error)
