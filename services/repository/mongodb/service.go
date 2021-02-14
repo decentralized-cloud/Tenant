@@ -78,7 +78,7 @@ func (service *mongodbRepositoryService) CreateProject(
 // ReadProject read an existing project
 // context: Optional The reference to the context
 // request: Mandatory. The request to read an existing project
-// Returns either the result of reading an exiting project or error if something goes wrong.
+// Returns either the result of reading an existing project or error if something goes wrong.
 func (service *mongodbRepositoryService) ReadProject(
 	ctx context.Context,
 	request *repository.ReadProjectRequest) (*repository.ReadProjectResponse, error) {
@@ -106,7 +106,7 @@ func (service *mongodbRepositoryService) ReadProject(
 // UpdateProject update an existing project
 // context: Optional The reference to the context
 // request: Mandatory. The request to update an existing project
-// Returns either the result of updateing an exiting project or error if something goes wrong.
+// Returns either the result of updateing an existing project or error if something goes wrong.
 func (service *mongodbRepositoryService) UpdateProject(
 	ctx context.Context,
 	request *repository.UpdateProjectRequest) (*repository.UpdateProjectResponse, error) {
@@ -140,7 +140,7 @@ func (service *mongodbRepositoryService) UpdateProject(
 // DeleteProject delete an existing project
 // context: Optional The reference to the context
 // request: Mandatory. The request to delete an existing project
-// Returns either the result of deleting an exiting project or error if something goes wrong.
+// Returns either the result of deleting an existing project or error if something goes wrong.
 func (service *mongodbRepositoryService) DeleteProject(
 	ctx context.Context,
 	request *repository.DeleteProjectRequest) (*repository.DeleteProjectResponse, error) {

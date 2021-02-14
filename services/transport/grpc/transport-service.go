@@ -190,7 +190,7 @@ func (service *transportService) CreateProject(
 // ReadProject read an existing project
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request to read an existing project
-// Returns the result of reading an exiting project
+// Returns the result of reading an existing project
 func (service *transportService) ReadProject(
 	ctx context.Context,
 	request *projectGRPCContract.ReadProjectRequest) (*projectGRPCContract.ReadProjectResponse, error) {
@@ -206,7 +206,7 @@ func (service *transportService) ReadProject(
 // UpdateProject update an existing project
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request to update an existing project
-// Returns the result of updateing an exiting project
+// Returns the result of updateing an existing project
 func (service *transportService) UpdateProject(
 	ctx context.Context,
 	request *projectGRPCContract.UpdateProjectRequest) (*projectGRPCContract.UpdateProjectResponse, error) {
@@ -222,7 +222,7 @@ func (service *transportService) UpdateProject(
 // DeleteProject delete an existing project
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request to delete an existing project
-// Returns the result of deleting an exiting project
+// Returns the result of deleting an existing project
 func (service *transportService) DeleteProject(
 	ctx context.Context,
 	request *projectGRPCContract.DeleteProjectRequest) (*projectGRPCContract.DeleteProjectResponse, error) {

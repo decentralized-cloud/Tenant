@@ -232,17 +232,17 @@ service ProjectService {
 
   // ReadProject read an exsiting project
   // request: The request to read an esiting project
-  // Returns the result of reading an exiting project
+  // Returns the result of reading an existing project
   rpc ReadProject(ReadProjectRequest) returns (ReadProjectResponse);
 
   // UpdateProject update an exsiting project
   // request: The request to update an esiting project
-  // Returns the result of updateing an exiting project
+  // Returns the result of updateing an existing project
   rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
 
   // DeleteProject delete an exsiting project
   // request: The request to delete an esiting project
-  // Returns the result of deleting an exiting project
+  // Returns the result of deleting an existing project
   rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
 
   // Search returns the list of projects that matched the criteria
