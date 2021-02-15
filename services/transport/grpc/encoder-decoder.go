@@ -19,9 +19,11 @@ import (
 func decodeCreateProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
+	parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
 	castedRequest := request.(*projectGRPCContract.CreateProjectRequest)
 
 	return &business.CreateProjectRequest{
+		UserEmail: parsedToken.Email,
 		Project: models.Project{
 			Name: castedRequest.Project.Name,
 		}}, nil
@@ -60,9 +62,11 @@ func encodeCreateProjectResponse(
 func decodeReadProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
+	parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
 	castedRequest := request.(*projectGRPCContract.ReadProjectRequest)
 
 	return &business.ReadProjectRequest{
+		UserEmail: parsedToken.Email,
 		ProjectID: castedRequest.ProjectID,
 	}, nil
 }
@@ -98,9 +102,11 @@ func encodeReadProjectResponse(
 func decodeUpdateProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
+	parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
 	castedRequest := request.(*projectGRPCContract.UpdateProjectRequest)
 
 	return &business.UpdateProjectRequest{
+		UserEmail: parsedToken.Email,
 		ProjectID: castedRequest.ProjectID,
 		Project: models.Project{
 			Name: castedRequest.Project.Name,
@@ -139,9 +145,11 @@ func encodeUpdateProjectResponse(
 func decodeDeleteProjectRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
+	parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
 	castedRequest := request.(*projectGRPCContract.DeleteProjectRequest)
 
 	return &business.DeleteProjectRequest{
+		UserEmail: parsedToken.Email,
 		ProjectID: castedRequest.ProjectID,
 	}, nil
 }
@@ -173,6 +181,7 @@ func encodeDeleteProjectResponse(
 func decodeSearchRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
+	parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
 	castedRequest := request.(*projectGRPCContract.SearchRequest)
 	sortingOptions := []common.SortingOptionPair{}
 
@@ -214,6 +223,7 @@ func decodeSearchRequest(
 	}
 
 	return &business.SearchRequest{
+		UserEmail:      parsedToken.Email,
 		Pagination:     pagination,
 		ProjectIDs:     castedRequest.ProjectIDs,
 		SortingOptions: sortingOptions,

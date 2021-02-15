@@ -8,7 +8,8 @@ import (
 
 // CreateProjectRequest contains the request to create a new project
 type CreateProjectRequest struct {
-	Project models.Project
+	UserEmail string
+	Project   models.Project
 }
 
 // CreateProjectResponse contains the result of creating a new project
@@ -20,6 +21,7 @@ type CreateProjectResponse struct {
 
 // ReadProjectRequest contains the request to read an existing project
 type ReadProjectRequest struct {
+	UserEmail string
 	ProjectID string
 }
 
@@ -30,6 +32,7 @@ type ReadProjectResponse struct {
 
 // UpdateProjectRequest contains the request to update an existing project
 type UpdateProjectRequest struct {
+	UserEmail string
 	ProjectID string
 	Project   models.Project
 }
@@ -42,6 +45,7 @@ type UpdateProjectResponse struct {
 
 // DeleteProjectRequest contains the request to delete an existing project
 type DeleteProjectRequest struct {
+	UserEmail string
 	ProjectID string
 }
 
@@ -51,6 +55,7 @@ type DeleteProjectResponse struct {
 
 // SearchRequest contains the filter criteria to look for existing projects
 type SearchRequest struct {
+	UserEmail      string
 	Pagination     common.Pagination
 	SortingOptions []common.SortingOptionPair
 	ProjectIDs     []string
