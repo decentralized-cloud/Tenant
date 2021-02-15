@@ -9,7 +9,7 @@ import (
 	"github.com/micro-business/go-core/jwt/grpc"
 )
 
-func (service *transportService) createAuthMiddleware(endpointName string) endpoint.Middleware {
+func (service *transportService) createAuthMiddleware() endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 			token, err := grpc.ParseAndVerifyToken(ctx, service.jwksURL, true)

@@ -12,7 +12,6 @@ func (val CreateProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
 		// Email must be provided
 		validation.Field(&val.UserEmail, validation.Required, is.Email),
-
 		// Validate Project using its own validation rules
 		validation.Field(&val.Project),
 	)
@@ -24,7 +23,6 @@ func (val ReadProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
 		// Email must be provided
 		validation.Field(&val.UserEmail, validation.Required, is.Email),
-
 		// ProjectID cannot be empty
 		validation.Field(&val.ProjectID, validation.Required),
 	)
@@ -36,10 +34,8 @@ func (val UpdateProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
 		// Email must be provided
 		validation.Field(&val.UserEmail, validation.Required, is.Email),
-
 		// ProjectID cannot be empty
 		validation.Field(&val.ProjectID, validation.Required),
-
 		// Validate Project using its own validation rules
 		validation.Field(&val.Project),
 	)
@@ -51,7 +47,6 @@ func (val DeleteProjectRequest) Validate() error {
 	return validation.ValidateStruct(&val,
 		// Email must be provided
 		validation.Field(&val.UserEmail, validation.Required, is.Email),
-
 		// ProjectID cannot be empty
 		validation.Field(&val.ProjectID, validation.Required),
 	)
