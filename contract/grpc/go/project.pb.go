@@ -251,8 +251,8 @@ type CreateProjectResponse struct {
 	ProjectID string `protobuf:"bytes,3,opt,name=projectID,proto3" json:"projectID,omitempty"`
 	// The created project object
 	Project *Project `protobuf:"bytes,4,opt,name=project,proto3" json:"project,omitempty"`
-	// The cursor defines the position of the project in the repository that can be later
-	// referred to using pagination information
+	// The cursor defines the position of the project in the repository that can
+	// be later referred to using pagination information
 	Cursor string `protobuf:"bytes,5,opt,name=cursor,proto3" json:"cursor,omitempty"`
 }
 
@@ -512,8 +512,8 @@ type UpdateProjectResponse struct {
 	ErrorMessage string `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
 	// The updated project object
 	Project *Project `protobuf:"bytes,3,opt,name=project,proto3" json:"project,omitempty"`
-	// The cursor defines the position of the project in the repository that can be later
-	// referred to using pagination information
+	// The cursor defines the position of the project in the repository that can
+	// be later referred to using pagination information
 	Cursor string `protobuf:"bytes,4,opt,name=cursor,proto3" json:"cursor,omitempty"`
 }
 
@@ -687,7 +687,8 @@ func (x *DeleteProjectResponse) GetErrorMessage() string {
 }
 
 //*
-// The pagination information compatible with graphql-relay connection definition, for more information visit:
+// The pagination information compatible with graphql-relay connection
+// definition, for more information visit:
 // https://facebook.github.io/relay/graphql/connections.htm
 type Pagination struct {
 	state         protoimpl.MessageState
@@ -793,7 +794,8 @@ func (x *Pagination) GetBefore() string {
 }
 
 //*
-// Defines the pair of values that are used to determine how the result data should be sorted.
+// Defines the pair of values that are used to determine how the result data
+// should be sorted.
 type SortingOptionPair struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -860,7 +862,8 @@ type SearchRequest struct {
 
 	// The pagination information
 	Pagination *Pagination `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-	// The collection of sorting option determines how the returned data must be sorted
+	// The collection of sorting option determines how the returned data must be
+	// sorted
 	SortingOptions []*SortingOptionPair `protobuf:"bytes,2,rep,name=sortingOptions,proto3" json:"sortingOptions,omitempty"`
 	// The unique project identifiers
 	ProjectIDs []string `protobuf:"bytes,3,rep,name=projectIDs,proto3" json:"projectIDs,omitempty"`
@@ -920,8 +923,8 @@ func (x *SearchRequest) GetProjectIDs() []string {
 }
 
 //
-// The pair of project and a cursor that defines the position of the project in the repository
-// that can later referred to using pagination information.
+// The pair of project and a cursor that defines the position of the project in
+// the repository that can later referred to using pagination information.
 type ProjectWithCursor struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -931,8 +934,8 @@ type ProjectWithCursor struct {
 	Project *Project `protobuf:"bytes,1,opt,name=project,proto3" json:"project,omitempty"`
 	// The unique project identifier
 	ProjectID string `protobuf:"bytes,2,opt,name=projectID,proto3" json:"projectID,omitempty"`
-	// The cursor defines the position of the project in the repository that can be later
-	// referred to using pagination information
+	// The cursor defines the position of the project in the repository that can
+	// be later referred to using pagination information
 	Cursor string `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
 }
 
@@ -1000,11 +1003,14 @@ type SearchResponse struct {
 	Error Error `protobuf:"varint,1,opt,name=error,proto3,enum=project.Error" json:"error,omitempty"`
 	// Contains error message if the operation was unsuccessful
 	ErrorMessage string `protobuf:"bytes,2,opt,name=errorMessage,proto3" json:"errorMessage,omitempty"`
-	// Indicates whether more edges exist prior to the set defined by the clients arguments
+	// Indicates whether more edges exist prior to the set defined by the clients
+	// arguments
 	HasPreviousPage bool `protobuf:"varint,3,opt,name=hasPreviousPage,proto3" json:"hasPreviousPage,omitempty"`
-	// Indicates whether more edges exist following the set defined by the clients arguments
+	// Indicates whether more edges exist following the set defined by the clients
+	// arguments
 	HasNextPage bool `protobuf:"varint,4,opt,name=hasNextPage,proto3" json:"hasNextPage,omitempty"`
-	// Indicates the total count of the projects that matched the provided filter criteria
+	// Indicates the total count of the projects that matched the provided filter
+	// criteria
 	TotalCount int64 `protobuf:"varint,5,opt,name=totalCount,proto3" json:"totalCount,omitempty"`
 	// The list contains the projects that matched the search criteria
 	Projects []*ProjectWithCursor `protobuf:"bytes,6,rep,name=projects,proto3" json:"projects,omitempty"`

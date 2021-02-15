@@ -42,7 +42,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 
 		mockBusinessService = businessMock.NewMockBusinessContract(mockCtrl)
 		sut, _ = endpoint.NewEndpointCreatorService(mockBusinessService)
-		ctx = context.Background()
+		ctx = context.WithValue(context.Background(), models.ContextKeyParsedToken, models.ParsedToken{Email: cuid.New() + "@test.com"})
 	})
 
 	AfterEach(func() {

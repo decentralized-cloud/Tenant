@@ -42,7 +42,7 @@ spec:
               value: "{{ .Values.pod.database.connection_string }}"
             - name: PROJECT_DATABASE_NAME
               value: "{{ .Values.pod.database.name }}"
-            - name: USER_DATABASE_COLLECTION_NAME
+            - name: PROJECT_DATABASE_COLLECTION_NAME
               value: "{{ .Values.pod.database.collection }}"
             - name: JWKS_URL
               value: "{{ .Values.pod.idp.jwksURL }}"

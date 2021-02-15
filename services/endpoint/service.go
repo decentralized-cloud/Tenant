@@ -4,6 +4,7 @@ package endpoint
 import (
 	"context"
 
+	"github.com/decentralized-cloud/project/models"
 	"github.com/decentralized-cloud/project/services/business"
 	"github.com/go-kit/kit/endpoint"
 	commonErrors "github.com/micro-business/go-core/system/errors"
@@ -44,6 +45,9 @@ func (service *endpointCreatorService) CreateProjectEndpoint() endpoint.Endpoint
 		}
 
 		castedRequest := request.(*business.CreateProjectRequest)
+		parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
+		castedRequest.UserEmail = parsedToken.Email
+
 		if err := castedRequest.Validate(); err != nil {
 			return &business.CreateProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
@@ -71,6 +75,9 @@ func (service *endpointCreatorService) ReadProjectEndpoint() endpoint.Endpoint {
 		}
 
 		castedRequest := request.(*business.ReadProjectRequest)
+		parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
+		castedRequest.UserEmail = parsedToken.Email
+
 		if err := castedRequest.Validate(); err != nil {
 			return &business.ReadProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
@@ -98,6 +105,9 @@ func (service *endpointCreatorService) UpdateProjectEndpoint() endpoint.Endpoint
 		}
 
 		castedRequest := request.(*business.UpdateProjectRequest)
+		parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
+		castedRequest.UserEmail = parsedToken.Email
+
 		if err := castedRequest.Validate(); err != nil {
 			return &business.UpdateProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
@@ -125,6 +135,9 @@ func (service *endpointCreatorService) DeleteProjectEndpoint() endpoint.Endpoint
 		}
 
 		castedRequest := request.(*business.DeleteProjectRequest)
+		parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
+		castedRequest.UserEmail = parsedToken.Email
+
 		if err := castedRequest.Validate(); err != nil {
 			return &business.DeleteProjectResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
@@ -152,6 +165,9 @@ func (service *endpointCreatorService) SearchEndpoint() endpoint.Endpoint {
 		}
 
 		castedRequest := request.(*business.SearchRequest)
+		parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
+		castedRequest.UserEmail = parsedToken.Email
+
 		if err := castedRequest.Validate(); err != nil {
 			return &business.SearchResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
