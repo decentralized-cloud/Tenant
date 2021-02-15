@@ -124,7 +124,7 @@ func (service *transportService) Stop() error {
 func (service *transportService) setupHandlers() {
 	endpoint := service.endpointCreatorService.CreateProjectEndpoint()
 	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("CreateProject")(endpoint)
-	endpoint = service.createAuthMiddleware("CreateProject")(endpoint)
+	endpoint = service.createAuthMiddleware()(endpoint)
 	service.createProjectHandler = gokitgrpc.NewServer(
 		endpoint,
 		decodeCreateProjectRequest,
@@ -133,7 +133,7 @@ func (service *transportService) setupHandlers() {
 
 	endpoint = service.endpointCreatorService.ReadProjectEndpoint()
 	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("ReadProject")(endpoint)
-	endpoint = service.createAuthMiddleware("ReadProject")(endpoint)
+	endpoint = service.createAuthMiddleware()(endpoint)
 	service.readProjectHandler = gokitgrpc.NewServer(
 		endpoint,
 		decodeReadProjectRequest,
@@ -142,7 +142,7 @@ func (service *transportService) setupHandlers() {
 
 	endpoint = service.endpointCreatorService.UpdateProjectEndpoint()
 	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("UpdateProject")(endpoint)
-	endpoint = service.createAuthMiddleware("UpdateProject")(endpoint)
+	endpoint = service.createAuthMiddleware()(endpoint)
 	service.updateProjectHandler = gokitgrpc.NewServer(
 		endpoint,
 		decodeUpdateProjectRequest,
@@ -151,7 +151,7 @@ func (service *transportService) setupHandlers() {
 
 	endpoint = service.endpointCreatorService.DeleteProjectEndpoint()
 	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("DeleteProject")(endpoint)
-	endpoint = service.createAuthMiddleware("DeleteProject")(endpoint)
+	endpoint = service.createAuthMiddleware()(endpoint)
 	service.deleteProjectHandler = gokitgrpc.NewServer(
 		endpoint,
 		decodeDeleteProjectRequest,
@@ -160,7 +160,7 @@ func (service *transportService) setupHandlers() {
 
 	endpoint = service.endpointCreatorService.SearchEndpoint()
 	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("Search")(endpoint)
-	endpoint = service.createAuthMiddleware("Search")(endpoint)
+	endpoint = service.createAuthMiddleware()(endpoint)
 	service.searchHandler = gokitgrpc.NewServer(
 		endpoint,
 		decodeSearchRequest,
