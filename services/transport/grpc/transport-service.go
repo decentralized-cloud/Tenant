@@ -10,7 +10,6 @@ import (
 	"github.com/decentralized-cloud/project/services/configuration"
 	"github.com/decentralized-cloud/project/services/endpoint"
 	"github.com/decentralized-cloud/project/services/transport"
-	gokitEndpoint "github.com/go-kit/kit/endpoint"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
 	commonErrors "github.com/micro-business/go-core/system/errors"
 	"github.com/micro-business/gokit-core/middleware"
@@ -23,6 +22,7 @@ type transportService struct {
 	configurationService      configuration.ConfigurationContract
 	endpointCreatorService    endpoint.EndpointCreatorContract
 	middlewareProviderService middleware.MiddlewareProviderContract
+	jwksURL                   string
 	createProjectHandler      gokitgrpc.Handler
 	readProjectHandler        gokitgrpc.Handler
 	updateProjectHandler      gokitgrpc.Handler
@@ -65,11 +65,17 @@ func NewTransportService(
 		return nil, commonErrors.NewArgumentNilError("middlewareProviderService", "middlewareProviderService is required")
 	}
 
+	jwksURL, err := configurationService.GetJwksURL()
+	if err != nil {
+		return nil, err
+	}
+
 	return &transportService{
 		logger:                    logger,
 		configurationService:      configurationService,
 		endpointCreatorService:    endpointCreatorService,
 		middlewareProviderService: middlewareProviderService,
+		jwksURL:                   jwksURL,
 	}, nil
 }
 
@@ -116,60 +122,50 @@ func (service *transportService) Stop() error {
 }
 
 func (service *transportService) setupHandlers() {
-	var createProjectEndpoint gokitEndpoint.Endpoint
-	{
-		createProjectEndpoint = service.endpointCreatorService.CreateProjectEndpoint()
-		createProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("CreateProject")(createProjectEndpoint)
-		service.createProjectHandler = gokitgrpc.NewServer(
-			createProjectEndpoint,
-			decodeCreateProjectRequest,
-			encodeCreateProjectResponse,
-		)
-	}
+	endpoint := service.endpointCreatorService.CreateProjectEndpoint()
+	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("CreateProject")(endpoint)
+	endpoint = service.createAuthMiddleware("CreateProject")(endpoint)
+	service.createProjectHandler = gokitgrpc.NewServer(
+		endpoint,
+		decodeCreateProjectRequest,
+		encodeCreateProjectResponse,
+	)
 
-	var readProjectEndpoint gokitEndpoint.Endpoint
-	{
-		readProjectEndpoint = service.endpointCreatorService.ReadProjectEndpoint()
-		readProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("ReadProject")(readProjectEndpoint)
-		service.readProjectHandler = gokitgrpc.NewServer(
-			readProjectEndpoint,
-			decodeReadProjectRequest,
-			encodeReadProjectResponse,
-		)
-	}
+	endpoint = service.endpointCreatorService.ReadProjectEndpoint()
+	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("ReadProject")(endpoint)
+	endpoint = service.createAuthMiddleware("ReadProject")(endpoint)
+	service.readProjectHandler = gokitgrpc.NewServer(
+		endpoint,
+		decodeReadProjectRequest,
+		encodeReadProjectResponse,
+	)
 
-	var updateProjectEndpoint gokitEndpoint.Endpoint
-	{
-		updateProjectEndpoint = service.endpointCreatorService.UpdateProjectEndpoint()
-		updateProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("UpdateProject")(updateProjectEndpoint)
-		service.updateProjectHandler = gokitgrpc.NewServer(
-			updateProjectEndpoint,
-			decodeUpdateProjectRequest,
-			encodeUpdateProjectResponse,
-		)
-	}
+	endpoint = service.endpointCreatorService.UpdateProjectEndpoint()
+	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("UpdateProject")(endpoint)
+	endpoint = service.createAuthMiddleware("UpdateProject")(endpoint)
+	service.updateProjectHandler = gokitgrpc.NewServer(
+		endpoint,
+		decodeUpdateProjectRequest,
+		encodeUpdateProjectResponse,
+	)
 
-	var deleteProjectEndpoint gokitEndpoint.Endpoint
-	{
-		deleteProjectEndpoint = service.endpointCreatorService.DeleteProjectEndpoint()
-		deleteProjectEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("DeleteProject")(deleteProjectEndpoint)
-		service.deleteProjectHandler = gokitgrpc.NewServer(
-			deleteProjectEndpoint,
-			decodeDeleteProjectRequest,
-			encodeDeleteProjectResponse,
-		)
-	}
+	endpoint = service.endpointCreatorService.DeleteProjectEndpoint()
+	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("DeleteProject")(endpoint)
+	endpoint = service.createAuthMiddleware("DeleteProject")(endpoint)
+	service.deleteProjectHandler = gokitgrpc.NewServer(
+		endpoint,
+		decodeDeleteProjectRequest,
+		encodeDeleteProjectResponse,
+	)
 
-	var searchEndpoint gokitEndpoint.Endpoint
-	{
-		searchEndpoint = service.endpointCreatorService.SearchEndpoint()
-		searchEndpoint = service.middlewareProviderService.CreateLoggingMiddleware("Search")(searchEndpoint)
-		service.searchHandler = gokitgrpc.NewServer(
-			searchEndpoint,
-			decodeSearchRequest,
-			encodeSearchResponse,
-		)
-	}
+	endpoint = service.endpointCreatorService.SearchEndpoint()
+	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("Search")(endpoint)
+	endpoint = service.createAuthMiddleware("Search")(endpoint)
+	service.searchHandler = gokitgrpc.NewServer(
+		endpoint,
+		decodeSearchRequest,
+		encodeSearchResponse,
+	)
 }
 
 // CreateProject creates a new project

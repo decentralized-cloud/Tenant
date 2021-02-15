@@ -17,11 +17,10 @@ import (
 )
 
 type mongodbRepositoryService struct {
-	connectionString string
-	databaseName     string
+	connectionString       string
+	databaseName           string
+	databaseCollectionName string
 }
-
-const collectionName string = "project"
 
 // NewMongodbRepositoryService creates new instance of the mongodbRepositoryService, setting up all dependencies and returns the instance
 // Returns the new service or error if something goes wrong
@@ -41,9 +40,15 @@ func NewMongodbRepositoryService(
 		return nil, repository.NewUnknownErrorWithError("Failed to get the database name", err)
 	}
 
+	databaseCollectionName, err := configurationService.GetDatabaseCollectionName()
+	if err != nil {
+		return nil, repository.NewUnknownErrorWithError("Failed to get the database collection name", err)
+	}
+
 	return &mongodbRepositoryService{
-		connectionString: connectionString,
-		databaseName:     databaseName,
+		connectionString:       connectionString,
+		databaseName:           databaseName,
+		databaseCollectionName: databaseCollectionName,
 	}, nil
 }
 
@@ -325,7 +330,7 @@ func (service *mongodbRepositoryService) createClientAndCollection(ctx context.C
 		return nil, nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
-	return client, client.Database(service.databaseName).Collection(collectionName), nil
+	return client, client.Database(service.databaseName).Collection(service.databaseCollectionName), nil
 }
 
 func disconnect(ctx context.Context, client *mongo.Client) {

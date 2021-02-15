@@ -42,6 +42,9 @@ pod:
   database:
     connection_string: "mongodb://mongodb:27017"
     name: "project"
+    collection: "project"
+  idp:
+    jwksURL: ""
 
 service:
   type: ClusterIP

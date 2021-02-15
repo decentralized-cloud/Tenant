@@ -50,6 +50,11 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			GetDatabaseName().
 			Return("project", nil)
 
+		mockConfigurationService.
+			EXPECT().
+			GetDatabaseCollectionName().
+			Return("project", nil)
+
 		sut, _ = mongodb.NewMongodbRepositoryService(mockConfigurationService)
 		ctx = context.Background()
 		createRequest = repository.CreateProjectRequest{
@@ -75,6 +80,12 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					EXPECT().
 					GetDatabaseName().
 					Return(cuid.New(), nil)
+
+				mockConfigurationService.
+					EXPECT().
+					GetDatabaseCollectionName().
+					Return(cuid.New(), nil)
+
 				service, err := mongodb.NewMongodbRepositoryService(mockConfigurationService)
 				Ω(err).Should(BeNil())
 				Ω(service).ShouldNot(BeNil())
@@ -323,7 +334,6 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		//TODO : this test does not make sense
 		When("user searches for projects with selected project Ids and last 10 projects", func() {
 			It("should return first 10 projects", func() {
 				last := 10

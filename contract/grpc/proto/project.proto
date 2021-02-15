@@ -50,8 +50,8 @@ message CreateProjectResponse {
   // The created project object
   Project project = 4;
 
-  // The cursor defines the position of the project in the repository that can be later
-  // referred to using pagination information
+  // The cursor defines the position of the project in the repository that can
+  // be later referred to using pagination information
   string cursor = 5;
 }
 
@@ -100,8 +100,8 @@ message UpdateProjectResponse {
   // The updated project object
   Project project = 3;
 
-  // The cursor defines the position of the project in the repository that can be later
-  // referred to using pagination information
+  // The cursor defines the position of the project in the repository that can
+  // be later referred to using pagination information
   string cursor = 4;
 }
 
@@ -125,25 +125,26 @@ message DeleteProjectResponse {
 }
 
 /**
- * The pagination information compatible with graphql-relay connection definition, for more information visit:
+ * The pagination information compatible with graphql-relay connection
+ * definition, for more information visit:
  * https://facebook.github.io/relay/graphql/connections.htm
  */
 message Pagination {
-    bool hasFirst = 1;
+  bool hasFirst = 1;
 
-    int32 first = 2;
+  int32 first = 2;
 
-    bool hasAfter = 3;
+  bool hasAfter = 3;
 
-    string after = 4;
+  string after = 4;
 
-    bool hasLast = 5;
+  bool hasLast = 5;
 
-    int32 last = 6;
+  int32 last = 6;
 
-    bool hasBefore = 7;
+  bool hasBefore = 7;
 
-    string before = 8;
+  string before = 8;
 }
 
 /**
@@ -158,14 +159,15 @@ enum SortingDirection {
 }
 
 /**
- * Defines the pair of values that are used to determine how the result data should be sorted.
+ * Defines the pair of values that are used to determine how the result data
+ * should be sorted.
  */
 message SortingOptionPair {
   // The name of the field on
-   string name = 1;
+  string name = 1;
 
-   // THe sorting direction
-   SortingDirection direction = 2;
+  // THe sorting direction
+  SortingDirection direction = 2;
 }
 
 /**
@@ -175,7 +177,8 @@ message SearchRequest {
   // The pagination information
   Pagination pagination = 1;
 
-  // The collection of sorting option determines how the returned data must be sorted
+  // The collection of sorting option determines how the returned data must be
+  // sorted
   repeated SortingOptionPair sortingOptions = 2;
 
   // The unique project identifiers
@@ -183,8 +186,8 @@ message SearchRequest {
 }
 
 /*
- * The pair of project and a cursor that defines the position of the project in the repository
- * that can later referred to using pagination information.
+ * The pair of project and a cursor that defines the position of the project in
+ * the repository that can later referred to using pagination information.
  */
 message ProjectWithCursor {
   // The project object
@@ -193,8 +196,8 @@ message ProjectWithCursor {
   // The unique project identifier
   string projectID = 2;
 
-  // The cursor defines the position of the project in the repository that can be later
-  // referred to using pagination information
+  // The cursor defines the position of the project in the repository that can
+  // be later referred to using pagination information
   string cursor = 3;
 }
 
@@ -208,13 +211,16 @@ message SearchResponse {
   // Contains error message if the operation was unsuccessful
   string errorMessage = 2;
 
-  // Indicates whether more edges exist prior to the set defined by the clients arguments
+  // Indicates whether more edges exist prior to the set defined by the clients
+  // arguments
   bool hasPreviousPage = 3;
 
-  // Indicates whether more edges exist following the set defined by the clients arguments
+  // Indicates whether more edges exist following the set defined by the clients
+  // arguments
   bool hasNextPage = 4;
 
-  // Indicates the total count of the projects that matched the provided filter criteria
+  // Indicates the total count of the projects that matched the provided filter
+  // criteria
   int64 totalCount = 5;
 
   // The list contains the projects that matched the search criteria
@@ -222,7 +228,8 @@ message SearchResponse {
 }
 
 /**
- * The project servcie that can create new project, read, update and delete existing project
+ * The project servcie that can create new project, read, update and delete
+ * existing project
  */
 service ProjectService {
   // CreateProject creates a new project
@@ -250,4 +257,3 @@ service ProjectService {
   // Returns the list of projects that matched the criteria
   rpc Search(SearchRequest) returns (SearchResponse);
 }
-

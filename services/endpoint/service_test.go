@@ -83,6 +83,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 			BeforeEach(func() {
 				endpoint = sut.CreateProjectEndpoint()
 				request = business.CreateProjectRequest{
+					UserEmail: cuid.New() + "@test.com",
 					Project: models.Project{
 						Name: cuid.New(),
 					},
@@ -202,6 +203,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 			BeforeEach(func() {
 				endpoint = sut.ReadProjectEndpoint()
 				request = business.ReadProjectRequest{
+					UserEmail: cuid.New() + "@test.com",
 					ProjectID: cuid.New(),
 				}
 
@@ -316,6 +318,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 			BeforeEach(func() {
 				endpoint = sut.UpdateProjectEndpoint()
 				request = business.UpdateProjectRequest{
+					UserEmail: cuid.New() + "@test.com",
 					ProjectID: cuid.New(),
 					Project: models.Project{
 						Name: cuid.New(),
@@ -435,6 +438,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 			BeforeEach(func() {
 				endpoint = sut.DeleteProjectEndpoint()
 				request = business.DeleteProjectRequest{
+					UserEmail: cuid.New() + "@test.com",
 					ProjectID: cuid.New(),
 				}
 
@@ -551,6 +555,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 				}
 
 				request = business.SearchRequest{
+					UserEmail: cuid.New() + "@test.com",
 					Pagination: common.Pagination{
 						After:  convertStringToPointer(cuid.New()),
 						First:  convertIntToPointer(rand.Intn(1000)),
@@ -558,11 +563,11 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 						Last:   convertIntToPointer(rand.Intn(1000)),
 					},
 					SortingOptions: []common.SortingOptionPair{
-						common.SortingOptionPair{
+						{
 							Name:      cuid.New(),
 							Direction: common.Ascending,
 						},
-						common.SortingOptionPair{
+						{
 							Name:      cuid.New(),
 							Direction: common.Descending,
 						},

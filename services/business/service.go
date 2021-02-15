@@ -34,7 +34,8 @@ func (service *businessService) CreateProject(
 	ctx context.Context,
 	request *CreateProjectRequest) (*CreateProjectResponse, error) {
 	response, err := service.repositoryService.CreateProject(ctx, &repository.CreateProjectRequest{
-		Project: request.Project,
+		UserEmail: request.UserEmail,
+		Project:   request.Project,
 	})
 
 	if err != nil {
@@ -58,6 +59,7 @@ func (service *businessService) ReadProject(
 	ctx context.Context,
 	request *ReadProjectRequest) (*ReadProjectResponse, error) {
 	response, err := service.repositoryService.ReadProject(ctx, &repository.ReadProjectRequest{
+		UserEmail: request.UserEmail,
 		ProjectID: request.ProjectID,
 	})
 
@@ -80,6 +82,7 @@ func (service *businessService) UpdateProject(
 	ctx context.Context,
 	request *UpdateProjectRequest) (*UpdateProjectResponse, error) {
 	response, err := service.repositoryService.UpdateProject(ctx, &repository.UpdateProjectRequest{
+		UserEmail: request.UserEmail,
 		ProjectID: request.ProjectID,
 		Project:   request.Project,
 	})
@@ -104,6 +107,7 @@ func (service *businessService) DeleteProject(
 	ctx context.Context,
 	request *DeleteProjectRequest) (*DeleteProjectResponse, error) {
 	_, err := service.repositoryService.DeleteProject(ctx, &repository.DeleteProjectRequest{
+		UserEmail: request.UserEmail,
 		ProjectID: request.ProjectID,
 	})
 
@@ -124,6 +128,7 @@ func (service *businessService) Search(
 	ctx context.Context,
 	request *SearchRequest) (*SearchResponse, error) {
 	result, err := service.repositoryService.Search(ctx, &repository.SearchRequest{
+		UserEmail:      request.UserEmail,
 		Pagination:     request.Pagination,
 		SortingOptions: request.SortingOptions,
 		ProjectIDs:     request.ProjectIDs,
