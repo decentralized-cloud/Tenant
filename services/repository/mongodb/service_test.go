@@ -58,6 +58,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		sut, _ = mongodb.NewMongodbRepositoryService(mockConfigurationService)
 		ctx = context.Background()
 		createRequest = repository.CreateProjectRequest{
+			UserEmail: cuid.New() + "@test.com",
 			Project: models.Project{
 				Name: cuid.New(),
 			}}
@@ -117,7 +118,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user reads a project by Id", func() {
 			It("should return a project", func() {
-				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
+				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{UserEmail: createRequest.UserEmail, ProjectID: projectID})
 				Ω(err).Should(BeNil())
 				assertProject(response.Project, createRequest.Project)
 			})
@@ -126,6 +127,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		When("user updates the existing project", func() {
 			It("should update the project information", func() {
 				updateRequest := repository.UpdateProjectRequest{
+					UserEmail: createRequest.UserEmail,
 					ProjectID: projectID,
 					Project: models.Project{
 						Name: cuid.New(),
@@ -136,7 +138,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 				Ω(updateResponse.Cursor).Should(Equal(projectID))
 				assertProject(updateResponse.Project, updateRequest.Project)
 
-				readResponse, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
+				readResponse, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{UserEmail: createRequest.UserEmail, ProjectID: projectID})
 				Ω(err).Should(BeNil())
 				assertProject(readResponse.Project, updateRequest.Project)
 			})
@@ -144,10 +146,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user deletes the project", func() {
 			It("should delete the project", func() {
-				_, err := sut.DeleteProject(ctx, &repository.DeleteProjectRequest{ProjectID: projectID})
+				_, err := sut.DeleteProject(ctx, &repository.DeleteProjectRequest{UserEmail: createRequest.UserEmail, ProjectID: projectID})
 				Ω(err).Should(BeNil())
 
-				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
+				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{UserEmail: createRequest.UserEmail, ProjectID: projectID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
@@ -172,7 +174,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user reads the project", func() {
 			It("should return NotFoundError", func() {
-				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{ProjectID: projectID})
+				response, err := sut.ReadProject(ctx, &repository.ReadProjectRequest{UserEmail: createRequest.UserEmail, ProjectID: projectID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
@@ -188,6 +190,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 		When("user tries to update the project", func() {
 			It("should return NotFoundError", func() {
 				updateRequest := repository.UpdateProjectRequest{
+					UserEmail: createRequest.UserEmail,
 					ProjectID: projectID,
 					Project: models.Project{
 						Name: cuid.New(),
@@ -208,7 +211,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 
 		When("user tries to delete the project", func() {
 			It("should return NotFoundError", func() {
-				response, err := sut.DeleteProject(ctx, &repository.DeleteProjectRequest{ProjectID: projectID})
+				response, err := sut.DeleteProject(ctx, &repository.DeleteProjectRequest{UserEmail: createRequest.UserEmail, ProjectID: projectID})
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
@@ -242,6 +245,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 10 projects", func() {
 				first := 10
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
@@ -266,6 +270,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 5 projects", func() {
 				first := 5
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
@@ -290,6 +295,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 9 projects after provided project id", func() {
 				first := 9
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: &projectIDs[0],
@@ -314,6 +320,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 5 projects after provided project id", func() {
 				first := 5
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: &projectIDs[0],
@@ -338,6 +345,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 10 projects", func() {
 				last := 10
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						Before: nil,
@@ -362,6 +370,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 9 projects before provided project id", func() {
 				last := 9
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						Before: &projectIDs[9],
@@ -386,6 +395,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 10 projects in adcending order on name field", func() {
 				first := 10
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,
@@ -412,6 +422,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			It("should return first 10 projects in descending order on name field", func() {
 				first := 10
 				searchRequest := repository.SearchRequest{
+					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
 						After: nil,

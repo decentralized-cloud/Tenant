@@ -16,6 +16,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type project struct {
+	UserEmail string `bson:"userEmail" json:"userEmail"`
+	Name      string `bson:"name" json:"name"`
+}
+
 type mongodbRepositoryService struct {
 	connectionString       string
 	databaseName           string
@@ -66,7 +71,7 @@ func (service *mongodbRepositoryService) CreateProject(
 
 	defer disconnect(ctx, client)
 
-	insertResult, err := collection.InsertOne(ctx, request.Project)
+	insertResult, err := collection.InsertOne(ctx, mapToInternalProject(request.UserEmail, request.Project))
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Insert project failed.", err)
 	}
@@ -95,8 +100,8 @@ func (service *mongodbRepositoryService) ReadProject(
 	defer disconnect(ctx, client)
 
 	ObjectID, _ := primitive.ObjectIDFromHex(request.ProjectID)
-	filter := bson.D{{Key: "_id", Value: ObjectID}}
-	var project models.Project
+	filter := bson.D{{Key: "_id", Value: ObjectID}, {Key: "userEmail", Value: request.UserEmail}}
+	var project project
 
 	err = collection.FindOne(ctx, filter).Decode(&project)
 	if err != nil {
@@ -104,7 +109,7 @@ func (service *mongodbRepositoryService) ReadProject(
 	}
 
 	return &repository.ReadProjectResponse{
-		Project: project,
+		Project: mapFromInternalProject(project),
 	}, nil
 }
 
@@ -123,7 +128,7 @@ func (service *mongodbRepositoryService) UpdateProject(
 	defer disconnect(ctx, client)
 
 	ObjectID, _ := primitive.ObjectIDFromHex(request.ProjectID)
-	filter := bson.D{{Key: "_id", Value: ObjectID}}
+	filter := bson.D{{Key: "_id", Value: ObjectID}, {Key: "userEmail", Value: request.UserEmail}}
 
 	newProject := bson.M{"$set": bson.M{"name": request.Project.Name}}
 	response, err := collection.UpdateOne(ctx, filter, newProject)
@@ -157,7 +162,7 @@ func (service *mongodbRepositoryService) DeleteProject(
 	defer disconnect(ctx, client)
 
 	ObjectID, _ := primitive.ObjectIDFromHex(request.ProjectID)
-	filter := bson.D{{Key: "_id", Value: ObjectID}}
+	filter := bson.D{{Key: "_id", Value: ObjectID}, {Key: "userEmail", Value: request.UserEmail}}
 	response, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
 		return nil, repository.NewUnknownErrorWithError("Delete project failed.", err)
@@ -195,6 +200,10 @@ func (service *mongodbRepositoryService) Search(
 	filter := bson.M{}
 	if len(request.ProjectIDs) > 0 {
 		filter["_id"] = bson.M{"$in": ids}
+	}
+
+	filter["$and"] = []interface{}{
+		bson.M{"userEmail": bson.M{"$eq": request.UserEmail}},
 	}
 
 	client, collection, err := service.createClientAndCollection(ctx)
@@ -283,8 +292,7 @@ func (service *mongodbRepositoryService) Search(
 
 	projects := []models.ProjectWithCursor{}
 	for cursor.Next(ctx) {
-		var project models.Project
-		//TODO : below line need to be removed, if we pass 'ShowRecordID' in findOption, ObjectID will be available
+		var project project
 		var projectBson bson.M
 
 		err := cursor.Decode(&project)
@@ -300,7 +308,7 @@ func (service *mongodbRepositoryService) Search(
 		projectID := projectBson["_id"].(primitive.ObjectID).Hex()
 		projectWithCursor := models.ProjectWithCursor{
 			ProjectID: projectID,
-			Project:   project,
+			Project:   mapFromInternalProject(project),
 			Cursor:    projectID,
 		}
 
@@ -335,4 +343,17 @@ func (service *mongodbRepositoryService) createClientAndCollection(ctx context.C
 
 func disconnect(ctx context.Context, client *mongo.Client) {
 	_ = client.Disconnect(ctx)
+}
+
+func mapToInternalProject(email string, from models.Project) project {
+	return project{
+		UserEmail: email,
+		Name:      from.Name,
+	}
+}
+
+func mapFromInternalProject(from project) models.Project {
+	return models.Project{
+		Name: from.Name,
+	}
 }
