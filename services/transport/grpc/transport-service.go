@@ -11,8 +11,8 @@ import (
 	"github.com/decentralized-cloud/project/services/endpoint"
 	"github.com/decentralized-cloud/project/services/transport"
 	gokitgrpc "github.com/go-kit/kit/transport/grpc"
+	"github.com/micro-business/go-core/gokit/middleware"
 	commonErrors "github.com/micro-business/go-core/system/errors"
-	"github.com/micro-business/gokit-core/middleware"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
