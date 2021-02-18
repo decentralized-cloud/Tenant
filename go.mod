@@ -1,15 +1,15 @@
 module github.com/decentralized-cloud/project
 
-go 1.15
+go 1.16
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/go-kit/kit v0.10.0
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang/mock v1.4.4
+	github.com/golang/protobuf v1.4.3
 	github.com/lucsky/cuid v1.0.2
-	github.com/micro-business/go-core v0.4.0
-	github.com/micro-business/gokit-core v0.4.0
+	github.com/micro-business/go-core v0.5.0
 	github.com/onsi/ginkgo v1.15.0
 	github.com/onsi/gomega v1.10.5
 	github.com/prometheus/client_golang v1.9.0
