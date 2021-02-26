@@ -1,10 +1,10 @@
 mode: ContinuousDeployment
 branches:
-  master:
-    regex: (^master$|^origin\/master$|^main$|^origin\/main$)
+  main: {}
   release: {}
   feature: {}
   hotfix: {}
 ignore:
   sha: []
 merge-message-formats: {}
+
