@@ -31,8 +31,6 @@ stages:
         parameters:
           version: ${{variables.artifactVersion}}
           vmImage: ${{variables.linuxVmImage}}
-          gitVersion: ${{ variables.gitVersion }}
-          gitVersionConfigFilePath: ${{ variables.gitVersionConfigFilePath }}
           grpcContractScriptFilePath: ${{ variables.grpcContractScriptFilePath }}
           grpcContractScriptworkingDirectory: ${{ variables.grpcContractScriptworkingDirectory }}
           dockerContainerRegistry: ${{variables.dockerContainerRegistry}}
