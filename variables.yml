@@ -33,12 +33,6 @@ variables:
   - name: linuxVmImage
     value: "ubuntu-20.04"
 
-  - name: gitVersion
-    value: "5.x"
-
-  - name: gitVersionConfigFilePath
-    value: "$(system.defaultWorkingDirectory)/GitVersion.yml"
-
   - name: grpcContractScriptFilePath
     value: "$(system.defaultWorkingDirectory)/scripts/compile-grpc.sh"
 
