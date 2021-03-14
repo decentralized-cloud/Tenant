@@ -38,7 +38,7 @@ dep: ## Install dependencies
 
 .PHONY: build-grpc
 build-grpc: ## Build grpc
-	@$(CURRENT_DIRECTORY)/script/compile-grpc.sh
+	@$(CURRENT_DIRECTORY)/scripts/compile-grpc.sh
 
 .PHONY: build
 build: GOARGS += -tags "$(GOTAGS)" -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/$(BINARY_NAME)
@@ -68,7 +68,7 @@ test-and-publish-test-results: test publish-test-results ## Test and publish tes
 
 .PHONY: build-and-push-helm-chart
 build-and-push-helm-chart: ## Build and push helm chart
-	@$(CURRENT_DIRECTORY)/script/build-and-push-helm-chart.sh
+	@$(CURRENT_DIRECTORY)/scripts/build-and-push-helm-chart.sh
 
 .PHONY: list
 list: ## List all make targets
