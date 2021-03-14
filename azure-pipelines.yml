@@ -31,6 +31,11 @@ stages:
         parameters:
           version: ${{variables.artifactVersion}}
           vmImage: ${{variables.linuxVmImage}}
+          shouldBuildContract: true
+          shouldPublishServiceDockerImage: true
+          shouldTestPublishResult: true
+          shouldPublishHelmChartAsArtifact: true
+          shouldPublishHelmChart: ${{ variables.shouldPublishHelmChart }}
           contractScriptFilePath: ${{ variables.contractScriptFilePath }}
           contractScriptworkingDirectory: ${{ variables.contractScriptworkingDirectory }}
           dockerContainerRegistry: ${{variables.dockerContainerRegistry}}
@@ -44,7 +49,6 @@ stages:
           helmChartsDirectoryPath: ${{ variables.helmChartsDirectoryPath }}
           helmChartsOutputDirectoryPath: ${{ variables.helmChartsOutputDirectoryPath }}
           helmArtifactName: ${{ variables.helmArtifactName }}
-          shouldPublishHelmChart: ${{ variables.shouldPublishHelmChart }}
           buildAndPushHelmChartDockerFilePath: ${{ variables.buildAndPushHelmChartDockerFilePath }}
           buildAndPushHelmChartDockerBuildContext: ${{ variables.buildAndPushHelmChartDockerBuildContext }}
           githubAccessCredentials: ${{ variables.githubAccessCredentials }}
