@@ -31,8 +31,8 @@ stages:
         parameters:
           version: ${{variables.artifactVersion}}
           vmImage: ${{variables.linuxVmImage}}
-          grpcContractScriptFilePath: ${{ variables.grpcContractScriptFilePath }}
-          grpcContractScriptworkingDirectory: ${{ variables.grpcContractScriptworkingDirectory }}
+          contractScriptFilePath: ${{ variables.contractScriptFilePath }}
+          contractScriptworkingDirectory: ${{ variables.contractScriptworkingDirectory }}
           dockerContainerRegistry: ${{variables.dockerContainerRegistry}}
           dockerRepositoryName: ${{variables.dockerRepositoryName}}
           dockerBuildFilePath: "$(system.defaultWorkingDirectory)/docker/Dockerfile.build"

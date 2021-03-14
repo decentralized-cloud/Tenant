@@ -33,10 +33,10 @@ variables:
   - name: linuxVmImage
     value: "ubuntu-20.04"
 
-  - name: grpcContractScriptFilePath
+  - name: contractScriptFilePath
     value: "$(system.defaultWorkingDirectory)/scripts/compile-grpc.sh"
 
-  - name: grpcContractScriptworkingDirectory
+  - name: contractScriptworkingDirectory
     value: "$(system.defaultWorkingDirectory)/scripts"
 
   - name: dockerContainerRegistry
