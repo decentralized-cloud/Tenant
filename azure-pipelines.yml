@@ -45,7 +45,6 @@ stages:
           testDockerComposeFilePath: ${{ variables.testDockerComposeFilePath }}
           coverallsServiceName: ${{ variables.coverallsServiceName }}
           coverallsRepoToken: ${{ variables.coverallsRepoToken }}
-          helmVersion: ${{ variables.helmVersion }}
           helmChartsDirectoryPath: ${{ variables.helmChartsDirectoryPath }}
           helmChartsOutputDirectoryPath: ${{ variables.helmChartsOutputDirectoryPath }}
           helmArtifactName: ${{ variables.helmArtifactName }}
@@ -61,7 +60,6 @@ stages:
           environment: Dev
           vmImage: ${{ variables.linuxVmImage }}
           helmArtifactName: ${{ variables.helmArtifactName }}
-          helmVersion: ${{ variables.helmVersion }}
           kubernetesServiceConnection: ${{ variables.kubernetesServiceConnection }}
           namespace: ${{ variables.devNamespace }}
           chartPath: ${{ variables.chartPath }}
@@ -76,7 +74,6 @@ stages:
           environment: Test
           vmImage: ${{ variables.linuxVmImage }}
           helmArtifactName: ${{ variables.helmArtifactName }}
-          helmVersion: ${{ variables.helmVersion }}
           kubernetesServiceConnection: ${{ variables.kubernetesServiceConnection }}
           namespace: ${{ variables.testNamespace }}
           chartPath: ${{ variables.chartPath }}
@@ -91,7 +88,6 @@ stages:
           environment: Prod
           vmImage: ${{ variables.linuxVmImage }}
           helmArtifactName: ${{ variables.helmArtifactName }}
-          helmVersion: ${{ variables.helmVersion }}
           kubernetesServiceConnection: ${{ variables.kubernetesServiceConnection }}
           namespace: ${{ variables.prodNamespace }}
           chartPath: ${{ variables.chartPath }}
