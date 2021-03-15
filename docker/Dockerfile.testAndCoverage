@@ -5,4 +5,3 @@ ADD . /src
 WORKDIR /src
 RUN make dep
 CMD ["make", "test-and-publish-test-results"]
-
