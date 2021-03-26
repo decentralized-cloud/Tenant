@@ -15,6 +15,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/lucsky/cuid"
 	"github.com/micro-business/go-core/common"
+	commonErrors "github.com/micro-business/go-core/system/errors"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -153,12 +154,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
+				Ω(commonErrors.IsNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.ProjectNotFoundError
+				var notFoundErr commonErrors.NotFoundError
 				_ = errors.As(err, &notFoundErr)
-
-				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 	})
@@ -178,12 +177,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
+				Ω(commonErrors.IsNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.ProjectNotFoundError
+				var notFoundErr commonErrors.NotFoundError
 				_ = errors.As(err, &notFoundErr)
-
-				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 
@@ -200,12 +197,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
+				Ω(commonErrors.IsNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.ProjectNotFoundError
+				var notFoundErr commonErrors.NotFoundError
 				_ = errors.As(err, &notFoundErr)
-
-				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 
@@ -215,12 +210,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 				Ω(err).Should(HaveOccurred())
 				Ω(response).Should(BeNil())
 
-				Ω(repository.IsProjectNotFoundError(err)).Should(BeTrue())
+				Ω(commonErrors.IsNotFoundError(err)).Should(BeTrue())
 
-				var notFoundErr repository.ProjectNotFoundError
+				var notFoundErr commonErrors.NotFoundError
 				_ = errors.As(err, &notFoundErr)
-
-				Ω(notFoundErr.ProjectID).Should(Equal(projectID))
 			})
 		})
 	})

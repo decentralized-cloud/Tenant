@@ -94,22 +94,8 @@ var _ = Describe("Business Service Tests", func() {
 					Ω(response.Err).Should(BeNil())
 				})
 
-				When("And project repository CreateProject return ProjectAlreadyExistError", func() {
-					It("should return ProjectAlreadyExistsError", func() {
-						expectedError := repository.NewProjectAlreadyExistsError()
-						mockRepositoryService.
-							EXPECT().
-							CreateProject(gomock.Any(), gomock.Any()).
-							Return(nil, expectedError)
-
-						response, err := sut.CreateProject(ctx, &request)
-						Ω(err).Should(BeNil())
-						assertProjectAlreadyExistsError(response.Err, expectedError)
-					})
-				})
-
-				When("And project repository CreateProject return any other error", func() {
-					It("should return UnknownError", func() {
+				When("And project repository CreateProject returns error", func() {
+					It("should return the same error", func() {
 						expectedError := errors.New(cuid.New())
 						mockRepositoryService.
 							EXPECT().
@@ -118,7 +104,7 @@ var _ = Describe("Business Service Tests", func() {
 
 						response, err := sut.CreateProject(ctx, &request)
 						Ω(err).Should(BeNil())
-						assertUnknowError(expectedError.Error(), response.Err, expectedError)
+						Ω(response.Err).Should(Equal(expectedError))
 					})
 				})
 
@@ -142,7 +128,7 @@ var _ = Describe("Business Service Tests", func() {
 						Ω(response.Err).Should(BeNil())
 						Ω(response.ProjectID).ShouldNot(BeNil())
 						Ω(response.ProjectID).Should(Equal(expectedResponse.ProjectID))
-						assertProject(response.Project, expectedResponse.Project)
+						Ω(response.Project).Should(Equal(expectedResponse.Project))
 					})
 				})
 			})
@@ -177,22 +163,8 @@ var _ = Describe("Business Service Tests", func() {
 				})
 			})
 
-			When("And project repository ReadProject cannot find provided project", func() {
-				It("should return ProjectNotFoundError", func() {
-					expectedError := repository.NewProjectNotFoundError(request.ProjectID)
-					mockRepositoryService.
-						EXPECT().
-						ReadProject(gomock.Any(), gomock.Any()).
-						Return(nil, expectedError)
-
-					response, err := sut.ReadProject(ctx, &request)
-					Ω(err).Should(BeNil())
-					assertProjectNotFoundError(request.ProjectID, response.Err, expectedError)
-				})
-			})
-
-			When("And project repository ReadProject return any other error", func() {
-				It("should return UnknownError", func() {
+			When("And project repository ReadProject returns error", func() {
+				It("should return the same error", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
@@ -201,7 +173,7 @@ var _ = Describe("Business Service Tests", func() {
 
 					response, err := sut.ReadProject(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err, expectedError)
+					Ω(response.Err).Should(Equal(expectedError))
 				})
 			})
 
@@ -219,7 +191,7 @@ var _ = Describe("Business Service Tests", func() {
 					response, err := sut.ReadProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					assertProject(response.Project, expectedResponse.Project)
+					Ω(response.Project).Should(Equal(expectedResponse.Project))
 				})
 			})
 		})
@@ -255,22 +227,8 @@ var _ = Describe("Business Service Tests", func() {
 				})
 			})
 
-			When("And project repository UpdateProject cannot find provided project", func() {
-				It("should return ProjectNotFoundError", func() {
-					expectedError := repository.NewProjectNotFoundError(request.ProjectID)
-					mockRepositoryService.
-						EXPECT().
-						UpdateProject(gomock.Any(), gomock.Any()).
-						Return(nil, expectedError)
-
-					response, err := sut.UpdateProject(ctx, &request)
-					Ω(err).Should(BeNil())
-					assertProjectNotFoundError(request.ProjectID, response.Err, expectedError)
-				})
-			})
-
-			When("And project repository UpdateProject return any other error", func() {
-				It("should return UnknownError", func() {
+			When("And project repository UpdateProject returns error", func() {
+				It("should return the same error", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
@@ -279,7 +237,7 @@ var _ = Describe("Business Service Tests", func() {
 
 					response, err := sut.UpdateProject(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err, expectedError)
+					Ω(response.Err).Should(Equal(expectedError))
 				})
 			})
 
@@ -299,7 +257,7 @@ var _ = Describe("Business Service Tests", func() {
 					response, err := sut.UpdateProject(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
-					assertProject(response.Project, expectedResponse.Project)
+					Ω(response.Project).Should(Equal(expectedResponse.Project))
 				})
 			})
 		})
@@ -333,22 +291,8 @@ var _ = Describe("Business Service Tests", func() {
 				})
 			})
 
-			When("project repository DeleteProject cannot find provided project", func() {
-				It("should return ProjectNotFoundError", func() {
-					expectedError := repository.NewProjectNotFoundError(request.ProjectID)
-					mockRepositoryService.
-						EXPECT().
-						DeleteProject(gomock.Any(), gomock.Any()).
-						Return(nil, expectedError)
-
-					response, err := sut.DeleteProject(ctx, &request)
-					Ω(err).Should(BeNil())
-					assertProjectNotFoundError(request.ProjectID, response.Err, expectedError)
-				})
-			})
-
-			When("project repository DeleteProject is faced with any other error", func() {
-				It("should return UnknownError", func() {
+			When("project repository DeleteProject returns error", func() {
+				It("should return the same error", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
@@ -357,7 +301,7 @@ var _ = Describe("Business Service Tests", func() {
 
 					response, err := sut.DeleteProject(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err, expectedError)
+					Ω(response.Err).Should(Equal(expectedError))
 				})
 			})
 
@@ -428,8 +372,8 @@ var _ = Describe("Business Service Tests", func() {
 				})
 			})
 
-			When("project repository Search is faced with any other error", func() {
-				It("should return UnknownError", func() {
+			When("project repository Search returns error", func() {
+				It("should return the same error", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
@@ -438,7 +382,7 @@ var _ = Describe("Business Service Tests", func() {
 
 					response, err := sut.Search(ctx, &request)
 					Ω(err).Should(BeNil())
-					assertUnknowError(expectedError.Error(), response.Err, expectedError)
+					Ω(response.Err).Should(Equal(expectedError))
 				})
 			})
 
@@ -494,36 +438,6 @@ func assertArgumentNilError(expectedArgumentName, expectedMessage string, err er
 	if expectedMessage != "" {
 		Ω(strings.Contains(argumentNilErr.Error(), expectedMessage)).Should(BeTrue())
 	}
-}
-
-func assertUnknowError(expectedMessage string, err error, nestedErr error) {
-	Ω(business.IsUnknownError(err)).Should(BeTrue())
-
-	var unknownErr business.UnknownError
-	_ = errors.As(err, &unknownErr)
-
-	Ω(strings.Contains(unknownErr.Error(), expectedMessage)).Should(BeTrue())
-	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
-}
-
-func assertProjectAlreadyExistsError(err error, nestedErr error) {
-	Ω(business.IsProjectAlreadyExistsError(err)).Should(BeTrue())
-	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
-}
-
-func assertProjectNotFoundError(expectedProjectID string, err error, nestedErr error) {
-	Ω(business.IsProjectNotFoundError(err)).Should(BeTrue())
-
-	var projectNotFoundErr business.ProjectNotFoundError
-	_ = errors.As(err, &projectNotFoundErr)
-
-	Ω(projectNotFoundErr.ProjectID).Should(Equal(expectedProjectID))
-	Ω(errors.Unwrap(err)).Should(Equal(nestedErr))
-}
-
-func assertProject(project, expectedProject models.Project) {
-	Ω(project).ShouldNot(BeNil())
-	Ω(project.Name).Should(Equal(expectedProject.Name))
 }
 
 func convertStringToPointer(str string) *string {

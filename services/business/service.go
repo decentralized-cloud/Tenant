@@ -40,7 +40,7 @@ func (service *businessService) CreateProject(
 
 	if err != nil {
 		return &CreateProjectResponse{
-			Err: mapRepositoryError(err, ""),
+			Err: err,
 		}, nil
 	}
 
@@ -65,7 +65,7 @@ func (service *businessService) ReadProject(
 
 	if err != nil {
 		return &ReadProjectResponse{
-			Err: mapRepositoryError(err, request.ProjectID),
+			Err: err,
 		}, nil
 	}
 
@@ -89,7 +89,7 @@ func (service *businessService) UpdateProject(
 
 	if err != nil {
 		return &UpdateProjectResponse{
-			Err: mapRepositoryError(err, request.ProjectID),
+			Err: err,
 		}, nil
 	}
 
@@ -113,7 +113,7 @@ func (service *businessService) DeleteProject(
 
 	if err != nil {
 		return &DeleteProjectResponse{
-			Err: mapRepositoryError(err, request.ProjectID),
+			Err: err,
 		}, nil
 	}
 
@@ -136,7 +136,7 @@ func (service *businessService) Search(
 
 	if err != nil {
 		return &SearchResponse{
-			Err: mapRepositoryError(err, ""),
+			Err: err,
 		}, nil
 	}
 
@@ -146,16 +146,4 @@ func (service *businessService) Search(
 		TotalCount:      result.TotalCount,
 		Projects:        result.Projects,
 	}, nil
-}
-
-func mapRepositoryError(err error, projectID string) error {
-	if repository.IsProjectAlreadyExistsError(err) {
-		return NewProjectAlreadyExistsErrorWithError(err)
-	}
-
-	if repository.IsProjectNotFoundError(err) {
-		return NewProjectNotFoundErrorWithError(projectID, err)
-	}
-
-	return NewUnknownErrorWithError("", err)
 }

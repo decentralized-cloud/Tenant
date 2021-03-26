@@ -3,4 +3,4 @@ LABEL maintainer="morteza.alizadeh@gmail.com"
 
 ADD . /src
 WORKDIR /src/contract/grpc/proto
-RUN protoc project.proto --go_out=plugins=grpc:../go
+RUN protoc --go_opt=Mproject.proto=/src/contract/grpc/proto project.proto --go_out=plugins=grpc:../go
