@@ -253,15 +253,15 @@ func encodeSearchResponse(
 }
 
 func mapError(err error) projectGRPCContract.Error {
-	if business.IsUnknownError(err) {
+	if commonErrors.IsUnknownError(err) {
 		return projectGRPCContract.Error_UNKNOWN
 	}
 
-	if business.IsProjectAlreadyExistsError(err) {
+	if commonErrors.IsAlreadyExistsError(err) {
 		return projectGRPCContract.Error_PROJECT_ALREADY_EXISTS
 	}
 
-	if business.IsProjectNotFoundError(err) {
+	if commonErrors.IsNotFoundError(err) {
 		return projectGRPCContract.Error_PROJECT_NOT_FOUND
 	}
 

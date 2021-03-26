@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	commonErrors "github.com/micro-business/go-core/system/errors"
 )
 
 type envConfigurationService struct {
@@ -27,12 +29,12 @@ func (service *envConfigurationService) GetGrpcHost() (string, error) {
 func (service *envConfigurationService) GetGrpcPort() (int, error) {
 	portNumberString := os.Getenv("GRPC_PORT")
 	if strings.Trim(portNumberString, " ") == "" {
-		return 0, NewUnknownError("GRPC_PORT is required")
+		return 0, commonErrors.NewUnknownError("GRPC_PORT is required")
 	}
 
 	portNumber, err := strconv.Atoi(portNumberString)
 	if err != nil {
-		return 0, NewUnknownErrorWithError("Failed to convert GRPC_PORT to integer", err)
+		return 0, commonErrors.NewUnknownErrorWithError("Failed to convert GRPC_PORT to integer", err)
 	}
 
 	return portNumber, nil
@@ -49,12 +51,12 @@ func (service *envConfigurationService) GetHttpHost() (string, error) {
 func (service *envConfigurationService) GetHttpPort() (int, error) {
 	portNumberString := os.Getenv("HTTP_PORT")
 	if strings.Trim(portNumberString, " ") == "" {
-		return 0, NewUnknownError("HTTP_PORT is required")
+		return 0, commonErrors.NewUnknownError("HTTP_PORT is required")
 	}
 
 	portNumber, err := strconv.Atoi(portNumberString)
 	if err != nil {
-		return 0, NewUnknownErrorWithError("Failed to convert HTTP_PORT to integer", err)
+		return 0, commonErrors.NewUnknownErrorWithError("Failed to convert HTTP_PORT to integer", err)
 	}
 
 	return portNumber, nil
@@ -66,7 +68,7 @@ func (service *envConfigurationService) GetDatabaseConnectionString() (string, e
 	connectionString := os.Getenv("DATABASE_CONNECTION_STRING")
 
 	if strings.Trim(connectionString, " ") == "" {
-		return "", NewUnknownError("DATABASE_CONNECTION_STRING is required")
+		return "", commonErrors.NewUnknownError("DATABASE_CONNECTION_STRING is required")
 	}
 
 	return connectionString, nil
@@ -78,7 +80,7 @@ func (service *envConfigurationService) GetDatabaseName() (string, error) {
 	databaseName := os.Getenv("PROJECT_DATABASE_NAME")
 
 	if strings.Trim(databaseName, " ") == "" {
-		return "", NewUnknownError("PROJECT_DATABASE_NAME is required")
+		return "", commonErrors.NewUnknownError("PROJECT_DATABASE_NAME is required")
 	}
 
 	return databaseName, nil
@@ -91,7 +93,7 @@ func (service *envConfigurationService) GetDatabaseCollectionName() (string, err
 	databaseCollectionName := os.Getenv("PROJECT_DATABASE_COLLECTION_NAME")
 
 	if strings.Trim(databaseCollectionName, " ") == "" {
-		return "", NewUnknownError("PROJECT_DATABASE_COLLECTION_NAME is required")
+		return "", commonErrors.NewUnknownError("PROJECT_DATABASE_COLLECTION_NAME is required")
 	}
 
 	return databaseCollectionName, nil
@@ -103,7 +105,7 @@ func (service *envConfigurationService) GetJwksURL() (string, error) {
 	jwksURL := os.Getenv("JWKS_URL")
 
 	if strings.Trim(jwksURL, " ") == "" {
-		return "", NewUnknownError("JWKS_URL is required")
+		return "", commonErrors.NewUnknownError("JWKS_URL is required")
 	}
 
 	return jwksURL, nil

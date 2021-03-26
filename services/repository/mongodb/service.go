@@ -37,17 +37,17 @@ func NewMongodbRepositoryService(
 
 	connectionString, err := configurationService.GetDatabaseConnectionString()
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Failed to get connection string to mongodb", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Failed to get connection string to mongodb", err)
 	}
 
 	databaseName, err := configurationService.GetDatabaseName()
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Failed to get the database name", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Failed to get the database name", err)
 	}
 
 	databaseCollectionName, err := configurationService.GetDatabaseCollectionName()
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Failed to get the database collection name", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Failed to get the database collection name", err)
 	}
 
 	return &mongodbRepositoryService{
@@ -73,7 +73,7 @@ func (service *mongodbRepositoryService) CreateProject(
 
 	insertResult, err := collection.InsertOne(ctx, mapToInternalProject(request.UserEmail, request.Project))
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Insert project failed.", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Insert project failed.", err)
 	}
 
 	projectID := insertResult.InsertedID.(primitive.ObjectID).Hex()
@@ -105,7 +105,7 @@ func (service *mongodbRepositoryService) ReadProject(
 
 	err = collection.FindOne(ctx, filter).Decode(&project)
 	if err != nil {
-		return nil, repository.NewProjectNotFoundError(request.ProjectID)
+		return nil, commonErrors.NewNotFoundError()
 	}
 
 	return &repository.ReadProjectResponse{
@@ -134,11 +134,11 @@ func (service *mongodbRepositoryService) UpdateProject(
 	response, err := collection.UpdateOne(ctx, filter, newProject)
 
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Update project failed.", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Update project failed.", err)
 	}
 
 	if response.MatchedCount == 0 {
-		return nil, repository.NewProjectNotFoundError(request.ProjectID)
+		return nil, commonErrors.NewNotFoundError()
 	}
 
 	return &repository.UpdateProjectResponse{
@@ -165,11 +165,11 @@ func (service *mongodbRepositoryService) DeleteProject(
 	filter := bson.D{{Key: "_id", Value: ObjectID}, {Key: "userEmail", Value: request.UserEmail}}
 	response, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Delete project failed.", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Delete project failed.", err)
 	}
 
 	if response.DeletedCount == 0 {
-		return nil, repository.NewProjectNotFoundError(request.ProjectID)
+		return nil, commonErrors.NewNotFoundError()
 	}
 
 	return &repository.DeleteProjectResponse{}, nil
@@ -191,7 +191,7 @@ func (service *mongodbRepositoryService) Search(
 	for _, projectID := range request.ProjectIDs {
 		objectID, err := primitive.ObjectIDFromHex(projectID)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the projectID: %s.", projectID), err)
+			return nil, commonErrors.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the projectID: %s.", projectID), err)
 		}
 
 		ids = append(ids, objectID)
@@ -215,7 +215,7 @@ func (service *mongodbRepositoryService) Search(
 
 	response.TotalCount, err = collection.CountDocuments(ctx, filter)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Failed to retrieve the number of projects that match the filter criteria", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Failed to retrieve the number of projects that match the filter criteria", err)
 	}
 
 	if response.TotalCount == 0 {
@@ -227,7 +227,7 @@ func (service *mongodbRepositoryService) Search(
 		after := *request.Pagination.After
 		objectID, err := primitive.ObjectIDFromHex(after)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the After: %s.", after), err)
+			return nil, commonErrors.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the After: %s.", after), err)
 		}
 
 		if len(filter) > 0 {
@@ -243,7 +243,7 @@ func (service *mongodbRepositoryService) Search(
 		before := *request.Pagination.Before
 		objectID, err := primitive.ObjectIDFromHex(before)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the Before: %s.", before), err)
+			return nil, commonErrors.NewUnknownErrorWithError(fmt.Sprintf("Failed to decode the Before: %s.", before), err)
 		}
 
 		if len(filter) > 0 {
@@ -287,7 +287,7 @@ func (service *mongodbRepositoryService) Search(
 
 	cursor, err := collection.Find(ctx, filter, findOptions)
 	if err != nil {
-		return nil, repository.NewUnknownErrorWithError("Failed to call the Find function on the collection.", err)
+		return nil, commonErrors.NewUnknownErrorWithError("Failed to call the Find function on the collection.", err)
 	}
 
 	projects := []models.ProjectWithCursor{}
@@ -297,12 +297,12 @@ func (service *mongodbRepositoryService) Search(
 
 		err := cursor.Decode(&project)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError("Failed to decode the project", err)
+			return nil, commonErrors.NewUnknownErrorWithError("Failed to decode the project", err)
 		}
 
 		err = cursor.Decode(&projectBson)
 		if err != nil {
-			return nil, repository.NewUnknownErrorWithError("Could not load the data.", err)
+			return nil, commonErrors.NewUnknownErrorWithError("Could not load the data.", err)
 		}
 
 		projectID := projectBson["_id"].(primitive.ObjectID).Hex()
@@ -335,7 +335,7 @@ func (service *mongodbRepositoryService) createClientAndCollection(ctx context.C
 	clientOptions := options.Client().ApplyURI(service.connectionString)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		return nil, nil, repository.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
+		return nil, nil, commonErrors.NewUnknownErrorWithError("Could not connect to mongodb database.", err)
 	}
 
 	return client, client.Database(service.databaseName).Collection(service.databaseCollectionName), nil
