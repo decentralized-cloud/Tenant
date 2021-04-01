@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package project;
+
+/**
+ * The different error types
+ */
+enum Error {
+  // Indicates the operation was successful
+  NO_ERROR = 0;
+  // Indicates the operation fail with unknown error
+  UNKNOWN = 1;
+  // Indicates the project already exists
+  PROJECT_ALREADY_EXISTS = 2;
+  // Indicates the project does not exist
+  PROJECT_NOT_FOUND = 3;
+  // Indicates the provided values for he operation were invalid
+  BAD_REQUEST = 4;
+}
