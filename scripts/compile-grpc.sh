@@ -4,7 +4,7 @@ set -e
 set -x
 
 cleanup() {
-	docker rm extract-project-contract-grpc-builder
+	docker rm extract-contract-grpc-builder
 }
 
 trap 'cleanup' EXIT
@@ -17,7 +17,6 @@ fi
 
 cd "$current_directory"/..
 
-docker build -f docker/Dockerfile.buildGrpcContract -t project-contract-grpc-builder .
-docker create --name extract-project-contract-grpc-builder project-contract-grpc-builder
-docker cp extract-project-contract-grpc-builder:/src/contract/grpc/go/project.pb.go ./contract/grpc/go
-
+docker build -f docker/Dockerfile.buildGrpcContract -t contract-grpc-builder .
+docker create --name extract-contract-grpc-builder contract-grpc-builder
+docker cp extract-contract-grpc-builder:/src/contract/grpc/go ./contract/grpc/

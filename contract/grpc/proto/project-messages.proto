@@ -2,21 +2,7 @@ syntax = "proto3";
 
 package project;
 
-/**
- * The different error types
- */
-enum Error {
-  // Indicates the operation was successful
-  NO_ERROR = 0;
-  // Indicates the operation fail with unknown error
-  UNKNOWN = 1;
-  // Indicates the project already exists
-  PROJECT_ALREADY_EXISTS = 2;
-  // Indicates the project does not exist
-  PROJECT_NOT_FOUND = 3;
-  // Indicates the provided values for he operation were invalid
-  BAD_REQUEST = 4;
-}
+import "commons.proto";
 
 /**
  * The project object
@@ -225,35 +211,4 @@ message SearchResponse {
 
   // The list contains the projects that matched the search criteria
   repeated ProjectWithCursor projects = 6;
-}
-
-/**
- * The project servcie that can create new project, read, update and delete
- * existing project
- */
-service ProjectService {
-  // CreateProject creates a new project
-  // request: The request to create a new project
-  // Returns the result of creating new project
-  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
-
-  // ReadProject read an exsiting project
-  // request: The request to read an esiting project
-  // Returns the result of reading an existing project
-  rpc ReadProject(ReadProjectRequest) returns (ReadProjectResponse);
-
-  // UpdateProject update an exsiting project
-  // request: The request to update an esiting project
-  // Returns the result of updateing an existing project
-  rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
-
-  // DeleteProject delete an exsiting project
-  // request: The request to delete an esiting project
-  // Returns the result of deleting an existing project
-  rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
-
-  // Search returns the list of projects that matched the criteria
-  // request: The request contains the search criteria
-  // Returns the list of projects that matched the criteria
-  rpc Search(SearchRequest) returns (SearchResponse);
 }
