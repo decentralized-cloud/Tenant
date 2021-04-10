@@ -29,8 +29,8 @@ service ProjectService {
   // Returns the result of deleting an existing project
   rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
 
-  // Search returns the list of projects that matched the criteria
+  // ListProjects returns the list of projects that matched the criteria
   // request: The request contains the search criteria
   // Returns the list of projects that matched the criteria
-  rpc Search(SearchRequest) returns (SearchResponse);
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse);
 }

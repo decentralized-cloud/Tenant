@@ -65,6 +65,21 @@ func (mr *MockRepositoryContractMockRecorder) DeleteProject(ctx, request interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProject", reflect.TypeOf((*MockRepositoryContract)(nil).DeleteProject), ctx, request)
 }
 
+// ListProjects mocks base method.
+func (m *MockRepositoryContract) ListProjects(ctx context.Context, request *repository.ListProjectsRequest) (*repository.ListProjectsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProjects", ctx, request)
+	ret0, _ := ret[0].(*repository.ListProjectsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListProjects indicates an expected call of ListProjects.
+func (mr *MockRepositoryContractMockRecorder) ListProjects(ctx, request interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjects", reflect.TypeOf((*MockRepositoryContract)(nil).ListProjects), ctx, request)
+}
+
 // ReadProject mocks base method.
 func (m *MockRepositoryContract) ReadProject(ctx context.Context, request *repository.ReadProjectRequest) (*repository.ReadProjectResponse, error) {
 	m.ctrl.T.Helper()
@@ -78,21 +93,6 @@ func (m *MockRepositoryContract) ReadProject(ctx context.Context, request *repos
 func (mr *MockRepositoryContractMockRecorder) ReadProject(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadProject", reflect.TypeOf((*MockRepositoryContract)(nil).ReadProject), ctx, request)
-}
-
-// Search mocks base method.
-func (m *MockRepositoryContract) Search(ctx context.Context, request *repository.SearchRequest) (*repository.SearchResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Search", ctx, request)
-	ret0, _ := ret[0].(*repository.SearchResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Search indicates an expected call of Search.
-func (mr *MockRepositoryContractMockRecorder) Search(ctx, request interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockRepositoryContract)(nil).Search), ctx, request)
 }
 
 // UpdateProject mocks base method.

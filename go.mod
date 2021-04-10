@@ -7,7 +7,6 @@ require (
 	github.com/go-kit/kit v0.10.0
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang/mock v1.5.0
-	github.com/golang/protobuf v1.4.3
 	github.com/lucsky/cuid v1.0.2
 	github.com/micro-business/go-core v0.6.1
 	github.com/onsi/ginkgo v1.15.2

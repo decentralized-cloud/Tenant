@@ -38,11 +38,11 @@ type RepositoryContract interface {
 		ctx context.Context,
 		request *DeleteProjectRequest) (*DeleteProjectResponse, error)
 
-	// Search returns the list of projects that matched the criteria
+	// ListProjects returns the list of projects that matched the criteria
 	// ctx: Mandatory The reference to the context
 	// request: Mandatory. The request contains the search criteria
 	// Returns the list of projects that matched the criteria
-	Search(
+	ListProjects(
 		ctx context.Context,
-		request *SearchRequest) (*SearchResponse, error)
+		request *ListProjectsRequest) (*ListProjectsResponse, error)
 }

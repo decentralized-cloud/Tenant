@@ -120,14 +120,14 @@ func (service *businessService) DeleteProject(
 	return &DeleteProjectResponse{}, nil
 }
 
-// Search returns the list of projects that matched the criteria
+// ListProjects returns the list of projects that matched the criteria
 // ctx: Mandatory The reference to the context
 // request: Mandatory. The request contains the search criteria
 // Returns the list of projects that matched the criteria
-func (service *businessService) Search(
+func (service *businessService) ListProjects(
 	ctx context.Context,
-	request *SearchRequest) (*SearchResponse, error) {
-	result, err := service.repositoryService.Search(ctx, &repository.SearchRequest{
+	request *ListProjectsRequest) (*ListProjectsResponse, error) {
+	result, err := service.repositoryService.ListProjects(ctx, &repository.ListProjectsRequest{
 		UserEmail:      request.UserEmail,
 		Pagination:     request.Pagination,
 		SortingOptions: request.SortingOptions,
@@ -135,12 +135,12 @@ func (service *businessService) Search(
 	})
 
 	if err != nil {
-		return &SearchResponse{
+		return &ListProjectsResponse{
 			Err: err,
 		}, nil
 	}
 
-	return &SearchResponse{
+	return &ListProjectsResponse{
 		HasPreviousPage: result.HasPreviousPage,
 		HasNextPage:     result.HasNextPage,
 		TotalCount:      result.TotalCount,

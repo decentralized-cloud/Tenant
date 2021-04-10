@@ -157,9 +157,9 @@ message SortingOptionPair {
 }
 
 /**
- * Request to search for projects
+ * Request to ListProjects for projects
  */
-message SearchRequest {
+message ListProjectsRequest {
   // The pagination information
   Pagination pagination = 1;
 
@@ -188,9 +188,9 @@ message ProjectWithCursor {
 }
 
 /**
- * Response contains the result of searching for projects
+ * Response contains the result of ListProjectsing for projects
  */
-message SearchResponse {
+message ListProjectsResponse {
   // Indicate whether the operation has any error
   Error error = 1;
 

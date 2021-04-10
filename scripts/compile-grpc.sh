@@ -19,4 +19,4 @@ cd "$current_directory"/..
 
 docker build -f docker/Dockerfile.buildGrpcContract -t contract-grpc-builder .
 docker create --name extract-contract-grpc-builder contract-grpc-builder
-docker cp extract-contract-grpc-builder:/src/contract/grpc/go ./contract/grpc/
+docker cp extract-contract-grpc-builder:/src/go ./contract/grpc/

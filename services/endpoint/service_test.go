@@ -534,27 +534,27 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 	})
 
 	Context("EndpointCreatorService is instantiated", func() {
-		When("SearchEndpoint is called", func() {
+		When("ListProjectsEndpoint is called", func() {
 			It("should return valid function", func() {
-				endpoint := sut.SearchEndpoint()
+				endpoint := sut.ListProjectsEndpoint()
 				Ω(endpoint).ShouldNot(BeNil())
 			})
 
 			var (
 				endpoint   gokitendpoint.Endpoint
 				projectIDs []string
-				request    business.SearchRequest
-				response   business.SearchResponse
+				request    business.ListProjectsRequest
+				response   business.ListProjectsResponse
 			)
 
 			BeforeEach(func() {
-				endpoint = sut.SearchEndpoint()
+				endpoint = sut.ListProjectsEndpoint()
 				projectIDs = []string{}
 				for idx := 0; idx < rand.Intn(20)+1; idx++ {
 					projectIDs = append(projectIDs, cuid.New())
 				}
 
-				request = business.SearchRequest{
+				request = business.ListProjectsRequest{
 					UserEmail: cuid.New() + "@test.com",
 					Pagination: common.Pagination{
 						After:  convertStringToPointer(cuid.New()),
@@ -587,7 +587,7 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 					})
 				}
 
-				response = business.SearchResponse{
+				response = business.ListProjectsResponse{
 					HasPreviousPage: (rand.Intn(10) % 2) == 0,
 					HasNextPage:     (rand.Intn(10) % 2) == 0,
 					TotalCount:      rand.Int63n(1000),
@@ -595,14 +595,14 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 				}
 			})
 
-			Context("SearchEndpoint function is returned", func() {
+			Context("ListProjectsEndpoint function is returned", func() {
 				When("endpoint is called with nil context", func() {
 					It("should return ArgumentNilError", func() {
 						returnedResponse, err := endpoint(nil, &request)
 
 						Ω(err).Should(BeNil())
 						Ω(returnedResponse).ShouldNot(BeNil())
-						castedResponse := returnedResponse.(*business.SearchResponse)
+						castedResponse := returnedResponse.(*business.ListProjectsResponse)
 						assertArgumentNilError("ctx", "", castedResponse.Err)
 					})
 				})
@@ -613,17 +613,17 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 
 						Ω(err).Should(BeNil())
 						Ω(returnedResponse).ShouldNot(BeNil())
-						castedResponse := returnedResponse.(*business.SearchResponse)
+						castedResponse := returnedResponse.(*business.ListProjectsResponse)
 						assertArgumentNilError("request", "", castedResponse.Err)
 					})
 				})
 
 				When("endpoint is called with valid request", func() {
-					It("should call business service Search method", func() {
+					It("should call business service ListProjects method", func() {
 						mockBusinessService.
 							EXPECT().
-							Search(ctx, gomock.Any()).
-							Do(func(_ context.Context, mappedRequest *business.SearchRequest) {
+							ListProjects(ctx, gomock.Any()).
+							Do(func(_ context.Context, mappedRequest *business.ListProjectsRequest) {
 								Ω(mappedRequest.Pagination).Should(Equal(request.Pagination))
 								Ω(mappedRequest.SortingOptions).Should(Equal(request.SortingOptions))
 								Ω(mappedRequest.ProjectIDs).Should(Equal(request.ProjectIDs))
@@ -634,17 +634,17 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 
 						Ω(err).Should(BeNil())
 						Ω(response).ShouldNot(BeNil())
-						castedResponse := returnedResponse.(*business.SearchResponse)
+						castedResponse := returnedResponse.(*business.ListProjectsResponse)
 						Ω(castedResponse.Err).Should(BeNil())
 					})
 				})
 
-				When("business service Search returns error", func() {
+				When("business service ListProjects returns error", func() {
 					It("should return the same error", func() {
 						expectedErr := errors.New(cuid.New())
 						mockBusinessService.
 							EXPECT().
-							Search(gomock.Any(), gomock.Any()).
+							ListProjects(gomock.Any(), gomock.Any()).
 							Return(nil, expectedErr)
 
 						_, err := endpoint(ctx, &request)
@@ -653,11 +653,11 @@ var _ = Describe("Endpoint Creator Service Tests", func() {
 					})
 				})
 
-				When("business service Search returns response", func() {
+				When("business service ListProjects returns response", func() {
 					It("should return the same response", func() {
 						mockBusinessService.
 							EXPECT().
-							Search(gomock.Any(), gomock.Any()).
+							ListProjects(gomock.Any(), gomock.Any()).
 							Return(&response, nil)
 
 						returnedResponse, err := endpoint(ctx, &request)

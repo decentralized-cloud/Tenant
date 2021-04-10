@@ -166,14 +166,14 @@ func encodeDeleteProjectResponse(
 	}, nil
 }
 
-// decodeSearchRequest decodes Search request message from GRPC object to business object
+// decodeListProjectsRequest decodes ListProjects request message from GRPC object to business object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the GRPC request
 // Returns either the decoded request or error if something goes wrongw
-func decodeSearchRequest(
+func decodeListProjectsRequest(
 	ctx context.Context,
 	request interface{}) (interface{}, error) {
-	castedRequest := request.(*projectGRPCContract.SearchRequest)
+	castedRequest := request.(*projectGRPCContract.ListProjectsRequest)
 	sortingOptions := []common.SortingOptionPair{}
 
 	if len(castedRequest.SortingOptions) > 0 {
@@ -213,23 +213,23 @@ func decodeSearchRequest(
 		pagination.Last = &last
 	}
 
-	return &business.SearchRequest{
+	return &business.ListProjectsRequest{
 		Pagination:     pagination,
 		ProjectIDs:     castedRequest.ProjectIDs,
 		SortingOptions: sortingOptions,
 	}, nil
 }
 
-// encodeSearchResponse encodes Search response from business object to GRPC object
+// encodeListProjectsResponse encodes ListProjects response from business object to GRPC object
 // context: Optional The reference to the context
 // request: Mandatory. The reference to the business response
 // Returns either the decoded response or error if something goes wrong
-func encodeSearchResponse(
+func encodeListProjectsResponse(
 	ctx context.Context,
 	response interface{}) (interface{}, error) {
-	castedResponse := response.(*business.SearchResponse)
+	castedResponse := response.(*business.ListProjectsResponse)
 	if castedResponse.Err == nil {
-		return &projectGRPCContract.SearchResponse{
+		return &projectGRPCContract.ListProjectsResponse{
 			Error:           projectGRPCContract.Error_NO_ERROR,
 			HasPreviousPage: castedResponse.HasPreviousPage,
 			HasNextPage:     castedResponse.HasNextPage,
@@ -246,7 +246,7 @@ func encodeSearchResponse(
 		}, nil
 	}
 
-	return &projectGRPCContract.SearchResponse{
+	return &projectGRPCContract.ListProjectsResponse{
 		Error:        mapError(castedResponse.Err),
 		ErrorMessage: castedResponse.Err.Error(),
 	}, nil
@@ -269,5 +269,5 @@ func mapError(err error) projectGRPCContract.Error {
 		return projectGRPCContract.Error_BAD_REQUEST
 	}
 
-	panic("Error type undefined.")
+	return projectGRPCContract.Error_UNKNOWN
 }

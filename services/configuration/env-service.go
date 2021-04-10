@@ -34,7 +34,7 @@ func (service *envConfigurationService) GetGrpcPort() (int, error) {
 
 	portNumber, err := strconv.Atoi(portNumberString)
 	if err != nil {
-		return 0, commonErrors.NewUnknownErrorWithError("Failed to convert GRPC_PORT to integer", err)
+		return 0, commonErrors.NewUnknownErrorWithError("failed to convert GRPC_PORT to integer", err)
 	}
 
 	return portNumber, nil
@@ -56,7 +56,7 @@ func (service *envConfigurationService) GetHttpPort() (int, error) {
 
 	portNumber, err := strconv.Atoi(portNumberString)
 	if err != nil {
-		return 0, commonErrors.NewUnknownErrorWithError("Failed to convert HTTP_PORT to integer", err)
+		return 0, commonErrors.NewUnknownErrorWithError("failed to convert HTTP_PORT to integer", err)
 	}
 
 	return portNumber, nil

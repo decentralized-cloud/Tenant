@@ -33,7 +33,7 @@ func StartService() {
 	}()
 
 	if err = setupDependencies(logger); err != nil {
-		logger.Fatal("Failed to setup dependecies", zap.Error(err))
+		logger.Fatal("failed to setup dependecies", zap.Error(err))
 	}
 
 	grpcTransportService, err := grpc.NewTransportService(
@@ -42,14 +42,14 @@ func StartService() {
 		endpointCreatorService,
 		middlewareProviderService)
 	if err != nil {
-		logger.Fatal("Failed to create gRPC transport service", zap.Error(err))
+		logger.Fatal("failed to create gRPC transport service", zap.Error(err))
 	}
 
 	httpsTansportService, err := https.NewTransportService(
 		logger,
 		configurationService)
 	if err != nil {
-		logger.Fatal("Failed to create HTTPS transport service", zap.Error(err))
+		logger.Fatal("failed to create HTTPS transport service", zap.Error(err))
 	}
 
 	signalChan := make(chan os.Signal, 1)
@@ -58,13 +58,13 @@ func StartService() {
 
 	go func() {
 		if serviceErr := grpcTransportService.Start(); serviceErr != nil {
-			logger.Fatal("Failed to start gRPC transport service", zap.Error(serviceErr))
+			logger.Fatal("failed to start gRPC transport service", zap.Error(serviceErr))
 		}
 	}()
 
 	go func() {
 		if serviceErr := httpsTansportService.Start(); serviceErr != nil {
-			logger.Fatal("Failed to start HTTPS transport service", zap.Error(serviceErr))
+			logger.Fatal("failed to start HTTPS transport service", zap.Error(serviceErr))
 		}
 	}()
 
@@ -73,11 +73,11 @@ func StartService() {
 		logger.Info("Received an interrupt, stopping services...")
 
 		if err := grpcTransportService.Stop(); err != nil {
-			logger.Error("Failed to stop gRPC transport service", zap.Error(err))
+			logger.Error("failed to stop gRPC transport service", zap.Error(err))
 		}
 
 		if err := httpsTansportService.Stop(); err != nil {
-			logger.Error("Failed to stop HTTPS transport service", zap.Error(err))
+			logger.Error("failed to stop HTTPS transport service", zap.Error(err))
 		}
 
 		close(cleanupDone)

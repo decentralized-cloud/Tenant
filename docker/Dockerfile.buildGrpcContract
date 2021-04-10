@@ -1,11 +1,12 @@
 FROM microbusiness/protobuf-builder:latest
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
-ADD . /src
-WORKDIR /src/contract/grpc/proto
+ADD ./contract/grpc /src
+WORKDIR /src/proto
+RUN mkdir -p ../go
 RUN protoc \
-    --go_opt=Mcommons.proto=/src/contract/grpc/proto \
-    --go_opt=Mproject-messages.proto=/src/contract/grpc/proto \
-    --go_opt=Moperations.proto=/src/contract/grpc/proto \
+    --go_opt=Mcommons.proto=./ \
+    --go_opt=Mproject-messages.proto=./ \
+    --go_opt=Moperations.proto=./ \
     *.proto \
     --go_out=plugins=grpc:../go

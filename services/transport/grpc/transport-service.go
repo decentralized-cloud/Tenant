@@ -27,7 +27,7 @@ type transportService struct {
 	readProjectHandler        gokitgrpc.Handler
 	updateProjectHandler      gokitgrpc.Handler
 	deleteProjectHandler      gokitgrpc.Handler
-	searchHandler             gokitgrpc.Handler
+	ListProjectsHandler       gokitgrpc.Handler
 }
 
 var Live bool
@@ -158,13 +158,13 @@ func (service *transportService) setupHandlers() {
 		encodeDeleteProjectResponse,
 	)
 
-	endpoint = service.endpointCreatorService.SearchEndpoint()
-	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("Search")(endpoint)
+	endpoint = service.endpointCreatorService.ListProjectsEndpoint()
+	endpoint = service.middlewareProviderService.CreateLoggingMiddleware("ListProjects")(endpoint)
 	endpoint = service.createAuthMiddleware()(endpoint)
-	service.searchHandler = gokitgrpc.NewServer(
+	service.ListProjectsHandler = gokitgrpc.NewServer(
 		endpoint,
-		decodeSearchRequest,
-		encodeSearchResponse,
+		decodeListProjectsRequest,
+		encodeListProjectsResponse,
 	)
 }
 
@@ -231,17 +231,17 @@ func (service *transportService) DeleteProject(
 
 }
 
-// Search returns the list  of project that matched the provided criteria
+// ListProjects returns the list  of project that matched the provided criteria
 // context: Mandatory. The reference to the context
 // request: Mandatory. The request contains the filter criteria to look for existing project
 // Returns the list of project that matched the provided criteria
-func (service *transportService) Search(
+func (service *transportService) ListProjects(
 	ctx context.Context,
-	request *projectGRPCContract.SearchRequest) (*projectGRPCContract.SearchResponse, error) {
-	_, response, err := service.searchHandler.ServeGRPC(ctx, request)
+	request *projectGRPCContract.ListProjectsRequest) (*projectGRPCContract.ListProjectsResponse, error) {
+	_, response, err := service.ListProjectsHandler.ServeGRPC(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.(*projectGRPCContract.SearchResponse), nil
+	return response.(*projectGRPCContract.ListProjectsResponse), nil
 }

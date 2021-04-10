@@ -65,6 +65,21 @@ func (mr *MockBusinessContractMockRecorder) DeleteProject(ctx, request interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteProject", reflect.TypeOf((*MockBusinessContract)(nil).DeleteProject), ctx, request)
 }
 
+// ListProjects mocks base method.
+func (m *MockBusinessContract) ListProjects(ctx context.Context, request *business.ListProjectsRequest) (*business.ListProjectsResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListProjects", ctx, request)
+	ret0, _ := ret[0].(*business.ListProjectsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListProjects indicates an expected call of ListProjects.
+func (mr *MockBusinessContractMockRecorder) ListProjects(ctx, request interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListProjects", reflect.TypeOf((*MockBusinessContract)(nil).ListProjects), ctx, request)
+}
+
 // ReadProject mocks base method.
 func (m *MockBusinessContract) ReadProject(ctx context.Context, request *business.ReadProjectRequest) (*business.ReadProjectResponse, error) {
 	m.ctrl.T.Helper()
@@ -78,21 +93,6 @@ func (m *MockBusinessContract) ReadProject(ctx context.Context, request *busines
 func (mr *MockBusinessContractMockRecorder) ReadProject(ctx, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadProject", reflect.TypeOf((*MockBusinessContract)(nil).ReadProject), ctx, request)
-}
-
-// Search mocks base method.
-func (m *MockBusinessContract) Search(ctx context.Context, request *business.SearchRequest) (*business.SearchResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Search", ctx, request)
-	ret0, _ := ret[0].(*business.SearchResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Search indicates an expected call of Search.
-func (mr *MockBusinessContractMockRecorder) Search(ctx, request interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Search", reflect.TypeOf((*MockBusinessContract)(nil).Search), ctx, request)
 }
 
 // UpdateProject mocks base method.
