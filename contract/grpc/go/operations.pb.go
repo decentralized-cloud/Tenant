@@ -29,33 +29,32 @@ var file_operations_proto_rawDesc = []byte{
 	0x0a, 0x10, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x12, 0x07, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x1a, 0x16, 0x70, 0x72, 0x6f,
 	0x6a, 0x65, 0x63, 0x74, 0x2d, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x32, 0x97, 0x03, 0x0a, 0x0e, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x53,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x4e, 0x0a, 0x0d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
-	0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x48, 0x0a, 0x0b, 0x52, 0x65, 0x61, 0x64, 0x50, 0x72,
-	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x1b, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e,
-	0x52, 0x65, 0x61, 0x64, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x52, 0x65, 0x61,
-	0x64, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x4e, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
-	0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x4e, 0x0a, 0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63,
-	0x74, 0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x12, 0x4b, 0x0a, 0x0c, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73,
-	0x12, 0x1c, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50,
-	0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d,
-	0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f,
-	0x6a, 0x65, 0x63, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x74, 0x6f, 0x32, 0x90, 0x03, 0x0a, 0x07, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
+	0x4e, 0x0a, 0x0d, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74,
+	0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x48, 0x0a, 0x0b, 0x52, 0x65, 0x61, 0x64, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x1b,
+	0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x50, 0x72, 0x6f,
+	0x6a, 0x65, 0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x70, 0x72,
+	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63,
+	0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4e, 0x0a, 0x0d, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f,
+	0x6a, 0x65, 0x63, 0x74, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65,
+	0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x6a,
+	0x65, 0x63, 0x74, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63,
+	0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4e, 0x0a, 0x0d, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f,
+	0x6a, 0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65,
+	0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x6a,
+	0x65, 0x63, 0x74, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63,
+	0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4b, 0x0a, 0x0c, 0x4c, 0x69, 0x73,
+	0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x12, 0x1c, 0x2e, 0x70, 0x72, 0x6f, 0x6a,
+	0x65, 0x63, 0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63,
+	0x74, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_operations_proto_goTypes = []interface{}{
@@ -71,16 +70,16 @@ var file_operations_proto_goTypes = []interface{}{
 	(*ListProjectsResponse)(nil),  // 9: project.ListProjectsResponse
 }
 var file_operations_proto_depIdxs = []int32{
-	0, // 0: project.ProjectService.CreateProject:input_type -> project.CreateProjectRequest
-	1, // 1: project.ProjectService.ReadProject:input_type -> project.ReadProjectRequest
-	2, // 2: project.ProjectService.UpdateProject:input_type -> project.UpdateProjectRequest
-	3, // 3: project.ProjectService.DeleteProject:input_type -> project.DeleteProjectRequest
-	4, // 4: project.ProjectService.ListProjects:input_type -> project.ListProjectsRequest
-	5, // 5: project.ProjectService.CreateProject:output_type -> project.CreateProjectResponse
-	6, // 6: project.ProjectService.ReadProject:output_type -> project.ReadProjectResponse
-	7, // 7: project.ProjectService.UpdateProject:output_type -> project.UpdateProjectResponse
-	8, // 8: project.ProjectService.DeleteProject:output_type -> project.DeleteProjectResponse
-	9, // 9: project.ProjectService.ListProjects:output_type -> project.ListProjectsResponse
+	0, // 0: project.Service.CreateProject:input_type -> project.CreateProjectRequest
+	1, // 1: project.Service.ReadProject:input_type -> project.ReadProjectRequest
+	2, // 2: project.Service.UpdateProject:input_type -> project.UpdateProjectRequest
+	3, // 3: project.Service.DeleteProject:input_type -> project.DeleteProjectRequest
+	4, // 4: project.Service.ListProjects:input_type -> project.ListProjectsRequest
+	5, // 5: project.Service.CreateProject:output_type -> project.CreateProjectResponse
+	6, // 6: project.Service.ReadProject:output_type -> project.ReadProjectResponse
+	7, // 7: project.Service.UpdateProject:output_type -> project.UpdateProjectResponse
+	8, // 8: project.Service.DeleteProject:output_type -> project.DeleteProjectResponse
+	9, // 9: project.Service.ListProjects:output_type -> project.ListProjectsResponse
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -121,10 +120,10 @@ var _ grpc.ClientConnInterface
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion6
 
-// ProjectServiceClient is the client API for ProjectService service.
+// ServiceClient is the client API for Service service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type ProjectServiceClient interface {
+type ServiceClient interface {
 	// CreateProject creates a new project
 	// request: The request to create a new project
 	// Returns the result of creating new project
@@ -147,61 +146,61 @@ type ProjectServiceClient interface {
 	ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error)
 }
 
-type projectServiceClient struct {
+type serviceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewProjectServiceClient(cc grpc.ClientConnInterface) ProjectServiceClient {
-	return &projectServiceClient{cc}
+func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
+	return &serviceClient{cc}
 }
 
-func (c *projectServiceClient) CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error) {
+func (c *serviceClient) CreateProject(ctx context.Context, in *CreateProjectRequest, opts ...grpc.CallOption) (*CreateProjectResponse, error) {
 	out := new(CreateProjectResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/CreateProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.Service/CreateProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *projectServiceClient) ReadProject(ctx context.Context, in *ReadProjectRequest, opts ...grpc.CallOption) (*ReadProjectResponse, error) {
+func (c *serviceClient) ReadProject(ctx context.Context, in *ReadProjectRequest, opts ...grpc.CallOption) (*ReadProjectResponse, error) {
 	out := new(ReadProjectResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/ReadProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.Service/ReadProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *projectServiceClient) UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error) {
+func (c *serviceClient) UpdateProject(ctx context.Context, in *UpdateProjectRequest, opts ...grpc.CallOption) (*UpdateProjectResponse, error) {
 	out := new(UpdateProjectResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/UpdateProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.Service/UpdateProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *projectServiceClient) DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error) {
+func (c *serviceClient) DeleteProject(ctx context.Context, in *DeleteProjectRequest, opts ...grpc.CallOption) (*DeleteProjectResponse, error) {
 	out := new(DeleteProjectResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/DeleteProject", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.Service/DeleteProject", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *projectServiceClient) ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error) {
+func (c *serviceClient) ListProjects(ctx context.Context, in *ListProjectsRequest, opts ...grpc.CallOption) (*ListProjectsResponse, error) {
 	out := new(ListProjectsResponse)
-	err := c.cc.Invoke(ctx, "/project.ProjectService/ListProjects", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/project.Service/ListProjects", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProjectServiceServer is the server API for ProjectService service.
-type ProjectServiceServer interface {
+// ServiceServer is the server API for Service service.
+type ServiceServer interface {
 	// CreateProject creates a new project
 	// request: The request to create a new project
 	// Returns the result of creating new project
@@ -224,143 +223,143 @@ type ProjectServiceServer interface {
 	ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error)
 }
 
-// UnimplementedProjectServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedProjectServiceServer struct {
+// UnimplementedServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedServiceServer struct {
 }
 
-func (*UnimplementedProjectServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error) {
+func (*UnimplementedServiceServer) CreateProject(context.Context, *CreateProjectRequest) (*CreateProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProject not implemented")
 }
-func (*UnimplementedProjectServiceServer) ReadProject(context.Context, *ReadProjectRequest) (*ReadProjectResponse, error) {
+func (*UnimplementedServiceServer) ReadProject(context.Context, *ReadProjectRequest) (*ReadProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadProject not implemented")
 }
-func (*UnimplementedProjectServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error) {
+func (*UnimplementedServiceServer) UpdateProject(context.Context, *UpdateProjectRequest) (*UpdateProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
 }
-func (*UnimplementedProjectServiceServer) DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error) {
+func (*UnimplementedServiceServer) DeleteProject(context.Context, *DeleteProjectRequest) (*DeleteProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProject not implemented")
 }
-func (*UnimplementedProjectServiceServer) ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error) {
+func (*UnimplementedServiceServer) ListProjects(context.Context, *ListProjectsRequest) (*ListProjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProjects not implemented")
 }
 
-func RegisterProjectServiceServer(s *grpc.Server, srv ProjectServiceServer) {
-	s.RegisterService(&_ProjectService_serviceDesc, srv)
+func RegisterServiceServer(s *grpc.Server, srv ServiceServer) {
+	s.RegisterService(&_Service_serviceDesc, srv)
 }
 
-func _ProjectService_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_CreateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProjectServiceServer).CreateProject(ctx, in)
+		return srv.(ServiceServer).CreateProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.ProjectService/CreateProject",
+		FullMethod: "/project.Service/CreateProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).CreateProject(ctx, req.(*CreateProjectRequest))
+		return srv.(ServiceServer).CreateProject(ctx, req.(*CreateProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_ReadProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_ReadProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ReadProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProjectServiceServer).ReadProject(ctx, in)
+		return srv.(ServiceServer).ReadProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.ProjectService/ReadProject",
+		FullMethod: "/project.Service/ReadProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).ReadProject(ctx, req.(*ReadProjectRequest))
+		return srv.(ServiceServer).ReadProject(ctx, req.(*ReadProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProjectServiceServer).UpdateProject(ctx, in)
+		return srv.(ServiceServer).UpdateProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.ProjectService/UpdateProject",
+		FullMethod: "/project.Service/UpdateProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).UpdateProject(ctx, req.(*UpdateProjectRequest))
+		return srv.(ServiceServer).UpdateProject(ctx, req.(*UpdateProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteProjectRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProjectServiceServer).DeleteProject(ctx, in)
+		return srv.(ServiceServer).DeleteProject(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.ProjectService/DeleteProject",
+		FullMethod: "/project.Service/DeleteProject",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).DeleteProject(ctx, req.(*DeleteProjectRequest))
+		return srv.(ServiceServer).DeleteProject(ctx, req.(*DeleteProjectRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProjectService_ListProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_ListProjects_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListProjectsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProjectServiceServer).ListProjects(ctx, in)
+		return srv.(ServiceServer).ListProjects(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/project.ProjectService/ListProjects",
+		FullMethod: "/project.Service/ListProjects",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProjectServiceServer).ListProjects(ctx, req.(*ListProjectsRequest))
+		return srv.(ServiceServer).ListProjects(ctx, req.(*ListProjectsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _ProjectService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "project.ProjectService",
-	HandlerType: (*ProjectServiceServer)(nil),
+var _Service_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "project.Service",
+	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "CreateProject",
-			Handler:    _ProjectService_CreateProject_Handler,
+			Handler:    _Service_CreateProject_Handler,
 		},
 		{
 			MethodName: "ReadProject",
-			Handler:    _ProjectService_ReadProject_Handler,
+			Handler:    _Service_ReadProject_Handler,
 		},
 		{
 			MethodName: "UpdateProject",
-			Handler:    _ProjectService_UpdateProject_Handler,
+			Handler:    _Service_UpdateProject_Handler,
 		},
 		{
 			MethodName: "DeleteProject",
-			Handler:    _ProjectService_DeleteProject_Handler,
+			Handler:    _Service_DeleteProject_Handler,
 		},
 		{
 			MethodName: "ListProjects",
-			Handler:    _ProjectService_ListProjects_Handler,
+			Handler:    _Service_ListProjects_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

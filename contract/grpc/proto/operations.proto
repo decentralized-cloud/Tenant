@@ -5,10 +5,9 @@ package project;
 import "project-messages.proto";
 
 /**
- * The project servcie that can create new project, read, update and delete
- * existing project
+ * The project servcie
  */
-service ProjectService {
+service Service {
   // CreateProject creates a new project
   // request: The request to create a new project
   // Returns the result of creating new project
