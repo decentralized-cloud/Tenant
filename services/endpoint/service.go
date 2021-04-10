@@ -148,32 +148,32 @@ func (service *endpointCreatorService) DeleteProjectEndpoint() endpoint.Endpoint
 	}
 }
 
-// SearchEndpoint creates Search Project endpoint
-// Returns the Search Project endpoint
-func (service *endpointCreatorService) SearchEndpoint() endpoint.Endpoint {
+// ListProjectsEndpoint creates ListProjects Project endpoint
+// Returns the ListProjects Project endpoint
+func (service *endpointCreatorService) ListProjectsEndpoint() endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		if ctx == nil {
-			return &business.SearchResponse{
+			return &business.ListProjectsResponse{
 				Err: commonErrors.NewArgumentNilError("ctx", "ctx is required"),
 			}, nil
 		}
 
 		if request == nil {
-			return &business.SearchResponse{
+			return &business.ListProjectsResponse{
 				Err: commonErrors.NewArgumentNilError("request", "request is required"),
 			}, nil
 		}
 
-		castedRequest := request.(*business.SearchRequest)
+		castedRequest := request.(*business.ListProjectsRequest)
 		parsedToken := ctx.Value(models.ContextKeyParsedToken).(models.ParsedToken)
 		castedRequest.UserEmail = parsedToken.Email
 
 		if err := castedRequest.Validate(); err != nil {
-			return &business.SearchResponse{
+			return &business.ListProjectsResponse{
 				Err: commonErrors.NewArgumentErrorWithError("request", "", err),
 			}, nil
 		}
 
-		return service.businessService.Search(ctx, castedRequest)
+		return service.businessService.ListProjects(ctx, castedRequest)
 	}
 }

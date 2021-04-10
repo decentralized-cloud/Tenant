@@ -320,9 +320,9 @@ var _ = Describe("Business Service Tests", func() {
 		})
 	})
 
-	Describe("Search is called", func() {
+	Describe("ListProjects is called", func() {
 		var (
-			request    business.SearchRequest
+			request    business.ListProjectsRequest
 			projectIDs []string
 		)
 
@@ -332,7 +332,7 @@ var _ = Describe("Business Service Tests", func() {
 				projectIDs = append(projectIDs, cuid.New())
 			}
 
-			request = business.SearchRequest{
+			request = business.ListProjectsRequest{
 				Pagination: common.Pagination{
 					After:  convertStringToPointer(cuid.New()),
 					First:  convertIntToPointer(rand.Intn(1000)),
@@ -354,39 +354,39 @@ var _ = Describe("Business Service Tests", func() {
 		})
 
 		Context("project service is instantiated", func() {
-			When("Search is called", func() {
-				It("should call project repository Search method", func() {
+			When("ListProjects is called", func() {
+				It("should call project repository ListProjects method", func() {
 					mockRepositoryService.
 						EXPECT().
-						Search(ctx, gomock.Any()).
-						Do(func(_ context.Context, mappedRequest *repository.SearchRequest) {
+						ListProjects(ctx, gomock.Any()).
+						Do(func(_ context.Context, mappedRequest *repository.ListProjectsRequest) {
 							Ω(mappedRequest.Pagination).Should(Equal(request.Pagination))
 							Ω(mappedRequest.SortingOptions).Should(Equal(request.SortingOptions))
 							Ω(mappedRequest.ProjectIDs).Should(Equal(request.ProjectIDs))
 						}).
-						Return(&repository.SearchResponse{}, nil)
+						Return(&repository.ListProjectsResponse{}, nil)
 
-					response, err := sut.Search(ctx, &request)
+					response, err := sut.ListProjects(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 				})
 			})
 
-			When("project repository Search returns error", func() {
+			When("project repository ListProjects returns error", func() {
 				It("should return the same error", func() {
 					expectedError := errors.New(cuid.New())
 					mockRepositoryService.
 						EXPECT().
-						Search(gomock.Any(), gomock.Any()).
+						ListProjects(gomock.Any(), gomock.Any()).
 						Return(nil, expectedError)
 
-					response, err := sut.Search(ctx, &request)
+					response, err := sut.ListProjects(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(Equal(expectedError))
 				})
 			})
 
-			When("project repository Search completes successfully", func() {
+			When("project repository ListProjects completes successfully", func() {
 				It("should return the list of matched projectIDs", func() {
 					projects := []models.ProjectWithCursor{}
 
@@ -400,7 +400,7 @@ var _ = Describe("Business Service Tests", func() {
 						})
 					}
 
-					expectedResponse := repository.SearchResponse{
+					expectedResponse := repository.ListProjectsResponse{
 						HasPreviousPage: (rand.Intn(10) % 2) == 0,
 						HasNextPage:     (rand.Intn(10) % 2) == 0,
 						TotalCount:      rand.Int63n(1000),
@@ -409,10 +409,10 @@ var _ = Describe("Business Service Tests", func() {
 
 					mockRepositoryService.
 						EXPECT().
-						Search(gomock.Any(), gomock.Any()).
+						ListProjects(gomock.Any(), gomock.Any()).
 						Return(&expectedResponse, nil)
 
-					response, err := sut.Search(ctx, &request)
+					response, err := sut.ListProjects(ctx, &request)
 					Ω(err).Should(BeNil())
 					Ω(response.Err).Should(BeNil())
 					Ω(response.HasPreviousPage).Should(Equal(expectedResponse.HasPreviousPage))

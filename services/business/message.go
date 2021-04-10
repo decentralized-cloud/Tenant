@@ -57,16 +57,16 @@ type DeleteProjectResponse struct {
 	Err error
 }
 
-// SearchRequest contains the filter criteria to look for existing projects
-type SearchRequest struct {
+// ListProjectsRequest contains the filter criteria to look for existing projects
+type ListProjectsRequest struct {
 	UserEmail      string
 	Pagination     common.Pagination
 	SortingOptions []common.SortingOptionPair
 	ProjectIDs     []string
 }
 
-// SearchResponse contains the list of the projects that matched the result
-type SearchResponse struct {
+// ListProjectsResponse contains the list of the projects that matched the result
+type ListProjectsResponse struct {
 	Err             error
 	HasPreviousPage bool
 	HasNextPage     bool

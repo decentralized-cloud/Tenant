@@ -234,10 +234,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			}
 		})
 
-		When("user searches for projects with selected project Ids and first 10 projects", func() {
+		When("user ListProjectses for projects with selected project Ids and first 10 projects", func() {
 			It("should return first 10 projects", func() {
 				first := 10
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -247,7 +247,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(10))
@@ -259,10 +259,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids and first 5 projects", func() {
+		When("user ListProjectses for projects with selected project Ids and first 5 projects", func() {
 			It("should return first 5 projects", func() {
 				first := 5
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -272,7 +272,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(5))
@@ -284,10 +284,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids with After parameter provided.", func() {
+		When("user ListProjectses for projects with selected project Ids with After parameter provided.", func() {
 			It("should return first 9 projects after provided project id", func() {
 				first := 9
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -297,7 +297,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(9))
@@ -309,10 +309,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids with After parameter provided.", func() {
+		When("user ListProjectses for projects with selected project Ids with After parameter provided.", func() {
 			It("should return first 5 projects after provided project id", func() {
 				first := 5
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -322,7 +322,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(5))
@@ -334,10 +334,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids and last 10 projects", func() {
+		When("user ListProjectses for projects with selected project Ids and last 10 projects", func() {
 			It("should return first 10 projects", func() {
 				last := 10
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -347,7 +347,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(10))
@@ -359,10 +359,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids with Before parameter provided.", func() {
+		When("user ListProjectses for projects with selected project Ids with Before parameter provided.", func() {
 			It("should return first 9 projects before provided project id", func() {
 				last := 9
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -372,7 +372,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					SortingOptions: []common.SortingOptionPair{},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(9))
@@ -384,10 +384,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids and first 10 projects with ascending order on name property", func() {
+		When("user ListProjectses for projects with selected project Ids and first 10 projects with ascending order on name property", func() {
 			It("should return first 10 projects in adcending order on name field", func() {
 				first := 10
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -399,7 +399,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(10))
@@ -411,10 +411,10 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 			})
 		})
 
-		When("user searches for projects with selected project Ids and first 10 projects with descending order on name property", func() {
+		When("user ListProjectses for projects with selected project Ids and first 10 projects with descending order on name property", func() {
 			It("should return first 10 projects in descending order on name field", func() {
 				first := 10
-				searchRequest := repository.SearchRequest{
+				ListProjectsRequest := repository.ListProjectsRequest{
 					UserEmail:  createRequest.UserEmail,
 					ProjectIDs: projectIDs,
 					Pagination: common.Pagination{
@@ -426,7 +426,7 @@ var _ = Describe("Mongodb Repository Service Tests", func() {
 					},
 				}
 
-				response, err := sut.Search(ctx, &searchRequest)
+				response, err := sut.ListProjects(ctx, &ListProjectsRequest)
 				Ω(err).Should(BeNil())
 				Ω(response.Projects).ShouldNot(BeNil())
 				Ω(len(response.Projects)).Should(Equal(10))

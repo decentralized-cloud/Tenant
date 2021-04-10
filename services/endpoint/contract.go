@@ -22,7 +22,7 @@ type EndpointCreatorContract interface {
 	// Returns the Delete Project endpoint
 	DeleteProjectEndpoint() endpoint.Endpoint
 
-	// SearchEndpoint creates Search Project endpoint
-	// Returns the Search Project endpoint
-	SearchEndpoint() endpoint.Endpoint
+	// ListProjectsEndpoint creates ListProjects Project endpoint
+	// Returns the ListProjects Project endpoint
+	ListProjectsEndpoint() endpoint.Endpoint
 }

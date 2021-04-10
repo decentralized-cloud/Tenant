@@ -52,8 +52,8 @@ func (val DeleteProjectRequest) Validate() error {
 	)
 }
 
-// Validate validates the SearchRequest model and return error if the validation failes
+// Validate validates the ListProjectsRequest model and return error if the validation failes
 // Returns error if validation failes
-func (val SearchRequest) Validate() error {
+func (val ListProjectsRequest) Validate() error {
 	return nil
 }
