@@ -34,7 +34,7 @@ variables:
     value: "ubuntu-20.04"
 
   - name: contractScriptFilePath
-    value: "$(system.defaultWorkingDirectory)/scripts/compile-grpc.sh"
+    value: "$(system.defaultWorkingDirectory)/scripts/compile-protobuf.sh"
 
   - name: contractScriptworkingDirectory
     value: "$(system.defaultWorkingDirectory)/scripts"
