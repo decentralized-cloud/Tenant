@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package project;
+
+option go_package = "project";
+
+import "project-messages.proto";
+
+/**
+ * The project servcie
+ */
+service Service {
+  // CreateProject creates a new project
+  // request: The request to create a new project
+  // Returns the result of creating new project
+  rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
+
+  // ReadProject reads an exsiting project
+  // request: The request to read an esiting project
+  // Returns the result of reading an existing project
+  rpc ReadProject(ReadProjectRequest) returns (ReadProjectResponse);
+
+  // UpdateProject updates an exsiting project
+  // request: The request to update an esiting project
+  // Returns the result of updateing an existing project
+  rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
+
+  // DeleteProject deletes an exsiting project
+  // request: The request to delete an esiting project
+  // Returns the result of deleting an existing project
+  rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
+
+  // ListProjects returns the list of projects that matched the criteria
+  // request: The request contains the search criteria
+  // Returns the list of projects that matched the criteria
+  rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse);
+}
