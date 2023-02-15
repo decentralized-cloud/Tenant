@@ -11,7 +11,7 @@ require (
 	github.com/micro-business/go-core v0.6.2
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.13.0
-	github.com/prometheus/client_golang v1.11.0
+	github.com/prometheus/client_golang v1.11.1
 	github.com/savsgio/atreugo/v11 v11.7.2
 	github.com/spf13/cobra v1.1.3
 	github.com/thoas/go-funk v0.8.0
